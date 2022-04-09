@@ -5,6 +5,7 @@ import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
+import 'package:a2l/src/a2l_tree/record_layout.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -392,7 +393,42 @@ class TokenParser {
      _createComputeTable(),
      _createComputeVerbatimTable(),
      _createComputeVerbatimRangeTable(),
-     _createGroups()];
+     _createGroups(),
+     _createRecordLayout()];
+  }
+  
+  BlockElement _createRecordLayout() {
+    return BlockElement('RECORD_LAYOUT', (s, p) {
+      if(p is Module) {
+        var rl = RecordLayout();
+        p.recordLayouts.add(rl);
+        
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            rl.name = s[0];
+          })];
+        
+        var optional = <A2LElement>[
+          NamedValue('ALIGNMENT_BYTE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt8 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_WORD', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt16 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_LONG', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt32 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_INT64', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt64 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT32_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentFloat32 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT64_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentFloat64 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('FNC_VALUES', [
+            Value('Position', ValueType.integer, (ValueType t, List<String> s) { rl.values ??= LayoutData(); rl.values!.position = int.parse(s[0]); }), 
+            Value('Datatype', ValueType.text, (ValueType t, List<String> s) { rl.values!.type = dataTypeFromString(s[0]); }), 
+            Value('IndexMode', ValueType.text, (ValueType t, List<String> s) { rl.values!.mode = indexModeFromString(s[0]); }), 
+            Value('Addresstype', ValueType.text, (ValueType t, List<String> s) { rl.values!.addressType = addressTypeFromString(s[0]); }), 
+          ], optional: true),
+          
+        ];
+        return A2LElementParsingOptions(rl, values, optional);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of RECORD_LAYOUT must be module!', '', 0);
+      }
+    }
+    , optional: true, unique: false);
   }
 
   BlockElement _createUnit() {

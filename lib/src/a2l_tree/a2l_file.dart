@@ -5,6 +5,7 @@ import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/record_layout.dart';
 
 class Unit {
   String name = '';
@@ -32,13 +33,15 @@ class Module {
   List<ComputeMethod> computeMethods;
   List<ComputeTableBase> computeTables;
   List<Group> groups;
+  List<RecordLayout> recordLayouts;
   Module() :
     measurements = [],
     characteristics = [],
     units = [],
     computeMethods = [],
     computeTables = [],
-    groups = []
+    groups = [],
+    recordLayouts = []
   ;
 }
 

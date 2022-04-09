@@ -182,3 +182,27 @@ class MeasurementCharacteristicBase extends DataContainer {
   String? memorySegment;
   SymbolLink? symbolLink;
 }
+
+/// Describes how data is deposited
+enum AddressType {
+  /// memory location has 1 byte pointer to value
+  PBYTE,
+  /// memory location has 2 byte pointer to value
+  PWORD,
+  /// memory location has 4 byte pointer to value
+  PLONG,
+  /// memory location holds first value. Others follow by incrementing address.
+  DIRECT
+}
+
+/// Converts a string to the address type
+AddressType addressTypeFromString(String s){
+  switch(s) {
+    case 'PBYTE': return AddressType.PBYTE;
+    case 'PWORD': return AddressType.PWORD;
+    case 'PLONG': return AddressType.PLONG;
+    case 'DIRECT': return AddressType.DIRECT;
+    default: throw ParsingException('Unknown address type $s', '', 0);
+  }
+}
+
