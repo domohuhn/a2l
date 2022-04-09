@@ -2,6 +2,8 @@ import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
+import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/measurement.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -462,19 +464,106 @@ class TokenParser {
     }, optional: true, unique: false);
   }
 
+  List<Value> _createSharedValuesMeasurementCharacteristicStart(MeasurementCharacteristicBase base) {
+    var values = <Value>[
+      Value('Name', ValueType.id, (ValueType t, List<String> s) {
+        base.name = s[0];
+      }),
+      Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+        base.description = removeQuotes(s[0]);
+      })
+    ];
+    return values;
+  }
+
+  List<Value> _createSharedValuesMeasurementCharacteristicEnd(MeasurementCharacteristicBase base) {
+    var values = <Value>[
+      Value('LowerLimit', ValueType.floating, (ValueType t, List<String> s) {
+        base.lowerLimit = double.parse(s[0]);
+      }),
+      Value('UpperLimit', ValueType.floating, (ValueType t, List<String> s) {
+        base.upperLimit = double.parse(s[0]);
+      })
+    ];
+    return values;
+  }
+  
+  List<A2LElement> _createSharedOptionalsMeasurementCharacteristic(MeasurementCharacteristicBase base) {
+    var values = <A2LElement>[
+      NamedValue('BIT_MASK', [
+        Value('mask', ValueType.integer, (ValueType t, List<String> s) {
+          base.bitMask = int.parse(s[0]);
+        })
+      ], optional: true),
+      NamedValue('BYTE_ORDER', [
+        Value('order', ValueType.text, (ValueType t, List<String> s) {
+          base.endianess = byteOrderFromString(s[0]);
+        })
+      ], optional: true),
+      NamedValue('DISCRETE',[], callback: () {base.discrete = true;}, optional: true),
+      NamedValue('DISPLAY_IDENTIFIER', [
+        Value('id', ValueType.text, (ValueType t, List<String> s) {
+          base.displayIdentifier = removeQuotes(s[0]);
+        })
+      ], optional: true),
+      NamedValue('ECU_ADDRESS_EXTENSION', [
+        Value('address extension', ValueType.integer, (ValueType t, List<String> s) {
+          base.addressExtension = int.parse(s[0]);
+        })
+      ], optional: true),
+      NamedValue('FORMAT', [
+        Value('format', ValueType.text, (ValueType t, List<String> s) {
+          base.format = removeQuotes(s[0]);
+        })
+      ], optional: true),
+      NamedValue('PHYS_UNIT', [
+        Value('unit', ValueType.text, (ValueType t, List<String> s) {
+          base.unit = removeQuotes(s[0]);
+        })
+      ], optional: true),
+      NamedValue('REF_MEMORY_SEGMENT', [
+        Value('segment', ValueType.text, (ValueType t, List<String> s) {
+          base.memorySegment = s[0];
+        })
+      ], optional: true),
+      NamedValue('SYMBOL_LINK', [
+        Value('SymbolName', ValueType.text, (ValueType t, List<String> s) {
+          base.symbolLink ??= SymbolLink();
+          base.symbolLink!.name = removeQuotes(s[0]);
+        }),
+        Value('Offset', ValueType.integer, (ValueType t, List<String> s) {
+          base.symbolLink!.offset = int.parse(s[0]);
+        }),
+      ], optional: true),
+      NamedValue('MATRIX_DIM', [
+        Value('Dimensions', ValueType.integer, (ValueType t, List<String> s) {
+          base.matrixDim ??= MatrixDim();
+          base.matrixDim!.x = int.parse(s[0]);
+          base.matrixDim!.y = int.parse(s[1]);
+          base.matrixDim!.z = int.parse(s[2]);
+        }, requiredTokens: 3),
+      ], optional: true),
+      NamedValue('MAX_REFRESH', [
+        Value('ScalingUnit', ValueType.integer, (ValueType t, List<String> s) {
+          base.maxRefresh ??= MaxRefresh();
+          base.maxRefresh!.scalingUnit = maxRefreshUnitFromString(s[0]);
+        }),
+        Value('Rate', ValueType.integer, (ValueType t, List<String> s) {
+          base.maxRefresh!.rate = int.parse(s[0]);
+        }),
+      ], optional: true),
+    ];
+    return values;
+  }
+
   BlockElement _createMeasurement() {
     return BlockElement('MEASUREMENT', (s, p) {
       if (p is Module) {
         var measurement = Measurement();
         p.measurements.add(measurement);
 
-        var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            measurement.name = s[0];
-          }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-            measurement.description = removeQuotes(s[0]);
-          }),
+        var values = _createSharedValuesMeasurementCharacteristicStart(measurement);
+        values.addAll([
           Value('Datatype', ValueType.text, (ValueType t, List<String> s) {
             measurement.datatype = dataTypeFromString(s[0]);
           }),
@@ -487,33 +576,14 @@ class TokenParser {
           Value('Accuracy', ValueType.floating, (ValueType t, List<String> s) {
             measurement.accuracy = double.parse(s[0]);
           }),
-          Value('LowerLimit', ValueType.floating, (ValueType t, List<String> s) {
-            measurement.lowerLimit = double.parse(s[0]);
-          }),
-          Value('UpperLimit', ValueType.floating, (ValueType t, List<String> s) {
-            measurement.upperLimit = double.parse(s[0]);
-          })
-        ];
+        ]);
+        values.addAll(_createSharedValuesMeasurementCharacteristicEnd(measurement));
 
-        var optional = <A2LElement>[
+        var optional = _createSharedOptionalsMeasurementCharacteristic(measurement);
+        optional.addAll(<A2LElement>[
           NamedValue('ARRAY_SIZE', [
             Value('size', ValueType.integer, (ValueType t, List<String> s) {
               measurement.arraySize = int.parse(s[0]);
-            })
-          ], optional: true),
-          NamedValue('BIT_MASK', [
-            Value('mask', ValueType.integer, (ValueType t, List<String> s) {
-              measurement.bitMask = int.parse(s[0]);
-            })
-          ], optional: true),
-          NamedValue('BYTE_ORDER', [
-            Value('order', ValueType.text, (ValueType t, List<String> s) {
-              measurement.endianess = byteOrderFromString(s[0]);
-            })
-          ], optional: true),
-          NamedValue('DISPLAY_IDENTIFIER', [
-            Value('id', ValueType.text, (ValueType t, List<String> s) {
-              measurement.displayIdentifier = removeQuotes(s[0]);
             })
           ], optional: true),
           NamedValue('ECU_ADDRESS', [
@@ -521,19 +591,9 @@ class TokenParser {
               measurement.address = int.parse(s[0]);
             })
           ], optional: true),
-          NamedValue('ECU_ADDRESS_EXTENSION', [
-            Value('address extension', ValueType.integer, (ValueType t, List<String> s) {
-              measurement.addressExtension = int.parse(s[0]);
-            })
-          ], optional: true),
           NamedValue('ERROR_MASK', [
             Value('error mask', ValueType.integer, (ValueType t, List<String> s) {
               measurement.errorMask = int.parse(s[0]);
-            })
-          ], optional: true),
-          NamedValue('FORMAT', [
-            Value('format', ValueType.text, (ValueType t, List<String> s) {
-              measurement.format = removeQuotes(s[0]);
             })
           ], optional: true),
           NamedValue('LAYOUT', [
@@ -541,18 +601,12 @@ class TokenParser {
               measurement.layout = indexModeFromString(s[0]);
             })
           ], optional: true),
-          NamedValue('PHYS_UNIT', [
-            Value('unit', ValueType.text, (ValueType t, List<String> s) {
-              measurement.unit = removeQuotes(s[0]);
-            })
-          ], optional: true),
-          NamedValue('REF_MEMORY_SEGMENT', [
-            Value('segment', ValueType.text, (ValueType t, List<String> s) {
-              measurement.memorySegment = s[0];
-            })
-          ], optional: true),
-          _createAnnotation()
-        ];
+          NamedValue('READ_WRITE',[], callback: () {measurement.readWrite = true;}, optional: true),
+          _createBitOperation(),
+          _createAnnotation(),
+          _createFunctionList(),
+          _createMeasurementsList(key: 'VIRTUAL')
+        ]);
         return A2LElementParsingOptions(measurement, values, optional);
       } else {
         throw ParsingException(
@@ -777,6 +831,31 @@ class TokenParser {
             'Parse tree built wrong, parent of MEASUREMENT must be module!',
             '',
             0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createBitOperation() {
+    return BlockElement('BIT_OPERATION', (s, p) {
+      if (p is Measurement) {
+        p.bitOperation = BitOperation();
+
+        var optional = <A2LElement>[
+          NamedValue('LEFT_SHIFT', [
+            Value('LEFT_SHIFT', ValueType.text, (ValueType t, List<String> s) {
+              p.bitOperation!.leftShift = int.parse(s[0]);
+            }),
+          ], optional: true),
+          NamedValue('RIGHT_SHIFT', [
+            Value('RIGHT_SHIFT', ValueType.text, (ValueType t, List<String> s) {
+              p.bitOperation!.rightShift = int.parse(s[0]);
+            }),
+          ], optional: true),
+          NamedValue('SIGN_EXTEND', [], callback: () => p.bitOperation!.signExtend = true, optional: true)
+        ];
+        return A2LElementParsingOptions(p, [], optional);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of ANNOTATION must be derived from AnnotationContainer!','', 0);
       }
     }, optional: true, unique: false);
   }
