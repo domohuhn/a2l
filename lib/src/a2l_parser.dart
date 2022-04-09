@@ -1,6 +1,7 @@
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
+import 'package:a2l/src/a2l_tree/group.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -353,7 +354,13 @@ class TokenParser {
 
 
   List<BlockElement> createModuleChildren() {
-    return [_createUnit(), _createMeasurement(), _createComputeMethod(), _createComputeTable(), _createComputeVerbatimTable(), _createComputeVerbatimRangeTable()];
+    return [_createUnit(),
+     _createMeasurement(),
+     _createComputeMethod(),
+     _createComputeTable(),
+     _createComputeVerbatimTable(),
+     _createComputeVerbatimRangeTable(),
+     _createGroups()];
   }
 
   BlockElement _createUnit() {
@@ -777,6 +784,88 @@ class TokenParser {
         return A2LElementParsingOptions(anno, [], optional);
       } else {
         throw ParsingException('Parse tree built wrong, parent of ANNOTATION must be derived from AnnotationContainer!','', 0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  
+  BlockElement _createFunctionList() {
+    return BlockElement('FUNCTION_LIST', (s, p) {
+      if (p is DataContainer) {
+        return A2LElementParsingOptions(p, [
+                Value('Function id', ValueType.text, (ValueType t, List<String> s) {
+                  p.functions.add(s[0]);
+                }, multiplicity: -1)], []);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of FUNCTION_LIST must be derived from DataContainer!','', 0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createCharacteristicsList({String key='REF_CHARACTERISTIC'}) {
+    return BlockElement(key, (s, p) {
+      if (p is DataContainer) {
+        return A2LElementParsingOptions(p, [
+                Value('Characteristics id', ValueType.text, (ValueType t, List<String> s) {
+                  p.characteristics.add(s[0]);
+                }, multiplicity: -1)], []);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of $key must be derived from DataContainer!','', 0);
+      }
+    }, optional: true, unique: false);
+  }
+  
+  BlockElement _createMeasurementsList({String key='REF_MEASUREMENT'}) {
+    return BlockElement(key, (s, p) {
+      if (p is DataContainer) {
+        return A2LElementParsingOptions(p, [
+                Value('Measurements id', ValueType.text, (ValueType t, List<String> s) {
+                  p.measurements.add(s[0]);
+                }, multiplicity: -1)], []);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of $key must be derived from DataContainer!','', 0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createGroupList({String key='SUB_GROUP'}) {
+    return BlockElement(key, (s, p) {
+      if (p is DataContainer) {
+        return A2LElementParsingOptions(p, [
+                Value('Group id', ValueType.text, (ValueType t, List<String> s) {
+                  p.groups.add(s[0]);
+                }, multiplicity: -1)], []);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of $key must be derived from DataContainer!','', 0);
+      }
+    }, optional: true, unique: false);
+  }
+  
+  BlockElement _createGroups() {
+    return BlockElement('GROUP', (s, p) {
+      if (p is Module) {
+        var grp = Group();
+        p.groups.add(grp);
+
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            grp.name = s[0];
+          }),
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+            grp.description = removeQuotes(s[0]);
+          })
+        ];
+
+        var optional = <A2LElement>[
+          _createAnnotation(),
+          _createFunctionList(),
+          _createCharacteristicsList(),
+          _createMeasurementsList(),
+          _createGroupList()
+        ];
+        return A2LElementParsingOptions(grp, values, optional);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of GROUP must be module!','', 0);
       }
     }, optional: true, unique: false);
   }

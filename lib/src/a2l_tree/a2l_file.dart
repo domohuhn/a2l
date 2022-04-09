@@ -3,6 +3,7 @@ import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
+import 'package:a2l/src/a2l_tree/group.dart';
 
 enum Datatype {
   uint8,
@@ -129,11 +130,13 @@ class Module {
   List<Unit> units;
   List<ComputeMethod> computeMethods;
   List<ComputeTableBase> computeTables;
+  List<Group> groups;
   Module() :
     measurements = [],
     units = [],
     computeMethods = [],
-    computeTables = []
+    computeTables = [],
+    groups = []
   ;
 }
 

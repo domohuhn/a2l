@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
 
   var parser = TokenParser();
-  group('Parse comput methods', (){
+  group('Parse compute methods', (){
     test('Parse mandatory', (){
       prepareTestData(parser, ['/begin','COMPU_METHOD','test_cm', '"This is a test cm"', 'IDENTICAL', '"%8.4"', '"[m]"', '/end', 'COMPU_METHOD']);
       var file = parser.parse();
