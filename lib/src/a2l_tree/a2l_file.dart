@@ -1,4 +1,5 @@
 
+import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
@@ -26,12 +27,14 @@ class Module {
   String name = '';
   String description = '';
   List<Measurement> measurements;
+  List<Characteristic> characteristics;
   List<Unit> units;
   List<ComputeMethod> computeMethods;
   List<ComputeTableBase> computeTables;
   List<Group> groups;
   Module() :
     measurements = [],
+    characteristics = [],
     units = [],
     computeMethods = [],
     computeTables = [],

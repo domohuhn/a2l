@@ -1,3 +1,4 @@
+import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
@@ -146,19 +147,19 @@ class TokenParser {
 
   void _parseRecursive(dynamic current, int start, int end)
   {
-    print("RECURSING $start $end");
+    //print("RECURSING $start $end");
     for (var i=start; i<end; ++i) {
       currentIndex = i;
-      print("= Token ${tokens[i]}");
+      //print("= Token ${tokens[i]}");
       if (tokens[i]=='/begin') {
-        print("begin ${tokens[i+1]}");
+        //print("begin ${tokens[i+1]}");
         var limit = findMatchingEndToken();
         var expected = findExpected(tokens[i+1]);
-        print("$expected");
+        //print("$expected");
         if(expected!=null) {
-          print("expected ${expected.name}");
+          //print("expected ${expected.name}");
           if(expected is BlockElement){
-            print("is block");
+            //print("is block");
             currentIndex = i+2;
             stack.add(expectedTokens);
             var opts = expected.prepareNewLement(current);
@@ -177,7 +178,7 @@ class TokenParser {
           }
         }
         i = limit+1;
-        print("new index $currentIndex");
+        //print("new index $currentIndex");
         continue;
       }
       for(final token in expectedTokens) {
@@ -185,7 +186,7 @@ class TokenParser {
           continue;
         }
         if(token is NamedValue) {
-          print("named value $token");
+          //print("named value $token");
           currentIndex = i+1;
           token.keyFound();
           parseRequiredOrderedElements(token.values,end);
@@ -207,7 +208,7 @@ class TokenParser {
 
   A2LElement? findExpected(String nm){
     for(final token in expectedTokens) {
-        print("${token.name} == $nm");
+       //print("${token.name} == $nm");
         if(token.name == nm) {
           return token;
         }
@@ -221,7 +222,7 @@ class TokenParser {
     if ( values.length + currentIndex > max) {
       throw ParsingException('Token "$currentToken" has at least ${values.length} mandatory values! Only found ${max-currentIndex}', '', currentIndex);
     }
-    print("Parse $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
+    //print("Parse $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
 
     for(var k=0; k<values.length; k++) {
         if(values[k].multiplicity>=0){
@@ -238,11 +239,11 @@ class TokenParser {
     if (k != values.length - 1) {
       throw ParsingException('Value ${values[k]} at $k (of ${values.length}) requested all remaining tokens! Some values could not be processed','',currentIndex);
     }
-    print("Parse all $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
+    //print("Parse all $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
 
     try {
       while (currentIndex + values[k].requiredTokens <= max) {
-        print("$currentIndex to ${currentIndex+values[k].requiredTokens} : ${tokens[currentIndex]} to ${tokens[currentIndex+values[k].requiredTokens]}");
+        //print("$currentIndex to ${currentIndex+values[k].requiredTokens} : ${tokens[currentIndex]} to ${tokens[currentIndex+values[k].requiredTokens]}");
         values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
         currentIndex += values[k].requiredTokens;
       }
@@ -339,7 +340,7 @@ class TokenParser {
       return A2LElementParsingOptions(p,s.values , s.namedValues);
     } ,values: [
       Value('Comment', ValueType.text, (ValueType t, List<String> s) {
-        print('setting comment to ${s[0]}');
+        //print('setting comment to ${s[0]}');
         parsed.project.comment = removeQuotes(s[0]);
       })
     ], namedValues: [
@@ -347,7 +348,7 @@ class TokenParser {
           'VERSION',
           [
             Value('version number', ValueType.text, (ValueType t, List<String> s) {
-        print('setting version to ${s[0]}');
+        //print('setting version to ${s[0]}');
               parsed.project.version = s[0];
             })
           ],
@@ -356,7 +357,7 @@ class TokenParser {
           'PROJECT_NO',
           [
             Value('project number', ValueType.text, (ValueType t, List<String> s) {
-        print('setting num to $s');
+        //print('setting num to $s');
               parsed.project.number = s[0];
             })
           ],
@@ -368,11 +369,11 @@ class TokenParser {
       p.project.modules.add(module);
       var values = [
         Value('Name', ValueType.id, (ValueType t, List<String> s) {
-        print("Setting name $s");
+        //print("Setting name $s");
         module.name = s[0];
       }),
       Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-        print("Setting desc $s");
+        //print("Setting desc $s");
         module.description = removeQuotes(s[0]);
       })
       ];
@@ -386,6 +387,7 @@ class TokenParser {
   List<BlockElement> createModuleChildren() {
     return [_createUnit(),
      _createMeasurement(),
+     _createCharacteristic(),
      _createComputeMethod(),
      _createComputeTable(),
      _createComputeVerbatimTable(),
@@ -613,6 +615,87 @@ class TokenParser {
             'Parse tree built wrong, parent of MEASUREMENT must be module!',
             '',
             0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  
+  BlockElement _createCharacteristic() {
+    return BlockElement('CHARACTERISTIC', (s, p) {
+      if (p is Module) {
+        var char = Characteristic();
+        p.characteristics.add(char);
+
+        var values = _createSharedValuesMeasurementCharacteristicStart(char);
+        values.addAll([
+          Value('Type', ValueType.text, (ValueType t, List<String> s) {
+            char.type = characteristicTypeFromString(s[0]);
+          }),
+          Value('Address', ValueType.integer, (ValueType t, List<String> s) {
+            char.address = int.parse(s[0]);
+          }),
+          Value('Deposit', ValueType.id, (ValueType t, List<String> s) {
+            char.recordLayout =s[0];
+          }),
+          Value('MaxDiff', ValueType.floating, (ValueType t, List<String> s) {
+            char.maxDiff = double.parse(s[0]);
+          }),
+          Value('Conversion', ValueType.id, (ValueType t, List<String> s) {
+            char.conversionMethod = s[0];
+          }),
+        ]);
+        values.addAll(_createSharedValuesMeasurementCharacteristicEnd(char));
+
+        var optional = _createSharedOptionalsMeasurementCharacteristic(char);
+        optional.addAll(<A2LElement>[
+          NamedValue('READ_ONLY',[], callback: () {char.readWrite = false;}, optional: true),
+          NamedValue('GUARD_RAILS',[], callback: () {char.guardRails = true;}, optional: true),
+          NamedValue('STEP_SIZE',[Value('Step size', ValueType.floating, (p0, p1) { char.stepSize = double.parse(p1[0]); })], optional: true),
+          NamedValue('NUMBER',[Value('number', ValueType.integer, (p0, p1) { char.number = int.parse(p1[0]); })], optional: true),
+          NamedValue('COMPARISON_QUANTITY',[Value('COMPARISON_QUANTITY', ValueType.id, (p0, p1) { char.comparisionQuantity = p1[0]; })], optional: true),
+          NamedValue('CALIBRATION_ACCESS',[Value('CALIBRATION_ACCESS', ValueType.text, (p0, p1) { char.calibrationAccess = calibrationAccessFromString(p1[0]); })], optional: true),
+          NamedValue('EXTENDED_LIMITS',[Value('EXTENDED_LIMITS', ValueType.floating, (p0, p1) {
+            char.extendedLimits ??= ExtendedLimits();
+            char.extendedLimits!.lowerLimit = double.parse(p1[0]); 
+            char.extendedLimits!.upperLimit = double.parse(p1[1]); 
+          },requiredTokens: 2)], optional: true),
+          _createAnnotation(),
+          _createFunctionList(),
+          _createVirtualCharacteristics(),
+          _createVirtualCharacteristics(key: 'DEPENDENT_CHARACTERISTIC', virtual: false)
+        ]);
+        return A2LElementParsingOptions(char, values, optional);
+      } else {
+        throw ParsingException(
+            'Parse tree built wrong, parent of MEASUREMENT must be module!',
+            '',
+            0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createVirtualCharacteristics({String key='VIRTUAL_CHARACTERISTIC', bool virtual=true}) {
+    return BlockElement(key, (s, p) {
+      if (p is Characteristic) {
+        return A2LElementParsingOptions(p, [
+                Value('Formula', ValueType.text, (ValueType t, List<String> s) {
+                  if(virtual) {
+                    p.virtualCharacteristics ??= DependentCharacteristics();
+                    p.virtualCharacteristics!.formula= removeQuotes(s[0]);
+                  } else {
+                    p.dependentCharacteristics ??= DependentCharacteristics();
+                    p.dependentCharacteristics!.formula= removeQuotes(s[0]);
+                  }
+                }),
+                Value('Characteristics id', ValueType.id, (ValueType t, List<String> s) {
+                  if(virtual) {
+                    p.virtualCharacteristics!.characteristics.add(s[0]);
+                  } else {
+                    p.dependentCharacteristics!.characteristics.add(s[0]);;
+                  }
+                }, multiplicity: -1)], []);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of $key must be derived from Characteristic!','', 0);
       }
     }, optional: true, unique: false);
   }
