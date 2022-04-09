@@ -1,0 +1,17 @@
+
+ASAP2_VERSION 1 61
+
+/begin PROJECT DH.XCP.SAMPLE
+	"XCP sim project"
+	/begin HEADER
+      "Project header"
+	  VERSION "DH A100"
+      PROJECT_NO DH20221
+	/end HEADER
+
+	/begin MODULE
+      DH.XCP.SIM
+      "XCP Simulation module"
+	/end MODULE
+
+/end PROJECT
