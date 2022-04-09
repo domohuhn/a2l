@@ -1,5 +1,6 @@
 
 import 'package:a2l/src/parsing_exception.dart';
+import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 
@@ -68,7 +69,7 @@ IndexMode indexModeFromString(String s) {
   }
 }
 
-class Measurement {
+class Measurement extends AnnotationContainer {
   String name = '';
   String description = '';
   Datatype datatype = Datatype.int8;
@@ -77,7 +78,6 @@ class Measurement {
   double accuracy = 1.0;
   double lowerLimit = 1.0;
   double upperLimit = 1.0;
-  // TODO ANNOTATION
   int? arraySize;
   int? bitMask;
   // TODO BIT operation

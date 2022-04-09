@@ -1,5 +1,6 @@
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
+import 'package:a2l/src/a2l_tree/annotation.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -189,6 +190,7 @@ class TokenParser {
     if ( values.length + currentIndex > max) {
       throw ParsingException('Token "$currentToken" has at least ${values.length} mandatory values! Only found ${max-currentIndex}', '', currentIndex);
     }
+    print("Parse $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
 
     for(var k=0; k<values.length; k++) {
         if(values[k].multiplicity>=0){
@@ -205,9 +207,11 @@ class TokenParser {
     if (k != values.length - 1) {
       throw ParsingException('Value ${values[k]} at $k (of ${values.length}) requested all remaining tokens! Some values could not be processed','',currentIndex);
     }
+    print("Parse all $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
 
     try {
-      while (currentIndex + values[k].requiredTokens < max) {
+      while (currentIndex + values[k].requiredTokens <= max) {
+        print("$currentIndex to ${currentIndex+values[k].requiredTokens} : ${tokens[currentIndex]} to ${tokens[currentIndex+values[k].requiredTokens]}");
         values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
         currentIndex += values[k].requiredTokens;
       }
@@ -215,7 +219,7 @@ class TokenParser {
       throw ParsingException('Token $currentIndex "${tokens[currentIndex]}" could not be converted to ${values[k]}','', currentIndex);
     }
 
-    if (currentIndex != max - 1) {
+    if (currentIndex != max) {
       throw ParsingException('Not all tokens could be processed! Target $max, stride ${values[k].requiredTokens}, ended at $currentIndex','', currentIndex);
     }
   }
@@ -511,7 +515,8 @@ class TokenParser {
             Value('segment', ValueType.text, (ValueType t, List<String> s) {
               measurement.memorySegment = s[0];
             })
-          ], optional: true)
+          ], optional: true),
+          _createAnnotation()
         ];
         return A2LElementParsingOptions(measurement, values, optional);
       } else {
@@ -737,6 +742,41 @@ class TokenParser {
             'Parse tree built wrong, parent of MEASUREMENT must be module!',
             '',
             0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createAnnotation() {
+    return BlockElement('ANNOTATION', (s, p) {
+      if (p is AnnotationContainer) {
+        var anno = Annotation();
+        p.annotations.add(anno);
+
+        var optional = <A2LElement>[
+          NamedValue('ANNOTATION_LABEL', [
+            Value('ANNOTATION_LABEL', ValueType.text, (ValueType t, List<String> s) {
+              anno.label = removeQuotes(s[0]);
+            }),
+          ], optional: true),
+          NamedValue('ANNOTATION_ORIGIN', [
+            Value('ANNOTATION_ORIGIN', ValueType.text, (ValueType t, List<String> s) {
+              anno.origin = removeQuotes(s[0]);
+            }),
+          ], optional: true),
+          BlockElement('ANNOTATION_TEXT', (s, p) {
+            if(p is Annotation) {
+              return A2LElementParsingOptions(anno, [
+                Value('TEXT', ValueType.text, (ValueType t, List<String> s) {
+                  anno.text.add(removeQuotes(s[0]));
+                }, multiplicity: -1)], []);
+            } else {
+              throw ParsingException('Parse tree built wrong, parent of ANNOTATION_TEXT must be derived from Annotation!','', 0);
+            }
+          },optional: true)
+        ];
+        return A2LElementParsingOptions(anno, [], optional);
+      } else {
+        throw ParsingException('Parse tree built wrong, parent of ANNOTATION must be derived from AnnotationContainer!','', 0);
       }
     }, optional: true, unique: false);
   }

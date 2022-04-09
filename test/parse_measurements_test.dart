@@ -2,6 +2,7 @@ import 'package:a2l/src/a2l_parser.dart';
 import 'package:a2l/src/a2l_tree/a2l_file.dart';
 import 'prepare_test_data.dart';
 import 'package:test/test.dart';
+import 'package:a2l/src/a2l_tree/annotation.dart';
 
 void main() {
 
@@ -352,6 +353,121 @@ void main() {
       expect(file.project.modules[0].measurements[0].layout, null);
       expect(file.project.modules[0].measurements[0].memorySegment, 'Some.Segment');
       expect(file.project.modules[0].measurements[0].unit, null);
+    });
+
+    test('Parse optional ANNOTATION empty', (){
+      prepareTestData(parser, ['/begin','MEASUREMENT','test_measure', '"This is a test measurement"', 'SWORD', 'CM_moo', '12', '1', '-32768', '32767',
+        '/begin', 'ANNOTATION', '/end', 'ANNOTATION',
+        '/end', 'MEASUREMENT']);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      expect(file.project.modules[0].measurements.length, 1);
+      expect(file.project.modules[0].measurements[0].name, 'test_measure');
+      expect(file.project.modules[0].measurements[0].description, 'This is a test measurement');
+      expect(file.project.modules[0].measurements[0].datatype, Datatype.int16);
+      expect(file.project.modules[0].measurements[0].conversionMethod, 'CM_moo');
+      expect(file.project.modules[0].measurements[0].resolution, 12);
+      expect(file.project.modules[0].measurements[0].accuracy, 1.0);
+      expect(file.project.modules[0].measurements[0].lowerLimit, -32768);
+      expect(file.project.modules[0].measurements[0].upperLimit, 32767);
+      expect(file.project.modules[0].measurements[0].address, null);
+      expect(file.project.modules[0].measurements[0].addressExtension,  null);
+      expect(file.project.modules[0].measurements[0].arraySize, null);
+      expect(file.project.modules[0].measurements[0].bitMask, null);
+      expect(file.project.modules[0].measurements[0].displayIdentifier, null);
+      expect(file.project.modules[0].measurements[0].endianess, null);
+      expect(file.project.modules[0].measurements[0].errorMask, null);
+      expect(file.project.modules[0].measurements[0].format, null);
+      expect(file.project.modules[0].measurements[0].layout, null);
+      expect(file.project.modules[0].measurements[0].memorySegment, null);
+      expect(file.project.modules[0].measurements[0].unit, null);
+      final annotations = file.project.modules[0].measurements[0].annotations;
+      expect(annotations.length, 1);
+      expect(annotations[0].label, null);
+      expect(annotations[0].origin, null);
+      expect(annotations[0].text.length, 0);
+    });
+
+    test('Parse optional ANNOTATION', (){
+      prepareTestData(parser, ['/begin','MEASUREMENT','test_measure', '"This is a test measurement"', 'SWORD', 'CM_moo', '12', '1', '-32768', '32767',
+        '/begin', 'ANNOTATION', '/begin', 'ANNOTATION_TEXT', '"AA\\n"', '"BB\\n"', '"CC\\n"', '/end', 'ANNOTATION_TEXT',
+        'ANNOTATION_ORIGIN', '"some origin"', 'ANNOTATION_LABEL', '"some label"', '/end', 'ANNOTATION',
+        '/end', 'MEASUREMENT']);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      expect(file.project.modules[0].measurements.length, 1);
+      expect(file.project.modules[0].measurements[0].name, 'test_measure');
+      expect(file.project.modules[0].measurements[0].description, 'This is a test measurement');
+      expect(file.project.modules[0].measurements[0].datatype, Datatype.int16);
+      expect(file.project.modules[0].measurements[0].conversionMethod, 'CM_moo');
+      expect(file.project.modules[0].measurements[0].resolution, 12);
+      expect(file.project.modules[0].measurements[0].accuracy, 1.0);
+      expect(file.project.modules[0].measurements[0].lowerLimit, -32768);
+      expect(file.project.modules[0].measurements[0].upperLimit, 32767);
+      expect(file.project.modules[0].measurements[0].address, null);
+      expect(file.project.modules[0].measurements[0].addressExtension,  null);
+      expect(file.project.modules[0].measurements[0].arraySize, null);
+      expect(file.project.modules[0].measurements[0].bitMask, null);
+      expect(file.project.modules[0].measurements[0].displayIdentifier, null);
+      expect(file.project.modules[0].measurements[0].endianess, null);
+      expect(file.project.modules[0].measurements[0].errorMask, null);
+      expect(file.project.modules[0].measurements[0].format, null);
+      expect(file.project.modules[0].measurements[0].layout, null);
+      expect(file.project.modules[0].measurements[0].memorySegment, null);
+      expect(file.project.modules[0].measurements[0].unit, null);
+      final annotations = file.project.modules[0].measurements[0].annotations;
+      expect(annotations.length, 1);
+      expect(annotations[0].label, 'some label');
+      expect(annotations[0].origin, 'some origin');
+      expect(annotations[0].text.length, 3);
+      expect(annotations[0].text[0], 'AA\\n');
+      expect(annotations[0].text[1], 'BB\\n');
+      expect(annotations[0].text[2], 'CC\\n');
+    });
+    
+    test('Parse optional ANNOTATION multiple', (){
+      prepareTestData(parser, ['/begin','MEASUREMENT','test_measure', '"This is a test measurement"', 'SWORD', 'CM_moo', '12', '1', '-32768', '32767',
+        '/begin', 'ANNOTATION', '/begin', 'ANNOTATION_TEXT', '"AA\\n"', '"BB\\n"', '"CC\\n"', '/end', 'ANNOTATION_TEXT',
+        'ANNOTATION_ORIGIN', '"some origin"', 'ANNOTATION_LABEL', '"some label"', '/end', 'ANNOTATION',
+        '/begin', 'ANNOTATION', 'ANNOTATION_LABEL', '"some label2"', '/begin', 'ANNOTATION_TEXT', '"AA2\\n"', '"BB2\\n"', '/end', 'ANNOTATION_TEXT',
+        'ANNOTATION_ORIGIN', '"some origin2"',  '/end', 'ANNOTATION',
+        '/end', 'MEASUREMENT']);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      expect(file.project.modules[0].measurements.length, 1);
+      expect(file.project.modules[0].measurements[0].name, 'test_measure');
+      expect(file.project.modules[0].measurements[0].description, 'This is a test measurement');
+      expect(file.project.modules[0].measurements[0].datatype, Datatype.int16);
+      expect(file.project.modules[0].measurements[0].conversionMethod, 'CM_moo');
+      expect(file.project.modules[0].measurements[0].resolution, 12);
+      expect(file.project.modules[0].measurements[0].accuracy, 1.0);
+      expect(file.project.modules[0].measurements[0].lowerLimit, -32768);
+      expect(file.project.modules[0].measurements[0].upperLimit, 32767);
+      expect(file.project.modules[0].measurements[0].address, null);
+      expect(file.project.modules[0].measurements[0].addressExtension,  null);
+      expect(file.project.modules[0].measurements[0].arraySize, null);
+      expect(file.project.modules[0].measurements[0].bitMask, null);
+      expect(file.project.modules[0].measurements[0].displayIdentifier, null);
+      expect(file.project.modules[0].measurements[0].endianess, null);
+      expect(file.project.modules[0].measurements[0].errorMask, null);
+      expect(file.project.modules[0].measurements[0].format, null);
+      expect(file.project.modules[0].measurements[0].layout, null);
+      expect(file.project.modules[0].measurements[0].memorySegment, null);
+      expect(file.project.modules[0].measurements[0].unit, null);
+      final annotations = file.project.modules[0].measurements[0].annotations;
+      expect(annotations.length, 2);
+      expect(annotations[0].label, 'some label');
+      expect(annotations[0].origin, 'some origin');
+      expect(annotations[0].text.length, 3);
+      expect(annotations[0].text[0], 'AA\\n');
+      expect(annotations[0].text[1], 'BB\\n');
+      expect(annotations[0].text[2], 'CC\\n');
+      
+      expect(annotations[1].label, 'some label2');
+      expect(annotations[1].origin, 'some origin2');
+      expect(annotations[1].text.length, 2);
+      expect(annotations[1].text[0], 'AA2\\n');
+      expect(annotations[1].text[1], 'BB2\\n');
     });
 
   });
