@@ -61,9 +61,36 @@ class Value extends A2LElement {
   }
 }
 
+/// Empty function, nneded for default argument.
+void doNothing()
+{
+}
+
+
+/// This class represent a named value inside the A2L file.
+/// The are typcially entered as KEY value0 value1 ...
+/// 
 class NamedValue extends A2LElement {
+  /// The mandatory values required after the key word.
   List<Value> values;
-  NamedValue(String name, this.values, {bool optional=false, bool unique=true}) : super(name, optional, unique: unique);
+  
+  /// The callback to invoke when the key is found inside the file.
+  final void Function() _callback;
+
+  /// Constructor for named values. 
+  /// [name] is the key in the file.
+  /// [values] are the mandatory values after the key.
+  /// [optional] determines if the key is required. Parsing will throw an exception if [optional] is false and the key was not found.
+  /// [unique] determines if the key can occur more than once. Parsing will throw an exception if [unique] is false and the key was found more than once.
+  /// [callback] is invoked whenever the key is found.
+  NamedValue(String name, this.values, {bool optional=false, bool unique=true, void Function() callback=doNothing}) 
+  : _callback=callback,
+  super(name, optional, unique: unique);
+
+  /// This method is invoked whenever the NamedValue key is found in the A2L file.
+  void keyFound() {
+    _callback();
+  }
 }
 
 class A2LElementParsingOptions {
@@ -158,6 +185,7 @@ class TokenParser {
         if(token is NamedValue) {
           print("named value $token");
           currentIndex = i+1;
+          token.keyFound();
           parseRequiredOrderedElements(token.values,end);
           token.count += 1;
           i+=token.values.length;
@@ -861,7 +889,8 @@ class TokenParser {
           _createFunctionList(),
           _createCharacteristicsList(),
           _createMeasurementsList(),
-          _createGroupList()
+          _createGroupList(),
+          NamedValue('ROOT', [], optional: true, unique: true, callback: (){grp.root = true;})
         ];
         return A2LElementParsingOptions(grp, values, optional);
       } else {
