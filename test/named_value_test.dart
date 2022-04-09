@@ -11,11 +11,11 @@ void main() {
     var major = 0;
     var minor = 0;
     var values = <Value>[
-        Value('Major a2l version', ValueType.integer, (ValueType t, String s) {
-          major = int.parse(s);
+        Value('Major a2l version', ValueType.integer, (ValueType t, List<String> s) {
+          major = int.parse(s[0]);
         }),
-        Value('Minor a2l version', ValueType.integer, (ValueType t, String s) {
-          minor = int.parse(s);
+        Value('Minor a2l version', ValueType.integer, (ValueType t, List<String> s) {
+          minor = int.parse(s[0]);
         })
       ];
 

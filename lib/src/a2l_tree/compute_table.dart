@@ -8,11 +8,14 @@ class ComputeTableEntry {
   bool isFloat = false;
   double outNumeric = 0.0;
   String outString = '';
+
+  ComputeTableEntry({this.x = 0.0, this.x_up = 0.0, this.isFloat = false, this.outNumeric = 0.0, this.outString = ''});
 }
 
 abstract class ComputeTableBase {
   String name = '';
   String description = '';
+  ComputeMethodType type = ComputeMethodType.TAB_INTP;
   List<ComputeTableEntry> table;
   ComputeTableBase() : table=[];
 
@@ -35,7 +38,6 @@ abstract class ComputeTableBase {
 
 
 class ComputeTable extends ComputeTableBase {
-  ComputeMethodType type = ComputeMethodType.TAB_INTP;
 
   @override
   String convertToPhysical(double input) {
@@ -83,7 +85,9 @@ class ComputeTable extends ComputeTableBase {
 
 
 class VerbatimTable extends ComputeTableBase {
-  ComputeMethodType type = ComputeMethodType.TAB_VERB;
+  VerbatimTable() {
+    type = ComputeMethodType.TAB_VERB;
+  }
 
   @override
   String convertToPhysical(double input) {
@@ -101,7 +105,9 @@ class VerbatimTable extends ComputeTableBase {
 
 
 class VerbatimRangeTable extends ComputeTableBase {
-  ComputeMethodType type = ComputeMethodType.TAB_VERB;
+  VerbatimRangeTable() {
+    type = ComputeMethodType.TAB_VERB;
+  }
 
   @override
   String convertToPhysical(double input) {

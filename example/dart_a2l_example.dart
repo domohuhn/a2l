@@ -1,4 +1,4 @@
-import 'package:dart_a2l/dart_a2l.dart';
+import 'package:a2l/dart_a2l.dart';
 
 void main() {
   var awesome = Awesome();

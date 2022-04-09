@@ -1,6 +1,7 @@
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
+import 'package:a2l/src/a2l_tree/compute_table.dart';
 
 enum Datatype {
   uint8,
@@ -127,10 +128,12 @@ class Module {
   List<Measurement> measurements;
   List<Unit> units;
   List<ComputeMethod> computeMethods;
+  List<ComputeTableBase> computeTables;
   Module() :
     measurements = [],
     units = [],
-    computeMethods = []
+    computeMethods = [],
+    computeTables = []
   ;
 }
 

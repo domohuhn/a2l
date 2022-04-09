@@ -1,4 +1,5 @@
 import 'package:a2l/src/a2l_tree/compute_method.dart';
+import 'package:a2l/src/a2l_tree/compute_table.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -24,28 +25,33 @@ class A2LElement {
 class Value extends A2LElement {
   ValueType type;
   bool _valueSet = false;
-  String _value = '';
+  List<String> _value;
   /// how many times a value should be read
-  int multiplicity = 1;
+  int multiplicity;
   /// how many String tokens are needed to initialize this value
-  int requiredTokens = 1;
+  int requiredTokens;
 
-  final void Function(ValueType,String) _callback;
+  final void Function(ValueType,List<String>) _callback;
 
-  Value(String name, this.type, this._callback) : super(name,false);
+  Value(String name, this.type, this._callback, {this.multiplicity = 1, this.requiredTokens = 1}) : _value = [], super(name,false);
 
-  set value(String val) {
-    if(val == '/begin' || val == '/end') {
-      throw ParsingException('A parsed value cannot be $val', '', 0);
+  set value(List<String> values) {
+    for(final val in values) {
+      if(val == '/begin' || val == '/end') {
+        throw ParsingException('A parsed value cannot be $val', '', 0);
+      }
     }
-    _value = val;
+    if(values.length != requiredTokens) {
+        throw ParsingException('A value of type "$name" requires exactly $requiredTokens, but received ${values.length}', '', 0);
+    }
+    _value = values;
     _valueSet = true;
     _callback(type,_value);
   }
 
   bool get valueSet => _valueSet;
 
-  String get value => _value;
+  List<String> get value => _value;
 
   @override
   String toString() {
@@ -125,7 +131,7 @@ class TokenParser {
             currentIndex = i+2;
             stack.add(expectedTokens);
             var opts = expected.prepareNewLement(current);
-            parseRequiredOrderedElements(opts.mandatoryPositional, currentIndex+opts.mandatoryPositional.length);
+            parseRequiredOrderedElements(opts.mandatoryPositional,limit);
             // Todo push stack, change expected
 
             expectedTokens = [];
@@ -150,7 +156,7 @@ class TokenParser {
         if(token is NamedValue) {
           print("named value $token");
           currentIndex = i+1;
-          parseRequiredOrderedElements(token.values, currentIndex+token.values.length);
+          parseRequiredOrderedElements(token.values,end);
           token.count += 1;
           i+=token.values.length;
           continue;
@@ -177,21 +183,55 @@ class TokenParser {
     return null;
   }
 
+  /// [max] is one past the end.
   void parseRequiredOrderedElements(List<Value> values, int max)
   {
     if ( values.length + currentIndex > max) {
-      throw ParsingException('Token "$currentToken" has ${values.length} mandatory values! Only found ${max-currentIndex}', '', currentIndex);
+      throw ParsingException('Token "$currentToken" has at least ${values.length} mandatory values! Only found ${max-currentIndex}', '', currentIndex);
     }
 
     for(var k=0; k<values.length; k++) {
-      try {
-        values[k].value = tokens[currentIndex+k];
-      }
-      catch (ex) {
-        throw ParsingException('Token ${currentIndex+k} "${tokens[currentIndex+k]}" could not be converted to ${values[k]}', '', currentIndex+k);
-      }
+        if(values[k].multiplicity>=0){
+          _parseSingleValue(values, max, k);
+        }
+        else {
+          _parseRemainingTokens(values, max, k);
+          break;
+        }
     }
-    currentIndex += values.length;
+  }
+
+  void _parseRemainingTokens(List<Value> values, int max, int k,) {
+    if (k != values.length - 1) {
+      throw ParsingException('Value ${values[k]} at $k (of ${values.length}) requested all remaining tokens! Some values could not be processed','',currentIndex);
+    }
+
+    try {
+      while (currentIndex + values[k].requiredTokens < max) {
+        values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
+        currentIndex += values[k].requiredTokens;
+      }
+    } catch (ex) {
+      throw ParsingException('Token $currentIndex "${tokens[currentIndex]}" could not be converted to ${values[k]}','', currentIndex);
+    }
+
+    if (currentIndex != max - 1) {
+      throw ParsingException('Not all tokens could be processed! Target $max, stride ${values[k].requiredTokens}, ended at $currentIndex','', currentIndex);
+    }
+  }
+
+  void _parseSingleValue(List<Value> values, int max, int k) {
+    for (var i = 0; i < values[k].multiplicity; ++i) {
+      if (currentIndex + values[k].requiredTokens > max) {
+        throw ParsingException('Not enough tokens! Target $max, stride ${values[k].requiredTokens}, multiplicity ${values[k].multiplicity}, ended at iteration $i, token $currentIndex','',currentIndex);
+      }
+      try {
+        values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
+      } catch (ex) {
+        throw ParsingException('Token $currentIndex "${tokens[currentIndex]}" could not be converted to ${values[k]}','',currentIndex);
+      }
+      currentIndex += values[k].requiredTokens;
+    }
   }
 
 
@@ -222,29 +262,29 @@ class TokenParser {
   void setTopLevelTokens() {
     parsed = A2LFile();
     var asap2VersionValues = <Value>[
-        Value('VersionNo', ValueType.integer, (ValueType t, String s) {
-          parsed.a2lMajorVersion = int.parse(s);
+        Value('VersionNo', ValueType.integer, (ValueType t, List<String> s) {
+          parsed.a2lMajorVersion = int.parse(s[0]);
         }),
-        Value('UpgradeNo', ValueType.integer, (ValueType t, String s) {
-          parsed.a2lMinorVersion = int.parse(s);
+        Value('UpgradeNo', ValueType.integer, (ValueType t, List<String> s) {
+          parsed.a2lMinorVersion = int.parse(s[0]);
         })
     ];
     var asap2MLVersionValues = <Value>[
-        Value('VersionNo', ValueType.integer, (ValueType t, String s) {
-          parsed.a2mlMajorVersion = int.parse(s);
+        Value('VersionNo', ValueType.integer, (ValueType t, List<String> s) {
+          parsed.a2mlMajorVersion = int.parse(s[0]);
         }),
-        Value('UpgradeNo', ValueType.integer, (ValueType t, String s) {
-          parsed.a2mlMinorVersion = int.parse(s);
+        Value('UpgradeNo', ValueType.integer, (ValueType t, List<String> s) {
+          parsed.a2mlMinorVersion = int.parse(s[0]);
         })
     ];
 
     
     var projectValues = <Value>[
-        Value('Name', ValueType.id, (ValueType t, String s) {
-          parsed.project.name = s;
+        Value('Name', ValueType.id, (ValueType t, List<String> s) {
+          parsed.project.name = s[0];
         }),
-        Value('LongIdentifier', ValueType.integer, (ValueType t, String s) {
-          parsed.project.longName = removeQuotes(s);
+        Value('LongIdentifier', ValueType.integer, (ValueType t, List<String> s) {
+          parsed.project.longName = removeQuotes(s[0]);
         })
     ];
 
@@ -263,26 +303,26 @@ class TokenParser {
     var header = BlockElement('HEADER',(s,p) {
       return A2LElementParsingOptions(p,s.values , s.namedValues);
     } ,values: [
-      Value('Comment', ValueType.text, (ValueType t, String s) {
-        print('setting comment to $s');
-        parsed.project.comment = removeQuotes(s);
+      Value('Comment', ValueType.text, (ValueType t, List<String> s) {
+        print('setting comment to ${s[0]}');
+        parsed.project.comment = removeQuotes(s[0]);
       })
     ], namedValues: [
       NamedValue(
           'VERSION',
           [
-            Value('version number', ValueType.text, (ValueType t, String s) {
-        print('setting version to $s');
-              parsed.project.version = s;
+            Value('version number', ValueType.text, (ValueType t, List<String> s) {
+        print('setting version to ${s[0]}');
+              parsed.project.version = s[0];
             })
           ],
           optional: true),
       NamedValue(
           'PROJECT_NO',
           [
-            Value('project number', ValueType.text, (ValueType t, String s) {
+            Value('project number', ValueType.text, (ValueType t, List<String> s) {
         print('setting num to $s');
-              parsed.project.number = s;
+              parsed.project.number = s[0];
             })
           ],
           optional: true),
@@ -292,13 +332,13 @@ class TokenParser {
       var module = Module();
       p.project.modules.add(module);
       var values = [
-        Value('Name', ValueType.id, (ValueType t, String s) {
+        Value('Name', ValueType.id, (ValueType t, List<String> s) {
         print("Setting name $s");
-        module.name = s;
+        module.name = s[0];
       }),
-      Value('LongIdentifier', ValueType.text, (ValueType t, String s) {
+      Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
         print("Setting desc $s");
-        module.description = removeQuotes(s);
+        module.description = removeQuotes(s[0]);
       })
       ];
       return A2LElementParsingOptions(module,values , createModuleChildren());
@@ -309,28 +349,28 @@ class TokenParser {
 
 
   List<BlockElement> createModuleChildren() {
-    return [createUnit(), createMeasurement(), createComputeMethod()];
+    return [_createUnit(), _createMeasurement(), _createComputeMethod(), _createComputeTable(), _createComputeVerbatimTable(), _createComputeVerbatimRangeTable()];
   }
 
-  BlockElement createUnit() {
+  BlockElement _createUnit() {
     return BlockElement('UNIT', (s, p) {
       if (p is Module) {
         var unit = Unit();
         p.units.add(unit);
         var values = [
-          Value('Name', ValueType.id, (ValueType t, String s) {
-            unit.name = s;
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            unit.name = s[0];
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, String s) {
-            unit.description = removeQuotes(s);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+            unit.description = removeQuotes(s[0]);
           }),
-          Value('Display', ValueType.text, (ValueType t, String s) {
-            unit.display = removeQuotes(s);
+          Value('Display', ValueType.text, (ValueType t, List<String> s) {
+            unit.display = removeQuotes(s[0]);
           }),
-          Value('Type', ValueType.text, (ValueType t, String s) {
-            if (s == 'DERIVED') {
+          Value('Type', ValueType.text, (ValueType t, List<String> s) {
+            if (s[0] == 'DERIVED') {
               unit.type = UnitType.DERIVED;
-            } else if (s == 'EXTENDED_SI') {
+            } else if (s[0] == 'EXTENDED_SI') {
               unit.type = UnitType.EXTENDED_SI;
             } else {
               throw ParsingException('Unsupported unit type $s', '', 0);
@@ -339,39 +379,39 @@ class TokenParser {
         ];
         var optional = <A2LElement>[
           NamedValue('REF_UNIT', [
-            Value('Unit', ValueType.id, (ValueType t, String s) {
-              unit.referencedUnit = s;
+            Value('Unit', ValueType.id, (ValueType t, List<String> s) {
+              unit.referencedUnit = s[0];
             }),
           ], optional: true),
           NamedValue('SI_EXPONENTS', [
-            Value('Length', ValueType.id, (ValueType t, String s) {
-              unit.exponent_length = int.parse(s);
+            Value('Length', ValueType.id, (ValueType t, List<String> s) {
+              unit.exponent_length = int.parse(s[0]);
             }),
-            Value('Mass', ValueType.id, (ValueType t, String s) {
-              unit.exponent_mass = int.parse(s);
+            Value('Mass', ValueType.id, (ValueType t, List<String> s) {
+              unit.exponent_mass = int.parse(s[0]);
             }),
-            Value('Time', ValueType.id, (ValueType t, String s) {
-              unit.exponent_time = int.parse(s);
+            Value('Time', ValueType.id, (ValueType t, List<String> s) {
+              unit.exponent_time = int.parse(s[0]);
             }),
-            Value('ElectricCurrent', ValueType.id, (ValueType t, String s) {
-              unit.exponent_electricCurrent = int.parse(s);
+            Value('ElectricCurrent', ValueType.id, (ValueType t, List<String> s) {
+              unit.exponent_electricCurrent = int.parse(s[0]);
             }),
-            Value('Temperature', ValueType.id, (ValueType t, String s) {
-              unit.exponent_temperature = int.parse(s);
+            Value('Temperature', ValueType.id, (ValueType t, List<String> s) {
+              unit.exponent_temperature = int.parse(s[0]);
             }),
-            Value('AmountOfSubstance', ValueType.id, (ValueType t, String s) {
-              unit.exponent_amountOfSubstance = int.parse(s);
+            Value('AmountOfSubstance', ValueType.id, (ValueType t, List<String> s) {
+              unit.exponent_amountOfSubstance = int.parse(s[0]);
             }),
-            Value('LuminousIntensity', ValueType.id, (ValueType t, String s) {
-              unit.exponent_luminousIntensity = int.parse(s);
+            Value('LuminousIntensity', ValueType.id, (ValueType t, List<String> s) {
+              unit.exponent_luminousIntensity = int.parse(s[0]);
             })
           ], optional: true),
           NamedValue('UNIT_CONVERSION', [
-            Value('Slope', ValueType.id, (ValueType t, String s) {
-              unit.conversionLinear_slope = double.parse(s);
+            Value('Slope', ValueType.id, (ValueType t, List<String> s) {
+              unit.conversionLinear_slope = double.parse(s[0]);
             }),
-            Value('Offset', ValueType.id, (ValueType t, String s) {
-              unit.conversionLinear_offset = double.parse(s);
+            Value('Offset', ValueType.id, (ValueType t, List<String> s) {
+              unit.conversionLinear_offset = double.parse(s[0]);
             }),
           ], optional: true),
         ];
@@ -383,93 +423,93 @@ class TokenParser {
     }, optional: true, unique: false);
   }
 
-  BlockElement createMeasurement() {
+  BlockElement _createMeasurement() {
     return BlockElement('MEASUREMENT', (s, p) {
       if (p is Module) {
         var measurement = Measurement();
         p.measurements.add(measurement);
 
         var values = [
-          Value('Name', ValueType.id, (ValueType t, String s) {
-            measurement.name = s;
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            measurement.name = s[0];
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, String s) {
-            measurement.description = removeQuotes(s);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+            measurement.description = removeQuotes(s[0]);
           }),
-          Value('Datatype', ValueType.text, (ValueType t, String s) {
-            measurement.datatype = dataTypeFromString(s);
+          Value('Datatype', ValueType.text, (ValueType t, List<String> s) {
+            measurement.datatype = dataTypeFromString(s[0]);
           }),
-          Value('Conversion', ValueType.text, (ValueType t, String s) {
-            measurement.conversionMethod = s;
+          Value('Conversion', ValueType.text, (ValueType t, List<String> s) {
+            measurement.conversionMethod = s[0];
           }),
-          Value('Resolution', ValueType.integer, (ValueType t, String s) {
-            measurement.resolution = int.parse(s);
+          Value('Resolution', ValueType.integer, (ValueType t, List<String> s) {
+            measurement.resolution = int.parse(s[0]);
           }),
-          Value('Accuracy', ValueType.floating, (ValueType t, String s) {
-            measurement.accuracy = double.parse(s);
+          Value('Accuracy', ValueType.floating, (ValueType t, List<String> s) {
+            measurement.accuracy = double.parse(s[0]);
           }),
-          Value('LowerLimit', ValueType.floating, (ValueType t, String s) {
-            measurement.lowerLimit = double.parse(s);
+          Value('LowerLimit', ValueType.floating, (ValueType t, List<String> s) {
+            measurement.lowerLimit = double.parse(s[0]);
           }),
-          Value('UpperLimit', ValueType.floating, (ValueType t, String s) {
-            measurement.upperLimit = double.parse(s);
+          Value('UpperLimit', ValueType.floating, (ValueType t, List<String> s) {
+            measurement.upperLimit = double.parse(s[0]);
           })
         ];
 
         var optional = <A2LElement>[
           NamedValue('ARRAY_SIZE', [
-            Value('size', ValueType.integer, (ValueType t, String s) {
-              measurement.arraySize = int.parse(s);
+            Value('size', ValueType.integer, (ValueType t, List<String> s) {
+              measurement.arraySize = int.parse(s[0]);
             })
           ], optional: true),
           NamedValue('BIT_MASK', [
-            Value('mask', ValueType.integer, (ValueType t, String s) {
-              measurement.bitMask = int.parse(s);
+            Value('mask', ValueType.integer, (ValueType t, List<String> s) {
+              measurement.bitMask = int.parse(s[0]);
             })
           ], optional: true),
           NamedValue('BYTE_ORDER', [
-            Value('order', ValueType.text, (ValueType t, String s) {
-              measurement.endianess = byteOrderFromString(s);
+            Value('order', ValueType.text, (ValueType t, List<String> s) {
+              measurement.endianess = byteOrderFromString(s[0]);
             })
           ], optional: true),
           NamedValue('DISPLAY_IDENTIFIER', [
-            Value('id', ValueType.text, (ValueType t, String s) {
-              measurement.displayIdentifier = removeQuotes(s);
+            Value('id', ValueType.text, (ValueType t, List<String> s) {
+              measurement.displayIdentifier = removeQuotes(s[0]);
             })
           ], optional: true),
           NamedValue('ECU_ADDRESS', [
-            Value('address', ValueType.integer, (ValueType t, String s) {
-              measurement.address = int.parse(s);
+            Value('address', ValueType.integer, (ValueType t, List<String> s) {
+              measurement.address = int.parse(s[0]);
             })
           ], optional: true),
           NamedValue('ECU_ADDRESS_EXTENSION', [
-            Value('address extension', ValueType.integer, (ValueType t, String s) {
-              measurement.addressExtension = int.parse(s);
+            Value('address extension', ValueType.integer, (ValueType t, List<String> s) {
+              measurement.addressExtension = int.parse(s[0]);
             })
           ], optional: true),
           NamedValue('ERROR_MASK', [
-            Value('error mask', ValueType.integer, (ValueType t, String s) {
-              measurement.errorMask = int.parse(s);
+            Value('error mask', ValueType.integer, (ValueType t, List<String> s) {
+              measurement.errorMask = int.parse(s[0]);
             })
           ], optional: true),
           NamedValue('FORMAT', [
-            Value('format', ValueType.text, (ValueType t, String s) {
-              measurement.format = removeQuotes(s);
+            Value('format', ValueType.text, (ValueType t, List<String> s) {
+              measurement.format = removeQuotes(s[0]);
             })
           ], optional: true),
           NamedValue('LAYOUT', [
-            Value('layout', ValueType.text, (ValueType t, String s) {
-              measurement.layout = indexModeFromString(s);
+            Value('layout', ValueType.text, (ValueType t, List<String> s) {
+              measurement.layout = indexModeFromString(s[0]);
             })
           ], optional: true),
           NamedValue('PHYS_UNIT', [
-            Value('unit', ValueType.text, (ValueType t, String s) {
-              measurement.unit = removeQuotes(s);
+            Value('unit', ValueType.text, (ValueType t, List<String> s) {
+              measurement.unit = removeQuotes(s[0]);
             })
           ], optional: true),
           NamedValue('REF_MEMORY_SEGMENT', [
-            Value('segment', ValueType.text, (ValueType t, String s) {
-              measurement.memorySegment = s;
+            Value('segment', ValueType.text, (ValueType t, List<String> s) {
+              measurement.memorySegment = s[0];
             })
           ], optional: true)
         ];
@@ -484,82 +524,214 @@ class TokenParser {
   }
 
 
-  BlockElement createComputeMethod() {
+  BlockElement _createComputeMethod() {
     return BlockElement('COMPU_METHOD', (s, p) {
       if (p is Module) {
         var comp = ComputeMethod();
         p.computeMethods.add(comp);
 
         var values = [
-          Value('Name', ValueType.id, (ValueType t, String s) {
-            comp.name = s;
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            comp.name = s[0];
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, String s) {
-            comp.description = removeQuotes(s);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+            comp.description = removeQuotes(s[0]);
           }),
-          Value('ConversionType', ValueType.text, (ValueType t, String s) {
-            comp.type = computeMethodTypeFromSting(s);
+          Value('ConversionType', ValueType.text, (ValueType t, List<String> s) {
+            comp.type = computeMethodTypeFromSting(s[0]);
           }),
-          Value('Format', ValueType.text, (ValueType t, String s) {
-            comp.format = removeQuotes(s);
+          Value('Format', ValueType.text, (ValueType t, List<String> s) {
+            comp.format = removeQuotes(s[0]);
           }),
-          Value('Unit', ValueType.text, (ValueType t, String s) {
-            comp.unit = removeQuotes(s);
+          Value('Unit', ValueType.text, (ValueType t, List<String> s) {
+            comp.unit = removeQuotes(s[0]);
           }),
         ];
 
         var optional = <A2LElement>[
           NamedValue('COEFFS', [
-            Value('a', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_a = double.parse(s);
+            Value('a', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_a = double.parse(s[0]);
             }),
-            Value('b', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_b = double.parse(s);
+            Value('b', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_b = double.parse(s[0]);
             }),
-            Value('c', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_c = double.parse(s);
+            Value('c', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_c = double.parse(s[0]);
             }),
-            Value('d', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_d = double.parse(s);
+            Value('d', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_d = double.parse(s[0]);
             }),
-            Value('e', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_e = double.parse(s);
+            Value('e', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_e = double.parse(s[0]);
             }),
-            Value('f', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_f = double.parse(s);
+            Value('f', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_f = double.parse(s[0]);
             }),
           ], optional: true),
           NamedValue('COEFFS_LINEAR', [
-            Value('a', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_a = double.parse(s);
+            Value('a', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_a = double.parse(s[0]);
             }),
-            Value('b', ValueType.integer, (ValueType t, String s) {
-              comp.coefficient_b = double.parse(s);
+            Value('b', ValueType.integer, (ValueType t, List<String> s) {
+              comp.coefficient_b = double.parse(s[0]);
             }),
           ], optional: true),
           NamedValue('COMPU_TAB_REF', [
-            Value('format', ValueType.id, (ValueType t, String s) {
-              comp.referenced_table = s;
+            Value('format', ValueType.id, (ValueType t, List<String> s) {
+              comp.referenced_table = s[0];
             })
           ], optional: true),
           NamedValue('FORMULA', [
-            Value('forumla', ValueType.text, (ValueType t, String s) {
-              comp.formula = removeQuotes(s);
+            Value('forumla', ValueType.text, (ValueType t, List<String> s) {
+              comp.formula = removeQuotes(s[0]);
             })
           ], optional: true),
           NamedValue('REF_UNIT', [
-            Value('unit', ValueType.id, (ValueType t, String s) {
-              comp.referenced_unit = s;
+            Value('unit', ValueType.id, (ValueType t, List<String> s) {
+              comp.referenced_unit = s[0];
             })
           ], optional: true),
           NamedValue('STATUS_STRING_REF', [
-            Value('segment', ValueType.id, (ValueType t, String s) {
-              comp.referenced_statusString = s;
+            Value('segment', ValueType.id, (ValueType t, List<String> s) {
+              comp.referenced_statusString = s[0];
             })
           ], optional: true)
         ];
         return A2LElementParsingOptions(comp, values, optional);
 
+      } else {
+        throw ParsingException(
+            'Parse tree built wrong, parent of MEASUREMENT must be module!',
+            '',
+            0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createComputeTable() {
+    return BlockElement('COMPU_TAB', (s, p) {
+      if (p is Module) {
+        var tab = ComputeTable();
+        p.computeTables.add(tab);
+
+        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<String> s) {
+            tab.table.add(ComputeTableEntry(x: double.parse(s[0]), outNumeric: double.parse(s[1]), outString: s[1]));
+        }, requiredTokens: 2);
+
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            tab.name = s[0];
+          }),
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+            tab.description = removeQuotes(s[0]);
+          }),
+          Value('ConversionType', ValueType.text, (ValueType t, List<String> s) {
+            tab.type = computeMethodTypeFromSting(s[0]);
+          }),
+          Value('NumberValuePairs', ValueType.integer, (ValueType t, List<String> s) {
+            pairs.multiplicity = int.parse(s[0]);
+          }),
+          pairs
+        ];
+
+        var optional = <A2LElement>[
+          NamedValue('DEFAULT_VALUE', [
+            Value('default value double', ValueType.text, (ValueType t, List<String> s) {
+              tab.fallbackValue = removeQuotes(s[0]);
+            }),
+          ], optional: true),
+          NamedValue('DEFAULT_VALUE_NUMERIC', [
+            Value('default value string', ValueType.floating, (ValueType t, List<String> s) {
+              tab.fallbackValueNumeric = double.parse(s[0]);
+            }),
+          ], optional: true),
+        ];
+        return A2LElementParsingOptions(tab, values, optional);
+
+      } else {
+        throw ParsingException(
+            'Parse tree built wrong, parent of MEASUREMENT must be module!',
+            '',
+            0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createComputeVerbatimTable() {
+    return BlockElement('COMPU_VTAB', (s, p) {
+      if (p is Module) {
+        var tab = VerbatimTable();
+        p.computeTables.add(tab);
+
+        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<String> s) {
+            tab.table.add(ComputeTableEntry(x: double.parse(s[0]), outString: removeQuotes(s[1])));
+        }, requiredTokens: 2);
+
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            tab.name = s[0];
+          }),
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+            tab.description = removeQuotes(s[0]);
+          }),
+          Value('ConversionType', ValueType.text, (ValueType t, List<String> s) {
+            tab.type = computeMethodTypeFromSting(s[0]);
+          }),
+          Value('NumberValuePairs', ValueType.integer, (ValueType t, List<String> s) {
+            pairs.multiplicity = int.parse(s[0]);
+          }),
+          pairs
+        ];
+
+        var optional = <A2LElement>[
+          NamedValue('DEFAULT_VALUE', [
+            Value('default value double', ValueType.text, (ValueType t, List<String> s) {
+              tab.fallbackValue = removeQuotes(s[0]);
+            }),
+          ], optional: true),
+        ];
+        return A2LElementParsingOptions(tab, values, optional);
+      } else {
+        throw ParsingException(
+            'Parse tree built wrong, parent of MEASUREMENT must be module!',
+            '',
+            0);
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createComputeVerbatimRangeTable() {
+    return BlockElement('COMPU_VTAB_RANGE', (s, p) {
+      if (p is Module) {
+        var tab = VerbatimRangeTable();
+        p.computeTables.add(tab);
+
+        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<String> s) {
+            tab.table.add(ComputeTableEntry(x: double.parse(s[0]), x_up: double.parse(s[1]), isFloat: s[1].contains('.'), outString: removeQuotes(s[2])));
+        }, requiredTokens: 3);
+
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<String> s) {
+            tab.name = s[0];
+          }),
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+            tab.description = removeQuotes(s[0]);
+          }),
+          Value('NumberValueTriples', ValueType.integer, (ValueType t, List<String> s) {
+            pairs.multiplicity = int.parse(s[0]);
+          }),
+          pairs
+        ];
+
+        var optional = <A2LElement>[
+          NamedValue('DEFAULT_VALUE', [
+            Value('default value double', ValueType.text, (ValueType t, List<String> s) {
+              tab.fallbackValue = removeQuotes(s[0]);
+            }),
+          ], optional: true),
+        ];
+        return A2LElementParsingOptions(tab, values, optional);
       } else {
         throw ParsingException(
             'Parse tree built wrong, parent of MEASUREMENT must be module!',
