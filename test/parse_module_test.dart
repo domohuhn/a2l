@@ -44,17 +44,17 @@ void main() {
       parser.currentIndex = 0;
       var file = parser.parse();
       expect(file.project.name, 'Moo');
-      expect(file.project.longName, 'MooProject');
+      expect(file.project.description, 'MooProject');
     });
     test('Parse Header', (){
       parser.tokens = ['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"',
-      '/begin', 'HEADER', '"Commemt"', 'VERSION', 'versio', 'PROJECT_NO', 'XCP123', '/end', 'HEADER', 
+      '/begin', 'HEADER', '"Commemt"', 'VERSION', '"versio"', 'PROJECT_NO', 'XCP123', '/end', 'HEADER', 
        '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE','/end', 'PROJECT' ];
       parser.currentIndex = 0;
       var file = parser.parse();
-      expect(file.project.comment, 'Commemt');
-      expect(file.project.version, 'versio');
-      expect(file.project.number, 'XCP123');
+      expect(file.project.header!.description, 'Commemt');
+      expect(file.project.header!.version, 'versio');
+      expect(file.project.header!.number, 'XCP123');
     });
   }); 
   group('Parse module', () {

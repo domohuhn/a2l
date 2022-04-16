@@ -5,9 +5,12 @@ import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
+import 'package:a2l/src/a2l_tree/project.dart';
+import 'package:a2l/src/a2l_tree/module.dart';
 import 'package:a2l/src/a2l_tree/module_common.dart';
 import 'package:a2l/src/a2l_tree/module_parameters.dart';
 import 'package:a2l/src/a2l_tree/record_layout.dart';
+import 'package:a2l/src/a2l_tree/unit.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -323,7 +326,7 @@ class TokenParser {
           parsed.project.name = s[0];
         }),
         Value('LongIdentifier', ValueType.integer, (ValueType t, List<String> s) {
-          parsed.project.longName = removeQuotes(s[0]);
+          parsed.project.description = removeQuotes(s[0]);
         })
     ];
 
@@ -343,16 +346,15 @@ class TokenParser {
       return A2LElementParsingOptions(p,s.values , s.namedValues);
     } ,values: [
       Value('Comment', ValueType.text, (ValueType t, List<String> s) {
-        //print('setting comment to ${s[0]}');
-        parsed.project.comment = removeQuotes(s[0]);
+        parsed.project.header ??= Header();
+        parsed.project.header!.description = removeQuotes(s[0]);
       })
     ], namedValues: [
       NamedValue(
           'VERSION',
           [
             Value('version number', ValueType.text, (ValueType t, List<String> s) {
-        //print('setting version to ${s[0]}');
-              parsed.project.version = s[0];
+              parsed.project.header!.version = removeQuotes(s[0]);
             })
           ],
           optional: true),
@@ -360,8 +362,7 @@ class TokenParser {
           'PROJECT_NO',
           [
             Value('project number', ValueType.text, (ValueType t, List<String> s) {
-        //print('setting num to $s');
-              parsed.project.number = s[0];
+              parsed.project.header!.number = s[0];
             })
           ],
           optional: true),
@@ -598,13 +599,7 @@ class TokenParser {
             unit.display = removeQuotes(s[0]);
           }),
           Value('Type', ValueType.text, (ValueType t, List<String> s) {
-            if (s[0] == 'DERIVED') {
-              unit.type = UnitType.DERIVED;
-            } else if (s[0] == 'EXTENDED_SI') {
-              unit.type = UnitType.EXTENDED_SI;
-            } else {
-              throw ParsingException('Unsupported unit type $s', '', 0);
-            }
+              unit.type = unitTypeFromString(s[0]);
           })
         ];
         var optional = <A2LElement>[
@@ -615,25 +610,26 @@ class TokenParser {
           ], optional: true),
           NamedValue('SI_EXPONENTS', [
             Value('Length', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponent_length = int.parse(s[0]);
+              unit.exponents ??= SIExponents();
+              unit.exponents!.length = int.parse(s[0]);
             }),
             Value('Mass', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponent_mass = int.parse(s[0]);
+              unit.exponents!.mass = int.parse(s[0]);
             }),
             Value('Time', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponent_time = int.parse(s[0]);
+              unit.exponents!.time = int.parse(s[0]);
             }),
             Value('ElectricCurrent', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponent_electricCurrent = int.parse(s[0]);
+              unit.exponents!.electricCurrent = int.parse(s[0]);
             }),
             Value('Temperature', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponent_temperature = int.parse(s[0]);
+              unit.exponents!.temperature = int.parse(s[0]);
             }),
             Value('AmountOfSubstance', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponent_amountOfSubstance = int.parse(s[0]);
+              unit.exponents!.amountOfSubstance = int.parse(s[0]);
             }),
             Value('LuminousIntensity', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponent_luminousIntensity = int.parse(s[0]);
+              unit.exponents!.luminousIntensity = int.parse(s[0]);
             })
           ], optional: true),
           NamedValue('UNIT_CONVERSION', [

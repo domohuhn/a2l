@@ -18,14 +18,6 @@ class DataContainer extends AnnotationContainer {
   ;
 }
 
-
-enum UnitType {
-  DERIVED,
-  EXTENDED_SI
-}
-
-
-
 enum Datatype {
   uint8,
   uint16,

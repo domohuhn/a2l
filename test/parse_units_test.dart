@@ -1,5 +1,5 @@
 import 'package:a2l/src/a2l_parser.dart';
-import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/unit.dart';
 import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
@@ -19,13 +19,7 @@ void main() {
       expect(file.project.modules[0].units[0].referencedUnit, null);
       expect(file.project.modules[0].units[0].conversionLinear_offset, null);
       expect(file.project.modules[0].units[0].conversionLinear_slope, null);
-      expect(file.project.modules[0].units[0].exponent_amountOfSubstance, null);
-      expect(file.project.modules[0].units[0].exponent_electricCurrent, null);
-      expect(file.project.modules[0].units[0].exponent_length, null);
-      expect(file.project.modules[0].units[0].exponent_luminousIntensity, null);
-      expect(file.project.modules[0].units[0].exponent_mass, null);
-      expect(file.project.modules[0].units[0].exponent_temperature, null);
-      expect(file.project.modules[0].units[0].exponent_time, null);
+      expect(file.project.modules[0].units[0].exponents, null);
     });
 
     test('Parse mandatory, multiple units', (){
@@ -77,13 +71,40 @@ void main() {
       expect(file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
-      expect(file.project.modules[0].units[0].exponent_length, 1);
-      expect(file.project.modules[0].units[0].exponent_mass, 2);
-      expect(file.project.modules[0].units[0].exponent_time, 3);
-      expect(file.project.modules[0].units[0].exponent_electricCurrent, 4);
-      expect(file.project.modules[0].units[0].exponent_temperature, 5);
-      expect(file.project.modules[0].units[0].exponent_amountOfSubstance, 6);
-      expect(file.project.modules[0].units[0].exponent_luminousIntensity, 7);
+      expect(file.project.modules[0].units[0].exponents!.length, 1);
+      expect(file.project.modules[0].units[0].exponents!.mass, 2);
+      expect(file.project.modules[0].units[0].exponents!.time, 3);
+      expect(file.project.modules[0].units[0].exponents!.electricCurrent, 4);
+      expect(file.project.modules[0].units[0].exponents!.temperature, 5);
+      expect(file.project.modules[0].units[0].exponents!.amountOfSubstance, 6);
+      expect(file.project.modules[0].units[0].exponents!.luminousIntensity, 7);
+    });
+  });
+
+  group('Serialization', (){
+    test('complete', (){
+      var unit = Unit();
+      unit.name = 'U.Test';
+      unit.display = 'm';
+      unit.description = 'Meter';
+      unit.type = UnitType.EXTENDED_SI;
+      unit.exponents = SIExponents();
+      unit.exponents!.length = 1;
+      unit.referencedUnit = 'U.Other';
+      unit.conversionLinear_slope = 1.0;
+      unit.conversionLinear_offset = 2.0;
+      var rv = unit.toFileContents(1);
+      final out = '''  /begin UNIT U.Test
+    "Meter"
+    "m" EXTENDED_SI
+    REF_UNIT U.Other
+    SI_EXPONENTS 1 0 0 0 0 0 0
+    UNIT_CONVERSION 1.0 2.0
+  /end UNIT
+
+''';
+      expect(rv, out);
+
     });
   });
 }

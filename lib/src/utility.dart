@@ -1,5 +1,6 @@
 
-String removeQuotes(String text){
+/// Removes quotation marks " around [text] if present and returns a new string. 
+String removeQuotes(String text) {
   var start = 0;
   var end = text.length;
   if(text.startsWith('"')) {
@@ -11,8 +12,11 @@ String removeQuotes(String text){
   return text.substring(start,end);
 }
 
-
-
+/// Indents the [text] to [depth].
+String indent(String text, int depth) {
+  var len = text.length + depth * 2;
+  return text.padLeft(len);
+}
 
 
 
