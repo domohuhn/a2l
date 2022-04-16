@@ -421,7 +421,62 @@ class TokenParser {
             Value('IndexMode', ValueType.text, (ValueType t, List<String> s) { rl.values!.mode = indexModeFromString(s[0]); }), 
             Value('Addresstype', ValueType.text, (ValueType t, List<String> s) { rl.values!.addressType = addressTypeFromString(s[0]); }), 
           ], optional: true),
-          
+          _createBaseLayoutData('SHIFT_OP_X', () { rl.shiftX??=BaseLayoutData(); return rl.shiftX!; }),
+          _createBaseLayoutData('SHIFT_OP_Y', () { rl.shiftY??=BaseLayoutData(); return rl.shiftY!; }),
+          _createBaseLayoutData('SHIFT_OP_Z', () { rl.shiftZ??=BaseLayoutData(); return rl.shiftZ!; }),
+          _createBaseLayoutData('SHIFT_OP_4', () { rl.shift4??=BaseLayoutData(); return rl.shift4!; }),
+          _createBaseLayoutData('SHIFT_OP_5', () { rl.shift5??=BaseLayoutData(); return rl.shift5!; }),
+          _createBaseLayoutData('SRC_ADDR_X', () { rl.inputX??=BaseLayoutData(); return rl.inputX!; }),
+          _createBaseLayoutData('SRC_ADDR_Y', () { rl.inputY??=BaseLayoutData(); return rl.inputY!; }),
+          _createBaseLayoutData('SRC_ADDR_Z', () { rl.inputZ??=BaseLayoutData(); return rl.inputZ!; }),
+          _createBaseLayoutData('SRC_ADDR_4', () { rl.input4??=BaseLayoutData(); return rl.input4!; }),
+          _createBaseLayoutData('SRC_ADDR_5', () { rl.input5??=BaseLayoutData(); return rl.input5!; }),
+          _createBaseLayoutData('RIP_ADDR_W', () { rl.output??=BaseLayoutData(); return rl.output!; }),
+          _createBaseLayoutData('RIP_ADDR_X', () { rl.intermediateX??=BaseLayoutData(); return rl.intermediateX!; }),
+          _createBaseLayoutData('RIP_ADDR_Y', () { rl.intermediateY??=BaseLayoutData(); return rl.intermediateY!; }),
+          _createBaseLayoutData('RIP_ADDR_Z', () { rl.intermediateZ??=BaseLayoutData(); return rl.intermediateZ!; }),
+          _createBaseLayoutData('RIP_ADDR_4', () { rl.intermediate4??=BaseLayoutData(); return rl.intermediate4!; }),
+          _createBaseLayoutData('RIP_ADDR_5', () { rl.intermediate5??=BaseLayoutData(); return rl.intermediate5!; }),
+          _createBaseLayoutData('OFFSET_X', () { rl.offsetX??=BaseLayoutData(); return rl.offsetX!; }),
+          _createBaseLayoutData('OFFSET_Y', () { rl.offsetY??=BaseLayoutData(); return rl.offsetY!; }),
+          _createBaseLayoutData('OFFSET_Z', () { rl.offsetZ??=BaseLayoutData(); return rl.offsetZ!; }),
+          _createBaseLayoutData('OFFSET_4', () { rl.offset4??=BaseLayoutData(); return rl.offset4!; }),
+          _createBaseLayoutData('OFFSET_5', () { rl.offset5??=BaseLayoutData(); return rl.offset5!; }),
+          _createBaseLayoutData('NO_RESCALE_X', () { rl.numberOfRescalePointsX??=BaseLayoutData(); return rl.numberOfRescalePointsX!; }),
+          _createBaseLayoutData('NO_RESCALE_Y', () { rl.numberOfRescalePointsY??=BaseLayoutData(); return rl.numberOfRescalePointsY!; }),
+          _createBaseLayoutData('NO_RESCALE_Z', () { rl.numberOfRescalePointsZ??=BaseLayoutData(); return rl.numberOfRescalePointsZ!; }),
+          _createBaseLayoutData('NO_RESCALE_4', () { rl.numberOfRescalePoints4??=BaseLayoutData(); return rl.numberOfRescalePoints4!; }),
+          _createBaseLayoutData('NO_RESCALE_5', () { rl.numberOfRescalePoints5??=BaseLayoutData(); return rl.numberOfRescalePoints5!; }),
+          _createBaseLayoutData('IDENTIFICATION', () { rl.identification??=BaseLayoutData(); return rl.identification!; }),
+          _createBaseLayoutData('DIST_OP_X', () { rl.distanceX??=BaseLayoutData(); return rl.distanceX!; }),
+          _createBaseLayoutData('DIST_OP_Y', () { rl.distanceY??=BaseLayoutData(); return rl.distanceY!; }),
+          _createBaseLayoutData('DIST_OP_Z', () { rl.distanceZ??=BaseLayoutData(); return rl.distanceZ!; }),
+          _createBaseLayoutData('DIST_OP_4', () { rl.distance4??=BaseLayoutData(); return rl.distance4!; }),
+          _createBaseLayoutData('DIST_OP_5', () { rl.distance5??=BaseLayoutData(); return rl.distance5!; }),
+          NamedValue('FIX_NO_AXIS_PTS_X', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPointsX = int.parse(s[0]); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_Y', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPointsY = int.parse(s[0]); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_Z', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPointsZ = int.parse(s[0]); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_4', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPoints4 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_5', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPoints5 = int.parse(s[0]); }), ], optional: true),
+          _createAxisLayoutData('AXIS_PTS_X', () { rl.axisPointsX ??= AxisLayoutData(); return rl.axisPointsX!;}),
+          _createAxisLayoutData('AXIS_PTS_Y', () { rl.axisPointsY ??= AxisLayoutData(); return rl.axisPointsY!;}),
+          _createAxisLayoutData('AXIS_PTS_Z', () { rl.axisPointsZ ??= AxisLayoutData(); return rl.axisPointsZ!;}),
+          _createAxisLayoutData('AXIS_PTS_4', () { rl.axisPoints4 ??= AxisLayoutData(); return rl.axisPoints4!;}),
+          _createAxisLayoutData('AXIS_PTS_5', () { rl.axisPoints5 ??= AxisLayoutData(); return rl.axisPoints5!;}),
+          _createAxisRescaleLayoutData('AXIS_RESCALE_X', () { rl.axisRescaleX ??= AxisRescaleData(); return rl.axisRescaleX!;}),
+          _createAxisRescaleLayoutData('AXIS_RESCALE_Y', () { rl.axisRescaleY ??= AxisRescaleData(); return rl.axisRescaleY!;}),
+          _createAxisRescaleLayoutData('AXIS_RESCALE_Z', () { rl.axisRescaleZ ??= AxisRescaleData(); return rl.axisRescaleZ!;}),
+          _createAxisRescaleLayoutData('AXIS_RESCALE_4', () { rl.axisRescale4 ??= AxisRescaleData(); return rl.axisRescale4!;}),
+          _createAxisRescaleLayoutData('AXIS_RESCALE_5', () { rl.axisRescale5 ??= AxisRescaleData(); return rl.axisRescale5!;}),
+          NamedValue('STATIC_RECORD_LAYOUT',[], callback: () {rl.staticRecordLayout = true;}, optional: true),
+          NamedValue('RESERVED', [
+            Value('Position', ValueType.integer, (ValueType t, List<String> s) {
+              var data = BaseLayoutData();
+              data.position = int.parse(s[0]);
+              rl.reserved.add(data);
+            }), 
+            Value('Datatype', ValueType.text, (ValueType t, List<String> s) { rl.reserved.last.type = dataTypeFromString(s[0]); })
+          ], optional: true, unique: false)
         ];
         return A2LElementParsingOptions(rl, values, optional);
       } else {
@@ -429,6 +484,32 @@ class TokenParser {
       }
     }
     , optional: true, unique: false);
+  }
+
+  NamedValue _createBaseLayoutData(String key, BaseLayoutData Function() data) {
+    return NamedValue(key, [
+      Value('Position', ValueType.integer, (ValueType t, List<String> s) { data().position = int.parse(s[0]); }), 
+      Value('Datatype', ValueType.text, (ValueType t, List<String> s) { data().type = dataTypeFromString(s[0]); })
+    ], optional: true);
+  }
+
+  NamedValue _createAxisLayoutData(String key, AxisLayoutData Function() data) {
+    return NamedValue(key, [
+      Value('Position', ValueType.integer, (ValueType t, List<String> s) { data().position = int.parse(s[0]); }), 
+      Value('Datatype', ValueType.text, (ValueType t, List<String> s) { data().type = dataTypeFromString(s[0]); }),
+      Value('indexOrder', ValueType.text, (ValueType t, List<String> s) { data().order = indexOrderFromString(s[0]); }),
+      Value('addressType', ValueType.text, (ValueType t, List<String> s) { data().addressType = addressTypeFromString(s[0]); }),
+    ], optional: true);
+  }
+
+  NamedValue _createAxisRescaleLayoutData(String key, AxisRescaleData Function() data) {
+    return NamedValue(key, [
+      Value('Position', ValueType.integer, (ValueType t, List<String> s) { data().position = int.parse(s[0]); }), 
+      Value('Datatype', ValueType.text, (ValueType t, List<String> s) { data().type = dataTypeFromString(s[0]); }),
+      Value('maxNumber', ValueType.integer, (ValueType t, List<String> s) { data().maxNumberOfPairs = int.parse(s[0]); }),
+      Value('indexOrder', ValueType.text, (ValueType t, List<String> s) { data().order = indexOrderFromString(s[0]); }),
+      Value('addressType', ValueType.text, (ValueType t, List<String> s) { data().addressType = addressTypeFromString(s[0]); }),
+    ], optional: true);
   }
 
   BlockElement _createUnit() {

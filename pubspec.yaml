@@ -1,5 +1,5 @@
 name: a2l
-description: A library that can process ASAM MCD-2MC (a2l) files. This is a automotive standard for measurement and calibration definitions.
+description: A library that can process ASAM MCD-2MC (a2l) files. This is an automotive standard for measurement and calibration data definitions.
 version: 1.0.0
 # homepage: https://www.example.com
 
