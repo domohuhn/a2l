@@ -167,6 +167,24 @@ void main() {
       expect(rls[0].values, null);
     });
 
+    test('Parse optional ALIGNMENT_FLOAT64_IEEE', (){
+      prepareTestData(parser, ['/begin','RECORD_LAYOUT','TEST.RL',
+       'ALIGNMENT_FLOAT64_IEEE', '17',
+       '/end', 'RECORD_LAYOUT']);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var rls = file.project.modules[0].recordLayouts;
+      expect(rls.length, 1);
+      expect(rls[0].name, 'TEST.RL');
+      expect(rls[0].aligmentFloat32, null);
+      expect(rls[0].aligmentFloat64, 17);
+      expect(rls[0].aligmentInt8, null);
+      expect(rls[0].aligmentInt16, null);
+      expect(rls[0].aligmentInt32, null);
+      expect(rls[0].aligmentInt64, null);
+      expect(rls[0].values, null);
+    });
+
     test('Parse optional ALIGNMENT_INT64', (){
       prepareTestData(parser, ['/begin','RECORD_LAYOUT','TEST.RL',
        'ALIGNMENT_FLOAT64_IEEE', '7',

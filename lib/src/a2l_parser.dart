@@ -5,6 +5,8 @@ import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
+import 'package:a2l/src/a2l_tree/module_common.dart';
+import 'package:a2l/src/a2l_tree/module_parameters.dart';
 import 'package:a2l/src/a2l_tree/record_layout.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
@@ -394,7 +396,75 @@ class TokenParser {
      _createComputeVerbatimTable(),
      _createComputeVerbatimRangeTable(),
      _createGroups(),
-     _createRecordLayout()];
+     _createRecordLayout(),
+     _createModuleCommon(),
+     _createModuleParameters()];
+  }
+  
+  BlockElement _createModuleCommon() {
+    return BlockElement('MOD_COMMON', (s, p) {
+      if(p is Module) {
+        var common = ModuleCommon();
+        p.common = common;
+        var values = [
+          Value('Description', ValueType.id, (ValueType t, List<String> s) {
+            common.description = removeQuotes(s[0]);
+          })];
+          
+        var optional = <A2LElement>[
+          NamedValue('ALIGNMENT_BYTE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt8 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_WORD', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt16 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_LONG', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt32 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_INT64', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt64 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT32_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentFloat32 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT64_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentFloat64 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('BYTE_ORDER', [Value('order', ValueType.text, (ValueType t, List<String> s) { common.endianess = byteOrderFromString(s[0]); })], optional: true),
+          NamedValue('DATA_SIZE', [Value('Position', ValueType.integer, (ValueType t, List<String> s) { common.dataSize = int.parse(s[0]); })], optional: true), 
+          NamedValue('DEPOSIT', [Value('Position', ValueType.text, (ValueType t, List<String> s) { common.standardDeposit = depositFromString(s[0]); })], optional: true), 
+          NamedValue('S_REC_LAYOUT', [Value('Identifier', ValueType.id, (ValueType t, List<String> s) { common.standardRecordLayout = s[0]; })], optional: true), 
+        ];
+        return A2LElementParsingOptions(common, values, optional);
+      } 
+      else {
+        throw ParsingException('Parse tree built wrong, parent of MOD_COMMON must be a module!', '', 0);
+      }
+    }, optional: true, unique: true);
+  }
+
+  BlockElement _createModuleParameters() {
+    return BlockElement('MOD_PAR', (s, p) {
+      if(p is Module) {
+        var pars = ModuleParameters();
+        p.parameters = pars;
+        var values = [
+          Value('Description', ValueType.id, (ValueType t, List<String> s) {
+            pars.description = removeQuotes(s[0]);
+          })];
+          
+        var optional = <A2LElement>[
+          NamedValue('CPU_TYPE', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.cpuType = removeQuotes(s[0]); })], optional: true),
+          NamedValue('CUSTOMER', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.customer = removeQuotes(s[0]); })], optional: true),
+          NamedValue('CUSTOMER_NO', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.customerNumber = removeQuotes(s[0]); })], optional: true),
+          NamedValue('ECU', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.controlUnit = removeQuotes(s[0]); })], optional: true),
+          NamedValue('EPK', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.epromIdentifier = removeQuotes(s[0]); })], optional: true),
+          NamedValue('PHONE_NO', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.phoneNumber = removeQuotes(s[0]); })], optional: true),
+          NamedValue('SUPPLIER', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.supplier = removeQuotes(s[0]); })], optional: true),
+          NamedValue('USER', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.user = removeQuotes(s[0]); })], optional: true),
+          NamedValue('VERSION', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.version = removeQuotes(s[0]); })], optional: true),
+          NamedValue('ECU_CALIBRATION_OFFSET', [Value('offset', ValueType.integer, (ValueType t, List<String> s) { pars.calibrationOffset = int.parse(s[0]); })], optional: true),
+          NamedValue('NO_OF_INTERFACES', [Value('count', ValueType.integer, (ValueType t, List<String> s) { pars.numberOfInterfaces = int.parse(s[0]); })], optional: true),
+          NamedValue('ADDR_EPK', [Value('address', ValueType.integer, (ValueType t, List<String> s) { pars.eepromIdentifiers.add(int.parse(s[0])); })], optional: true, unique: false),
+          NamedValue('SYSTEM_CONSTANT', [
+            Value('name', ValueType.text, (ValueType t, List<String> s) { pars.systemConstants.add(SystemConstant()); pars.systemConstants.last.name = removeQuotes(s[0]); }),
+            Value('value', ValueType.text, (ValueType t, List<String> s) { pars.systemConstants.last.value = removeQuotes(s[0]); }),
+          ], optional: true, unique: false),
+        ];
+        return A2LElementParsingOptions(pars, values, optional);
+      } 
+      else {
+        throw ParsingException('Parse tree built wrong, parent of MOD_PAR must be a module!', '', 0);
+      }
+    }, optional: true, unique: true);
   }
   
   BlockElement _createRecordLayout() {

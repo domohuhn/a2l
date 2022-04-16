@@ -5,6 +5,8 @@ import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/module_common.dart';
+import 'package:a2l/src/a2l_tree/module_parameters.dart';
 import 'package:a2l/src/a2l_tree/record_layout.dart';
 
 class Unit {
@@ -27,6 +29,8 @@ class Unit {
 class Module {
   String name = '';
   String description = '';
+  ModuleCommon? common;
+  ModuleParameters? parameters;
   List<Measurement> measurements;
   List<Characteristic> characteristics;
   List<Unit> units;

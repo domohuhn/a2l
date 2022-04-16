@@ -206,5 +206,22 @@ AddressType addressTypeFromString(String s){
   }
 }
 
+/// Deposite mode for axis
+enum Deposit {
+  /// absolute value is stored
+  ABSOLUTE,
+  /// difference to last is stored
+  DIFFERENCE
+}
+
+/// Converts a string to deposit mode
+Deposit depositFromString(String s){
+  switch(s) {
+    case 'ABSOLUTE': return Deposit.ABSOLUTE;
+    case 'DIFFERENCE': return Deposit.DIFFERENCE;
+    default: throw ParsingException('Unknown deposit type $s', '', 0);
+  }
+}
+
 
 
