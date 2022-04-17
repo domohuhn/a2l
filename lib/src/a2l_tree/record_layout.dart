@@ -1,5 +1,6 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/parsing_exception.dart';
+import 'package:a2l/src/token.dart';
 
 /// The description of the memory layout in the ECU.
 class BaseLayoutData {
@@ -26,11 +27,11 @@ enum IndexOrder {
 }
 
 /// Converts input String [s] to the enum.
-IndexOrder indexOrderFromString(String s) {
-  switch(s) {
+IndexOrder indexOrderFromString(Token s) {
+  switch(s.text) {
     case 'INDEX_INCR' : return IndexOrder.INDEX_INCR;
     case 'INDEX_DECR' : return IndexOrder.INDEX_DECR;
-    default: throw ParsingException('Unknown IndexOrder "$s"', '', 0);
+    default: throw ParsingException('Unknown IndexOrder', s);
   }
 }
 

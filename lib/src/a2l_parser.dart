@@ -15,6 +15,7 @@ import 'package:a2l/src/a2l_tree/unit.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
 import 'package:a2l/src/a2l_tree/a2l_file.dart';
+import 'package:a2l/src/token.dart';
 import 'dart:collection';
 
 enum ValueType {
@@ -36,33 +37,33 @@ class A2LElement {
 class Value extends A2LElement {
   ValueType type;
   bool _valueSet = false;
-  List<String> _value;
+  List<Token> _value;
   /// how many times a value should be read
   int multiplicity;
   /// how many String tokens are needed to initialize this value
   int requiredTokens;
 
-  final void Function(ValueType,List<String>) _callback;
+  final void Function(ValueType,List<Token>) _callback;
 
   Value(String name, this.type, this._callback, {this.multiplicity = 1, this.requiredTokens = 1}) : _value = [], super(name,false);
 
-  set value(List<String> values) {
+  set value(List<Token> values) {
     for(final val in values) {
-      if(val == '/begin' || val == '/end') {
-        throw ParsingException('A parsed value cannot be $val', '', 0);
+      if(val.text == '/begin' || val.text == '/end') {
+        throw ParsingException('Syntax error: a value cannot be a reserved keyword.', val);
       }
     }
     if(values.length != requiredTokens) {
-        throw ParsingException('A value of type "$name" requires exactly $requiredTokens, but received ${values.length}', '', 0);
+        throw ParsingException('A value of type "$name" requires exactly $requiredTokens, but received ${values.length}', values[0]);
     }
-    _value = values;
     _valueSet = true;
+    _value = values;
     _callback(type,_value);
   }
 
   bool get valueSet => _valueSet;
 
-  List<String> get value => _value;
+  List<Token> get value => _value;
 
   @override
   String toString() {
@@ -129,8 +130,9 @@ class EntryData {
   EntryData(this.name);
 }
 
+/// The TokenParser converts the preprocessed tokens to the A2L File data structure.
 class TokenParser {
-  List<String> tokens = [];
+  List<Token> tokens = [];
   List<bool> usedTokens = [];
   int currentIndex = 0;
   String currentToken = '';
@@ -153,46 +155,35 @@ class TokenParser {
 
   void _parseRecursive(dynamic current, int start, int end)
   {
-    //print("RECURSING $start $end");
     for (var i=start; i<end; ++i) {
       currentIndex = i;
-      //print("= Token ${tokens[i]}");
-      if (tokens[i]=='/begin') {
-        //print("begin ${tokens[i+1]}");
+      if (tokens[i].text =='/begin') {
         var limit = findMatchingEndToken();
-        var expected = findExpected(tokens[i+1]);
-        //print("$expected");
+        var expected = findExpected(tokens[i+1].text);
         if(expected!=null) {
-          //print("expected ${expected.name}");
           if(expected is BlockElement){
-            //print("is block");
             currentIndex = i+2;
             stack.add(expectedTokens);
             var opts = expected.prepareNewLement(current);
             parseRequiredOrderedElements(opts.mandatoryPositional,limit);
-            // Todo push stack, change expected
-
             expectedTokens = [];
             expectedTokens.addAll(opts.named);
             _parseRecursive(opts.current,currentIndex,limit);
             expectedTokens = stack.last;
             stack.removeLast();
-            // todo restore expected from stack
             expected.count += 1;
           } else {
-            throw ParsingException('Element "${expected.name}" is not a block element!', '', 0);
+            throw ParsingException('Element "${expected.name}" is not a block element!', tokens[i]);
           }
         }
         i = limit+1;
-        //print("new index $currentIndex");
         continue;
       }
       for(final token in expectedTokens) {
-        if(token.name != tokens[i]) {
+        if(token.name != tokens[i].text) {
           continue;
         }
         if(token is NamedValue) {
-          //print("named value $token");
           currentIndex = i+1;
           token.keyFound();
           parseRequiredOrderedElements(token.values,end);
@@ -204,17 +195,16 @@ class TokenParser {
     }
     for(final token in expectedTokens) {
       if(!token.optional && token.count==0) {
-        throw ParsingException('Mandatory element "${token.name}" not found', '', 0);
+        throw ParsingException('Mandatory element "${token.name}" was not found', tokens[currentIndex]);
       }
       if(token.unique && token.count>1) {
-        throw ParsingException('${token.name} can only occur once! Found ${token.count}', '', 0);
+        throw ParsingException('${token.name} can only occur once! Found ${token.count}', tokens[currentIndex]);
       }
     }
   }
 
   A2LElement? findExpected(String nm){
     for(final token in expectedTokens) {
-       //print("${token.name} == $nm");
         if(token.name == nm) {
           return token;
         }
@@ -226,9 +216,8 @@ class TokenParser {
   void parseRequiredOrderedElements(List<Value> values, int max)
   {
     if ( values.length + currentIndex > max) {
-      throw ParsingException('Token "$currentToken" has at least ${values.length} mandatory values! Only found ${max-currentIndex}', '', currentIndex);
+      throw ParsingException('Token "$currentToken" has at least ${values.length} mandatory values! Only found ${max-currentIndex}', tokens[currentIndex]);
     }
-    //print("Parse $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
 
     for(var k=0; k<values.length; k++) {
         if(values[k].multiplicity>=0){
@@ -243,34 +232,32 @@ class TokenParser {
 
   void _parseRemainingTokens(List<Value> values, int max, int k,) {
     if (k != values.length - 1) {
-      throw ParsingException('Value ${values[k]} at $k (of ${values.length}) requested all remaining tokens! Some values could not be processed','',currentIndex);
+      throw ParsingException('Value ${values[k]} at $k (of ${values.length}) requested all remaining tokens! Some values could not be processed', tokens[currentIndex]);
     }
-    //print("Parse all $currentIndex to ${max} : ${tokens[currentIndex]} to ${tokens[max-1]}");
 
     try {
       while (currentIndex + values[k].requiredTokens <= max) {
-        //print("$currentIndex to ${currentIndex+values[k].requiredTokens} : ${tokens[currentIndex]} to ${tokens[currentIndex+values[k].requiredTokens]}");
         values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
         currentIndex += values[k].requiredTokens;
       }
     } catch (ex) {
-      throw ParsingException('Token $currentIndex "${tokens[currentIndex]}" could not be converted to ${values[k]}','', currentIndex);
+      throw ParsingException('${tokens[currentIndex]} could not be converted to ${values[k]}', tokens[currentIndex]);
     }
 
     if (currentIndex != max) {
-      throw ParsingException('Not all tokens could be processed! Target $max, stride ${values[k].requiredTokens}, ended at $currentIndex','', currentIndex);
+      throw ParsingException('Not all tokens could be processed! Target $max, stride ${values[k].requiredTokens}, ended at $currentIndex', tokens[currentIndex]);
     }
   }
 
   void _parseSingleValue(List<Value> values, int max, int k) {
     for (var i = 0; i < values[k].multiplicity; ++i) {
       if (currentIndex + values[k].requiredTokens > max) {
-        throw ParsingException('Not enough tokens! Target $max, stride ${values[k].requiredTokens}, multiplicity ${values[k].multiplicity}, ended at iteration $i, token $currentIndex','',currentIndex);
+        throw ParsingException('Not enough tokens! Target $max, stride ${values[k].requiredTokens}, multiplicity ${values[k].multiplicity}, ended at iteration $i, token $currentIndex',tokens[currentIndex]);
       }
       try {
         values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
       } catch (ex) {
-        throw ParsingException('Token $currentIndex "${tokens[currentIndex]}" could not be converted to ${values[k]}','',currentIndex);
+        throw ParsingException('${tokens[currentIndex]} could not be converted to ${values[k]}:\n$ex', tokens[currentIndex]);
       }
       currentIndex += values[k].requiredTokens;
     }
@@ -279,54 +266,50 @@ class TokenParser {
 
   int findMatchingEndToken() {
     var beginCount = 0;
-    var name = tokens[currentIndex+1];
+    var name = tokens[currentIndex+1].text;
     for(var k = currentIndex; k<tokens.length; ++k) {
-      //print("Check ${tokens[k]}");
-      if(tokens[k]=='/begin') {
+      if(tokens[k].text=='/begin') {
         beginCount += 1;
-        //print("add $beginCount");
       }
-      if(tokens[k]=='/end') {
+      if(tokens[k].text=='/end') {
         beginCount -= 1;
-        //print("remove $beginCount");
       }
       if(beginCount==0) {
-        //print("found $k : ${tokens[k]} ${tokens[k+1]}");
-        if(tokens[k+1]!=name) {
-          throw ParsingException('Expected /end $name, got /end ${tokens[k+1]}', '', currentIndex);
+        if(tokens[k+1].text!=name) {
+          throw ParsingException('Expected /end $name, got /end ${tokens[k+1].text} at ${tokens[k+1]}', tokens[currentIndex]);
         }
         return k;
       }
     }
-    throw ParsingException('Missing /end $name', '', currentIndex);
+    throw ParsingException('Missing /end $name', tokens[currentIndex]);
   }
 
   void setTopLevelTokens() {
     parsed = A2LFile();
     var asap2VersionValues = <Value>[
-        Value('VersionNo', ValueType.integer, (ValueType t, List<String> s) {
-          parsed.a2lMajorVersion = int.parse(s[0]);
+        Value('VersionNo', ValueType.integer, (ValueType t, List<Token> s) {
+          parsed.a2lMajorVersion = int.parse(s[0].text);
         }),
-        Value('UpgradeNo', ValueType.integer, (ValueType t, List<String> s) {
-          parsed.a2lMinorVersion = int.parse(s[0]);
+        Value('UpgradeNo', ValueType.integer, (ValueType t, List<Token> s) {
+          parsed.a2lMinorVersion = int.parse(s[0].text);
         })
     ];
     var asap2MLVersionValues = <Value>[
-        Value('VersionNo', ValueType.integer, (ValueType t, List<String> s) {
-          parsed.a2mlMajorVersion = int.parse(s[0]);
+        Value('VersionNo', ValueType.integer, (ValueType t, List<Token> s) {
+          parsed.a2mlMajorVersion = int.parse(s[0].text);
         }),
-        Value('UpgradeNo', ValueType.integer, (ValueType t, List<String> s) {
-          parsed.a2mlMinorVersion = int.parse(s[0]);
+        Value('UpgradeNo', ValueType.integer, (ValueType t, List<Token> s) {
+          parsed.a2mlMinorVersion = int.parse(s[0].text);
         })
     ];
 
     
     var projectValues = <Value>[
-        Value('Name', ValueType.id, (ValueType t, List<String> s) {
-          parsed.project.name = s[0];
+        Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+          parsed.project.name = s[0].text;
         }),
-        Value('LongIdentifier', ValueType.integer, (ValueType t, List<String> s) {
-          parsed.project.description = removeQuotes(s[0]);
+        Value('LongIdentifier', ValueType.integer, (ValueType t, List<Token> s) {
+          parsed.project.description = removeQuotes(s[0].text);
         })
     ];
 
@@ -345,24 +328,24 @@ class TokenParser {
     var header = BlockElement('HEADER',(s,p) {
       return A2LElementParsingOptions(p,s.values , s.namedValues);
     } ,values: [
-      Value('Comment', ValueType.text, (ValueType t, List<String> s) {
+      Value('Comment', ValueType.text, (ValueType t, List<Token> s) {
         parsed.project.header ??= Header();
-        parsed.project.header!.description = removeQuotes(s[0]);
+        parsed.project.header!.description = removeQuotes(s[0].text);
       })
     ], namedValues: [
       NamedValue(
           'VERSION',
           [
-            Value('version number', ValueType.text, (ValueType t, List<String> s) {
-              parsed.project.header!.version = removeQuotes(s[0]);
+            Value('version number', ValueType.text, (ValueType t, List<Token> s) {
+              parsed.project.header!.version = removeQuotes(s[0].text);
             })
           ],
           optional: true),
       NamedValue(
           'PROJECT_NO',
           [
-            Value('project number', ValueType.text, (ValueType t, List<String> s) {
-              parsed.project.header!.number = s[0];
+            Value('project number', ValueType.text, (ValueType t, List<Token> s) {
+              parsed.project.header!.number = s[0].text;
             })
           ],
           optional: true),
@@ -372,13 +355,13 @@ class TokenParser {
       var module = Module();
       p.project.modules.add(module);
       var values = [
-        Value('Name', ValueType.id, (ValueType t, List<String> s) {
+        Value('Name', ValueType.id, (ValueType t, List<Token> s) {
         //print("Setting name $s");
-        module.name = s[0];
+        module.name = s[0].text;
       }),
-      Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
+      Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
         //print("Setting desc $s");
-        module.description = removeQuotes(s[0]);
+        module.description = removeQuotes(s[0].text);
       })
       ];
       return A2LElementParsingOptions(module,values , createModuleChildren());
@@ -408,26 +391,26 @@ class TokenParser {
         var common = ModuleCommon();
         p.common = common;
         var values = [
-          Value('Description', ValueType.id, (ValueType t, List<String> s) {
-            common.description = removeQuotes(s[0]);
+          Value('Description', ValueType.id, (ValueType t, List<Token> s) {
+            common.description = removeQuotes(s[0].text);
           })];
           
         var optional = <A2LElement>[
-          NamedValue('ALIGNMENT_BYTE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt8 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_WORD', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt16 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_LONG', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt32 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_INT64', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentInt64 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_FLOAT32_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentFloat32 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_FLOAT64_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { common.aligmentFloat64 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('BYTE_ORDER', [Value('order', ValueType.text, (ValueType t, List<String> s) { common.endianess = byteOrderFromString(s[0]); })], optional: true),
-          NamedValue('DATA_SIZE', [Value('Position', ValueType.integer, (ValueType t, List<String> s) { common.dataSize = int.parse(s[0]); })], optional: true), 
-          NamedValue('DEPOSIT', [Value('Position', ValueType.text, (ValueType t, List<String> s) { common.standardDeposit = depositFromString(s[0]); })], optional: true), 
-          NamedValue('S_REC_LAYOUT', [Value('Identifier', ValueType.id, (ValueType t, List<String> s) { common.standardRecordLayout = s[0]; })], optional: true), 
+          NamedValue('ALIGNMENT_BYTE', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { common.aligmentInt8 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_WORD', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { common.aligmentInt16 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_LONG', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { common.aligmentInt32 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_INT64', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { common.aligmentInt64 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT32_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { common.aligmentFloat32 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT64_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { common.aligmentFloat64 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('BYTE_ORDER', [Value('order', ValueType.text, (ValueType t, List<Token> s) { common.endianess = byteOrderFromString(s[0]); })], optional: true),
+          NamedValue('DATA_SIZE', [Value('Position', ValueType.integer, (ValueType t, List<Token> s) { common.dataSize = int.parse(s[0].text); })], optional: true), 
+          NamedValue('DEPOSIT', [Value('Position', ValueType.text, (ValueType t, List<Token> s) { common.standardDeposit = depositFromString(s[0]); })], optional: true), 
+          NamedValue('S_REC_LAYOUT', [Value('Identifier', ValueType.id, (ValueType t, List<Token> s) { common.standardRecordLayout = s[0].text; })], optional: true), 
         ];
         return A2LElementParsingOptions(common, values, optional);
       } 
       else {
-        throw ParsingException('Parse tree built wrong, parent of MOD_COMMON must be a module!', '', 0);
+        throw ValidationError('Parse tree built wrong, parent of MOD_COMMON must be a module!');
       }
     }, optional: true, unique: true);
   }
@@ -438,32 +421,32 @@ class TokenParser {
         var pars = ModuleParameters();
         p.parameters = pars;
         var values = [
-          Value('Description', ValueType.id, (ValueType t, List<String> s) {
-            pars.description = removeQuotes(s[0]);
+          Value('Description', ValueType.id, (ValueType t, List<Token> s) {
+            pars.description = removeQuotes(s[0].text);
           })];
           
         var optional = <A2LElement>[
-          NamedValue('CPU_TYPE', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.cpuType = removeQuotes(s[0]); })], optional: true),
-          NamedValue('CUSTOMER', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.customer = removeQuotes(s[0]); })], optional: true),
-          NamedValue('CUSTOMER_NO', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.customerNumber = removeQuotes(s[0]); })], optional: true),
-          NamedValue('ECU', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.controlUnit = removeQuotes(s[0]); })], optional: true),
-          NamedValue('EPK', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.epromIdentifier = removeQuotes(s[0]); })], optional: true),
-          NamedValue('PHONE_NO', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.phoneNumber = removeQuotes(s[0]); })], optional: true),
-          NamedValue('SUPPLIER', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.supplier = removeQuotes(s[0]); })], optional: true),
-          NamedValue('USER', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.user = removeQuotes(s[0]); })], optional: true),
-          NamedValue('VERSION', [Value('string', ValueType.text, (ValueType t, List<String> s) { pars.version = removeQuotes(s[0]); })], optional: true),
-          NamedValue('ECU_CALIBRATION_OFFSET', [Value('offset', ValueType.integer, (ValueType t, List<String> s) { pars.calibrationOffset = int.parse(s[0]); })], optional: true),
-          NamedValue('NO_OF_INTERFACES', [Value('count', ValueType.integer, (ValueType t, List<String> s) { pars.numberOfInterfaces = int.parse(s[0]); })], optional: true),
-          NamedValue('ADDR_EPK', [Value('address', ValueType.integer, (ValueType t, List<String> s) { pars.eepromIdentifiers.add(int.parse(s[0])); })], optional: true, unique: false),
+          NamedValue('CPU_TYPE', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.cpuType = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('CUSTOMER', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.customer = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('CUSTOMER_NO', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.customerNumber = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('ECU', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.controlUnit = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('EPK', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.epromIdentifier = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('PHONE_NO', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.phoneNumber = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('SUPPLIER', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.supplier = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('USER', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.user = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('VERSION', [Value('string', ValueType.text, (ValueType t, List<Token> s) { pars.version = removeQuotes(s[0].text); })], optional: true),
+          NamedValue('ECU_CALIBRATION_OFFSET', [Value('offset', ValueType.integer, (ValueType t, List<Token> s) { pars.calibrationOffset = int.parse(s[0].text); })], optional: true),
+          NamedValue('NO_OF_INTERFACES', [Value('count', ValueType.integer, (ValueType t, List<Token> s) { pars.numberOfInterfaces = int.parse(s[0].text); })], optional: true),
+          NamedValue('ADDR_EPK', [Value('address', ValueType.integer, (ValueType t, List<Token> s) { pars.eepromIdentifiers.add(int.parse(s[0].text)); })], optional: true, unique: false),
           NamedValue('SYSTEM_CONSTANT', [
-            Value('name', ValueType.text, (ValueType t, List<String> s) { pars.systemConstants.add(SystemConstant()); pars.systemConstants.last.name = removeQuotes(s[0]); }),
-            Value('value', ValueType.text, (ValueType t, List<String> s) { pars.systemConstants.last.value = removeQuotes(s[0]); }),
+            Value('name', ValueType.text, (ValueType t, List<Token> s) { pars.systemConstants.add(SystemConstant()); pars.systemConstants.last.name = removeQuotes(s[0].text); }),
+            Value('value', ValueType.text, (ValueType t, List<Token> s) { pars.systemConstants.last.value = removeQuotes(s[0].text); }),
           ], optional: true, unique: false),
         ];
         return A2LElementParsingOptions(pars, values, optional);
       } 
       else {
-        throw ParsingException('Parse tree built wrong, parent of MOD_PAR must be a module!', '', 0);
+        throw ValidationError('Parse tree built wrong, parent of MOD_PAR must be a module!');
       }
     }, optional: true, unique: true);
   }
@@ -475,22 +458,22 @@ class TokenParser {
         p.recordLayouts.add(rl);
         
         var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            rl.name = s[0];
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+            rl.name = s[0].text;
           })];
         
         var optional = <A2LElement>[
-          NamedValue('ALIGNMENT_BYTE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt8 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_WORD', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt16 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_LONG', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt32 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_INT64', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentInt64 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_FLOAT32_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentFloat32 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('ALIGNMENT_FLOAT64_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<String> s) { rl.aligmentFloat64 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('ALIGNMENT_BYTE', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { rl.aligmentInt8 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_WORD', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { rl.aligmentInt16 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_LONG', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { rl.aligmentInt32 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_INT64', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { rl.aligmentInt64 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT32_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { rl.aligmentFloat32 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('ALIGNMENT_FLOAT64_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { rl.aligmentFloat64 = int.parse(s[0].text); }), ], optional: true),
           NamedValue('FNC_VALUES', [
-            Value('Position', ValueType.integer, (ValueType t, List<String> s) { rl.values ??= LayoutData(); rl.values!.position = int.parse(s[0]); }), 
-            Value('Datatype', ValueType.text, (ValueType t, List<String> s) { rl.values!.type = dataTypeFromString(s[0]); }), 
-            Value('IndexMode', ValueType.text, (ValueType t, List<String> s) { rl.values!.mode = indexModeFromString(s[0]); }), 
-            Value('Addresstype', ValueType.text, (ValueType t, List<String> s) { rl.values!.addressType = addressTypeFromString(s[0]); }), 
+            Value('Position', ValueType.integer, (ValueType t, List<Token> s) { rl.values ??= LayoutData(); rl.values!.position = int.parse(s[0].text); }), 
+            Value('Datatype', ValueType.text, (ValueType t, List<Token> s) { rl.values!.type = dataTypeFromString(s[0]); }), 
+            Value('IndexMode', ValueType.text, (ValueType t, List<Token> s) { rl.values!.mode = indexModeFromString(s[0]); }), 
+            Value('Addresstype', ValueType.text, (ValueType t, List<Token> s) { rl.values!.addressType = addressTypeFromString(s[0]); }), 
           ], optional: true),
           _createBaseLayoutData('SHIFT_OP_X', () { rl.shiftX??=BaseLayoutData(); return rl.shiftX!; }),
           _createBaseLayoutData('SHIFT_OP_Y', () { rl.shiftY??=BaseLayoutData(); return rl.shiftY!; }),
@@ -524,11 +507,11 @@ class TokenParser {
           _createBaseLayoutData('DIST_OP_Z', () { rl.distanceZ??=BaseLayoutData(); return rl.distanceZ!; }),
           _createBaseLayoutData('DIST_OP_4', () { rl.distance4??=BaseLayoutData(); return rl.distance4!; }),
           _createBaseLayoutData('DIST_OP_5', () { rl.distance5??=BaseLayoutData(); return rl.distance5!; }),
-          NamedValue('FIX_NO_AXIS_PTS_X', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPointsX = int.parse(s[0]); }), ], optional: true),
-          NamedValue('FIX_NO_AXIS_PTS_Y', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPointsY = int.parse(s[0]); }), ], optional: true),
-          NamedValue('FIX_NO_AXIS_PTS_Z', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPointsZ = int.parse(s[0]); }), ], optional: true),
-          NamedValue('FIX_NO_AXIS_PTS_4', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPoints4 = int.parse(s[0]); }), ], optional: true),
-          NamedValue('FIX_NO_AXIS_PTS_5', [Value('number', ValueType.integer, (ValueType t, List<String> s) { rl.fixedNumberOfAxisPoints5 = int.parse(s[0]); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_X', [Value('number', ValueType.integer, (ValueType t, List<Token> s) { rl.fixedNumberOfAxisPointsX = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_Y', [Value('number', ValueType.integer, (ValueType t, List<Token> s) { rl.fixedNumberOfAxisPointsY = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_Z', [Value('number', ValueType.integer, (ValueType t, List<Token> s) { rl.fixedNumberOfAxisPointsZ = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_4', [Value('number', ValueType.integer, (ValueType t, List<Token> s) { rl.fixedNumberOfAxisPoints4 = int.parse(s[0].text); }), ], optional: true),
+          NamedValue('FIX_NO_AXIS_PTS_5', [Value('number', ValueType.integer, (ValueType t, List<Token> s) { rl.fixedNumberOfAxisPoints5 = int.parse(s[0].text); }), ], optional: true),
           _createAxisLayoutData('AXIS_PTS_X', () { rl.axisPointsX ??= AxisLayoutData(); return rl.axisPointsX!;}),
           _createAxisLayoutData('AXIS_PTS_Y', () { rl.axisPointsY ??= AxisLayoutData(); return rl.axisPointsY!;}),
           _createAxisLayoutData('AXIS_PTS_Z', () { rl.axisPointsZ ??= AxisLayoutData(); return rl.axisPointsZ!;}),
@@ -541,17 +524,17 @@ class TokenParser {
           _createAxisRescaleLayoutData('AXIS_RESCALE_5', () { rl.axisRescale5 ??= AxisRescaleData(); return rl.axisRescale5!;}),
           NamedValue('STATIC_RECORD_LAYOUT',[], callback: () {rl.staticRecordLayout = true;}, optional: true),
           NamedValue('RESERVED', [
-            Value('Position', ValueType.integer, (ValueType t, List<String> s) {
+            Value('Position', ValueType.integer, (ValueType t, List<Token> s) {
               var data = BaseLayoutData();
-              data.position = int.parse(s[0]);
+              data.position = int.parse(s[0].text);
               rl.reserved.add(data);
             }), 
-            Value('Datatype', ValueType.text, (ValueType t, List<String> s) { rl.reserved.last.type = dataTypeFromString(s[0]); })
+            Value('Datatype', ValueType.text, (ValueType t, List<Token> s) { rl.reserved.last.type = dataTypeFromString(s[0]); })
           ], optional: true, unique: false)
         ];
         return A2LElementParsingOptions(rl, values, optional);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of RECORD_LAYOUT must be module!', '', 0);
+        throw ValidationError('Parse tree built wrong, parent of RECORD_LAYOUT must be module!');
       }
     }
     , optional: true, unique: false);
@@ -559,27 +542,27 @@ class TokenParser {
 
   NamedValue _createBaseLayoutData(String key, BaseLayoutData Function() data) {
     return NamedValue(key, [
-      Value('Position', ValueType.integer, (ValueType t, List<String> s) { data().position = int.parse(s[0]); }), 
-      Value('Datatype', ValueType.text, (ValueType t, List<String> s) { data().type = dataTypeFromString(s[0]); })
+      Value('Position', ValueType.integer, (ValueType t, List<Token> s) { data().position = int.parse(s[0].text); }), 
+      Value('Datatype', ValueType.text, (ValueType t, List<Token> s) { data().type = dataTypeFromString(s[0]); })
     ], optional: true);
   }
 
   NamedValue _createAxisLayoutData(String key, AxisLayoutData Function() data) {
     return NamedValue(key, [
-      Value('Position', ValueType.integer, (ValueType t, List<String> s) { data().position = int.parse(s[0]); }), 
-      Value('Datatype', ValueType.text, (ValueType t, List<String> s) { data().type = dataTypeFromString(s[0]); }),
-      Value('indexOrder', ValueType.text, (ValueType t, List<String> s) { data().order = indexOrderFromString(s[0]); }),
-      Value('addressType', ValueType.text, (ValueType t, List<String> s) { data().addressType = addressTypeFromString(s[0]); }),
+      Value('Position', ValueType.integer, (ValueType t, List<Token> s) { data().position = int.parse(s[0].text); }), 
+      Value('Datatype', ValueType.text, (ValueType t, List<Token> s) { data().type = dataTypeFromString(s[0]); }),
+      Value('indexOrder', ValueType.text, (ValueType t, List<Token> s) { data().order = indexOrderFromString(s[0]); }),
+      Value('addressType', ValueType.text, (ValueType t, List<Token> s) { data().addressType = addressTypeFromString(s[0]); }),
     ], optional: true);
   }
 
   NamedValue _createAxisRescaleLayoutData(String key, AxisRescaleData Function() data) {
     return NamedValue(key, [
-      Value('Position', ValueType.integer, (ValueType t, List<String> s) { data().position = int.parse(s[0]); }), 
-      Value('Datatype', ValueType.text, (ValueType t, List<String> s) { data().type = dataTypeFromString(s[0]); }),
-      Value('maxNumber', ValueType.integer, (ValueType t, List<String> s) { data().maxNumberOfPairs = int.parse(s[0]); }),
-      Value('indexOrder', ValueType.text, (ValueType t, List<String> s) { data().order = indexOrderFromString(s[0]); }),
-      Value('addressType', ValueType.text, (ValueType t, List<String> s) { data().addressType = addressTypeFromString(s[0]); }),
+      Value('Position', ValueType.integer, (ValueType t, List<Token> s) { data().position = int.parse(s[0].text); }), 
+      Value('Datatype', ValueType.text, (ValueType t, List<Token> s) { data().type = dataTypeFromString(s[0]); }),
+      Value('maxNumber', ValueType.integer, (ValueType t, List<Token> s) { data().maxNumberOfPairs = int.parse(s[0].text); }),
+      Value('indexOrder', ValueType.text, (ValueType t, List<Token> s) { data().order = indexOrderFromString(s[0]); }),
+      Value('addressType', ValueType.text, (ValueType t, List<Token> s) { data().addressType = addressTypeFromString(s[0]); }),
     ], optional: true);
   }
 
@@ -589,73 +572,72 @@ class TokenParser {
         var unit = Unit();
         p.units.add(unit);
         var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            unit.name = s[0];
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+            unit.name = s[0].text;
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-            unit.description = removeQuotes(s[0]);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
+            unit.description = removeQuotes(s[0].text);
           }),
-          Value('Display', ValueType.text, (ValueType t, List<String> s) {
-            unit.display = removeQuotes(s[0]);
+          Value('Display', ValueType.text, (ValueType t, List<Token> s) {
+            unit.display = removeQuotes(s[0].text);
           }),
-          Value('Type', ValueType.text, (ValueType t, List<String> s) {
+          Value('Type', ValueType.text, (ValueType t, List<Token> s) {
               unit.type = unitTypeFromString(s[0]);
           })
         ];
         var optional = <A2LElement>[
           NamedValue('REF_UNIT', [
-            Value('Unit', ValueType.id, (ValueType t, List<String> s) {
-              unit.referencedUnit = s[0];
+            Value('Unit', ValueType.id, (ValueType t, List<Token> s) {
+              unit.referencedUnit = s[0].text;
             }),
           ], optional: true),
           NamedValue('SI_EXPONENTS', [
-            Value('Length', ValueType.id, (ValueType t, List<String> s) {
+            Value('Length', ValueType.id, (ValueType t, List<Token> s) {
               unit.exponents ??= SIExponents();
-              unit.exponents!.length = int.parse(s[0]);
+              unit.exponents!.length = int.parse(s[0].text);
             }),
-            Value('Mass', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponents!.mass = int.parse(s[0]);
+            Value('Mass', ValueType.id, (ValueType t, List<Token> s) {
+              unit.exponents!.mass = int.parse(s[0].text);
             }),
-            Value('Time', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponents!.time = int.parse(s[0]);
+            Value('Time', ValueType.id, (ValueType t, List<Token> s) {
+              unit.exponents!.time = int.parse(s[0].text);
             }),
-            Value('ElectricCurrent', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponents!.electricCurrent = int.parse(s[0]);
+            Value('ElectricCurrent', ValueType.id, (ValueType t, List<Token> s) {
+              unit.exponents!.electricCurrent = int.parse(s[0].text);
             }),
-            Value('Temperature', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponents!.temperature = int.parse(s[0]);
+            Value('Temperature', ValueType.id, (ValueType t, List<Token> s) {
+              unit.exponents!.temperature = int.parse(s[0].text);
             }),
-            Value('AmountOfSubstance', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponents!.amountOfSubstance = int.parse(s[0]);
+            Value('AmountOfSubstance', ValueType.id, (ValueType t, List<Token> s) {
+              unit.exponents!.amountOfSubstance = int.parse(s[0].text);
             }),
-            Value('LuminousIntensity', ValueType.id, (ValueType t, List<String> s) {
-              unit.exponents!.luminousIntensity = int.parse(s[0]);
+            Value('LuminousIntensity', ValueType.id, (ValueType t, List<Token> s) {
+              unit.exponents!.luminousIntensity = int.parse(s[0].text);
             })
           ], optional: true),
           NamedValue('UNIT_CONVERSION', [
-            Value('Slope', ValueType.id, (ValueType t, List<String> s) {
-              unit.conversionLinear_slope = double.parse(s[0]);
+            Value('Slope', ValueType.id, (ValueType t, List<Token> s) {
+              unit.conversionLinear_slope = double.parse(s[0].text);
             }),
-            Value('Offset', ValueType.id, (ValueType t, List<String> s) {
-              unit.conversionLinear_offset = double.parse(s[0]);
+            Value('Offset', ValueType.id, (ValueType t, List<Token> s) {
+              unit.conversionLinear_offset = double.parse(s[0].text);
             }),
           ], optional: true),
         ];
         return A2LElementParsingOptions(unit, values, optional);
       } else {
-        throw ParsingException(
-            'Parse tree built wrong, parent of UNIT must be module!', '', 0);
+        throw ValidationError('Parse tree built wrong, parent of UNIT must be module!');
       }
     }, optional: true, unique: false);
   }
 
   List<Value> _createSharedValuesMeasurementCharacteristicStart(MeasurementCharacteristicBase base) {
     var values = <Value>[
-      Value('Name', ValueType.id, (ValueType t, List<String> s) {
-        base.name = s[0];
+      Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+        base.name = s[0].text;
       }),
-      Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-        base.description = removeQuotes(s[0]);
+      Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
+        base.description = removeQuotes(s[0].text);
       })
     ];
     return values;
@@ -663,11 +645,11 @@ class TokenParser {
 
   List<Value> _createSharedValuesMeasurementCharacteristicEnd(MeasurementCharacteristicBase base) {
     var values = <Value>[
-      Value('LowerLimit', ValueType.floating, (ValueType t, List<String> s) {
-        base.lowerLimit = double.parse(s[0]);
+      Value('LowerLimit', ValueType.floating, (ValueType t, List<Token> s) {
+        base.lowerLimit = double.parse(s[0].text);
       }),
-      Value('UpperLimit', ValueType.floating, (ValueType t, List<String> s) {
-        base.upperLimit = double.parse(s[0]);
+      Value('UpperLimit', ValueType.floating, (ValueType t, List<Token> s) {
+        base.upperLimit = double.parse(s[0].text);
       })
     ];
     return values;
@@ -676,65 +658,65 @@ class TokenParser {
   List<A2LElement> _createSharedOptionalsMeasurementCharacteristic(MeasurementCharacteristicBase base) {
     var values = <A2LElement>[
       NamedValue('BIT_MASK', [
-        Value('mask', ValueType.integer, (ValueType t, List<String> s) {
-          base.bitMask = int.parse(s[0]);
+        Value('mask', ValueType.integer, (ValueType t, List<Token> s) {
+          base.bitMask = int.parse(s[0].text);
         })
       ], optional: true),
       NamedValue('BYTE_ORDER', [
-        Value('order', ValueType.text, (ValueType t, List<String> s) {
+        Value('order', ValueType.text, (ValueType t, List<Token> s) {
           base.endianess = byteOrderFromString(s[0]);
         })
       ], optional: true),
       NamedValue('DISCRETE',[], callback: () {base.discrete = true;}, optional: true),
       NamedValue('DISPLAY_IDENTIFIER', [
-        Value('id', ValueType.text, (ValueType t, List<String> s) {
-          base.displayIdentifier = removeQuotes(s[0]);
+        Value('id', ValueType.text, (ValueType t, List<Token> s) {
+          base.displayIdentifier = removeQuotes(s[0].text);
         })
       ], optional: true),
       NamedValue('ECU_ADDRESS_EXTENSION', [
-        Value('address extension', ValueType.integer, (ValueType t, List<String> s) {
-          base.addressExtension = int.parse(s[0]);
+        Value('address extension', ValueType.integer, (ValueType t, List<Token> s) {
+          base.addressExtension = int.parse(s[0].text);
         })
       ], optional: true),
       NamedValue('FORMAT', [
-        Value('format', ValueType.text, (ValueType t, List<String> s) {
-          base.format = removeQuotes(s[0]);
+        Value('format', ValueType.text, (ValueType t, List<Token> s) {
+          base.format = removeQuotes(s[0].text);
         })
       ], optional: true),
       NamedValue('PHYS_UNIT', [
-        Value('unit', ValueType.text, (ValueType t, List<String> s) {
-          base.unit = removeQuotes(s[0]);
+        Value('unit', ValueType.text, (ValueType t, List<Token> s) {
+          base.unit = removeQuotes(s[0].text);
         })
       ], optional: true),
       NamedValue('REF_MEMORY_SEGMENT', [
-        Value('segment', ValueType.text, (ValueType t, List<String> s) {
-          base.memorySegment = s[0];
+        Value('segment', ValueType.text, (ValueType t, List<Token> s) {
+          base.memorySegment = s[0].text;
         })
       ], optional: true),
       NamedValue('SYMBOL_LINK', [
-        Value('SymbolName', ValueType.text, (ValueType t, List<String> s) {
+        Value('SymbolName', ValueType.text, (ValueType t, List<Token> s) {
           base.symbolLink ??= SymbolLink();
-          base.symbolLink!.name = removeQuotes(s[0]);
+          base.symbolLink!.name = removeQuotes(s[0].text);
         }),
-        Value('Offset', ValueType.integer, (ValueType t, List<String> s) {
-          base.symbolLink!.offset = int.parse(s[0]);
+        Value('Offset', ValueType.integer, (ValueType t, List<Token> s) {
+          base.symbolLink!.offset = int.parse(s[0].text);
         }),
       ], optional: true),
       NamedValue('MATRIX_DIM', [
-        Value('Dimensions', ValueType.integer, (ValueType t, List<String> s) {
+        Value('Dimensions', ValueType.integer, (ValueType t, List<Token> s) {
           base.matrixDim ??= MatrixDim();
-          base.matrixDim!.x = int.parse(s[0]);
-          base.matrixDim!.y = int.parse(s[1]);
-          base.matrixDim!.z = int.parse(s[2]);
+          base.matrixDim!.x = int.parse(s[0].text);
+          base.matrixDim!.y = int.parse(s[1].text);
+          base.matrixDim!.z = int.parse(s[2].text);
         }, requiredTokens: 3),
       ], optional: true),
       NamedValue('MAX_REFRESH', [
-        Value('ScalingUnit', ValueType.integer, (ValueType t, List<String> s) {
+        Value('ScalingUnit', ValueType.integer, (ValueType t, List<Token> s) {
           base.maxRefresh ??= MaxRefresh();
           base.maxRefresh!.scalingUnit = maxRefreshUnitFromString(s[0]);
         }),
-        Value('Rate', ValueType.integer, (ValueType t, List<String> s) {
-          base.maxRefresh!.rate = int.parse(s[0]);
+        Value('Rate', ValueType.integer, (ValueType t, List<Token> s) {
+          base.maxRefresh!.rate = int.parse(s[0].text);
         }),
       ], optional: true),
     ];
@@ -749,17 +731,17 @@ class TokenParser {
 
         var values = _createSharedValuesMeasurementCharacteristicStart(measurement);
         values.addAll([
-          Value('Datatype', ValueType.text, (ValueType t, List<String> s) {
+          Value('Datatype', ValueType.text, (ValueType t, List<Token> s) {
             measurement.datatype = dataTypeFromString(s[0]);
           }),
-          Value('Conversion', ValueType.text, (ValueType t, List<String> s) {
-            measurement.conversionMethod = s[0];
+          Value('Conversion', ValueType.text, (ValueType t, List<Token> s) {
+            measurement.conversionMethod = s[0].text;
           }),
-          Value('Resolution', ValueType.integer, (ValueType t, List<String> s) {
-            measurement.resolution = int.parse(s[0]);
+          Value('Resolution', ValueType.integer, (ValueType t, List<Token> s) {
+            measurement.resolution = int.parse(s[0].text);
           }),
-          Value('Accuracy', ValueType.floating, (ValueType t, List<String> s) {
-            measurement.accuracy = double.parse(s[0]);
+          Value('Accuracy', ValueType.floating, (ValueType t, List<Token> s) {
+            measurement.accuracy = double.parse(s[0].text);
           }),
         ]);
         values.addAll(_createSharedValuesMeasurementCharacteristicEnd(measurement));
@@ -767,22 +749,22 @@ class TokenParser {
         var optional = _createSharedOptionalsMeasurementCharacteristic(measurement);
         optional.addAll(<A2LElement>[
           NamedValue('ARRAY_SIZE', [
-            Value('size', ValueType.integer, (ValueType t, List<String> s) {
-              measurement.arraySize = int.parse(s[0]);
+            Value('size', ValueType.integer, (ValueType t, List<Token> s) {
+              measurement.arraySize = int.parse(s[0].text);
             })
           ], optional: true),
           NamedValue('ECU_ADDRESS', [
-            Value('address', ValueType.integer, (ValueType t, List<String> s) {
-              measurement.address = int.parse(s[0]);
+            Value('address', ValueType.integer, (ValueType t, List<Token> s) {
+              measurement.address = int.parse(s[0].text);
             })
           ], optional: true),
           NamedValue('ERROR_MASK', [
-            Value('error mask', ValueType.integer, (ValueType t, List<String> s) {
-              measurement.errorMask = int.parse(s[0]);
+            Value('error mask', ValueType.integer, (ValueType t, List<Token> s) {
+              measurement.errorMask = int.parse(s[0].text);
             })
           ], optional: true),
           NamedValue('LAYOUT', [
-            Value('layout', ValueType.text, (ValueType t, List<String> s) {
+            Value('layout', ValueType.text, (ValueType t, List<Token> s) {
               measurement.layout = indexModeFromString(s[0]);
             })
           ], optional: true),
@@ -794,10 +776,7 @@ class TokenParser {
         ]);
         return A2LElementParsingOptions(measurement, values, optional);
       } else {
-        throw ParsingException(
-            'Parse tree built wrong, parent of MEASUREMENT must be module!',
-            '',
-            0);
+        throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
       }
     }, optional: true, unique: false);
   }
@@ -811,20 +790,20 @@ class TokenParser {
 
         var values = _createSharedValuesMeasurementCharacteristicStart(char);
         values.addAll([
-          Value('Type', ValueType.text, (ValueType t, List<String> s) {
+          Value('Type', ValueType.text, (ValueType t, List<Token> s) {
             char.type = characteristicTypeFromString(s[0]);
           }),
-          Value('Address', ValueType.integer, (ValueType t, List<String> s) {
-            char.address = int.parse(s[0]);
+          Value('Address', ValueType.integer, (ValueType t, List<Token> s) {
+            char.address = int.parse(s[0].text);
           }),
-          Value('Deposit', ValueType.id, (ValueType t, List<String> s) {
-            char.recordLayout =s[0];
+          Value('Deposit', ValueType.id, (ValueType t, List<Token> s) {
+            char.recordLayout =s[0].text;
           }),
-          Value('MaxDiff', ValueType.floating, (ValueType t, List<String> s) {
-            char.maxDiff = double.parse(s[0]);
+          Value('MaxDiff', ValueType.floating, (ValueType t, List<Token> s) {
+            char.maxDiff = double.parse(s[0].text);
           }),
-          Value('Conversion', ValueType.id, (ValueType t, List<String> s) {
-            char.conversionMethod = s[0];
+          Value('Conversion', ValueType.id, (ValueType t, List<Token> s) {
+            char.conversionMethod = s[0].text;
           }),
         ]);
         values.addAll(_createSharedValuesMeasurementCharacteristicEnd(char));
@@ -833,14 +812,14 @@ class TokenParser {
         optional.addAll(<A2LElement>[
           NamedValue('READ_ONLY',[], callback: () {char.readWrite = false;}, optional: true),
           NamedValue('GUARD_RAILS',[], callback: () {char.guardRails = true;}, optional: true),
-          NamedValue('STEP_SIZE',[Value('Step size', ValueType.floating, (p0, p1) { char.stepSize = double.parse(p1[0]); })], optional: true),
-          NamedValue('NUMBER',[Value('number', ValueType.integer, (p0, p1) { char.number = int.parse(p1[0]); })], optional: true),
-          NamedValue('COMPARISON_QUANTITY',[Value('COMPARISON_QUANTITY', ValueType.id, (p0, p1) { char.comparisionQuantity = p1[0]; })], optional: true),
+          NamedValue('STEP_SIZE',[Value('Step size', ValueType.floating, (p0, p1) { char.stepSize = double.parse(p1[0].text); })], optional: true),
+          NamedValue('NUMBER',[Value('number', ValueType.integer, (p0, p1) { char.number = int.parse(p1[0].text); })], optional: true),
+          NamedValue('COMPARISON_QUANTITY',[Value('COMPARISON_QUANTITY', ValueType.id, (p0, p1) { char.comparisionQuantity = p1[0].text; })], optional: true),
           NamedValue('CALIBRATION_ACCESS',[Value('CALIBRATION_ACCESS', ValueType.text, (p0, p1) { char.calibrationAccess = calibrationAccessFromString(p1[0]); })], optional: true),
           NamedValue('EXTENDED_LIMITS',[Value('EXTENDED_LIMITS', ValueType.floating, (p0, p1) {
             char.extendedLimits ??= ExtendedLimits();
-            char.extendedLimits!.lowerLimit = double.parse(p1[0]); 
-            char.extendedLimits!.upperLimit = double.parse(p1[1]); 
+            char.extendedLimits!.lowerLimit = double.parse(p1[0].text); 
+            char.extendedLimits!.upperLimit = double.parse(p1[1].text); 
           },requiredTokens: 2)], optional: true),
           _createAnnotation(),
           _createFunctionList(),
@@ -849,10 +828,7 @@ class TokenParser {
         ]);
         return A2LElementParsingOptions(char, values, optional);
       } else {
-        throw ParsingException(
-            'Parse tree built wrong, parent of MEASUREMENT must be module!',
-            '',
-            0);
+        throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
       }
     }, optional: true, unique: false);
   }
@@ -861,24 +837,24 @@ class TokenParser {
     return BlockElement(key, (s, p) {
       if (p is Characteristic) {
         return A2LElementParsingOptions(p, [
-                Value('Formula', ValueType.text, (ValueType t, List<String> s) {
+                Value('Formula', ValueType.text, (ValueType t, List<Token> s) {
                   if(virtual) {
                     p.virtualCharacteristics ??= DependentCharacteristics();
-                    p.virtualCharacteristics!.formula= removeQuotes(s[0]);
+                    p.virtualCharacteristics!.formula= removeQuotes(s[0].text);
                   } else {
                     p.dependentCharacteristics ??= DependentCharacteristics();
-                    p.dependentCharacteristics!.formula= removeQuotes(s[0]);
+                    p.dependentCharacteristics!.formula= removeQuotes(s[0].text);
                   }
                 }),
-                Value('Characteristics id', ValueType.id, (ValueType t, List<String> s) {
+                Value('Characteristics id', ValueType.id, (ValueType t, List<Token> s) {
                   if(virtual) {
-                    p.virtualCharacteristics!.characteristics.add(s[0]);
+                    p.virtualCharacteristics!.characteristics.add(s[0].text);
                   } else {
-                    p.dependentCharacteristics!.characteristics.add(s[0]);;
+                    p.dependentCharacteristics!.characteristics.add(s[0].text);;
                   }
                 }, multiplicity: -1)], []);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of $key must be derived from Characteristic!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of $key must be derived from Characteristic!');
       }
     }, optional: true, unique: false);
   }
@@ -891,80 +867,77 @@ class TokenParser {
         p.computeMethods.add(comp);
 
         var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            comp.name = s[0];
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+            comp.name = s[0].text;
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-            comp.description = removeQuotes(s[0]);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
+            comp.description = removeQuotes(s[0].text);
           }),
-          Value('ConversionType', ValueType.text, (ValueType t, List<String> s) {
+          Value('ConversionType', ValueType.text, (ValueType t, List<Token> s) {
             comp.type = computeMethodTypeFromSting(s[0]);
           }),
-          Value('Format', ValueType.text, (ValueType t, List<String> s) {
-            comp.format = removeQuotes(s[0]);
+          Value('Format', ValueType.text, (ValueType t, List<Token> s) {
+            comp.format = removeQuotes(s[0].text);
           }),
-          Value('Unit', ValueType.text, (ValueType t, List<String> s) {
-            comp.unit = removeQuotes(s[0]);
+          Value('Unit', ValueType.text, (ValueType t, List<Token> s) {
+            comp.unit = removeQuotes(s[0].text);
           }),
         ];
 
         var optional = <A2LElement>[
           NamedValue('COEFFS', [
-            Value('a', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_a = double.parse(s[0]);
+            Value('a', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_a = double.parse(s[0].text);
             }),
-            Value('b', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_b = double.parse(s[0]);
+            Value('b', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_b = double.parse(s[0].text);
             }),
-            Value('c', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_c = double.parse(s[0]);
+            Value('c', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_c = double.parse(s[0].text);
             }),
-            Value('d', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_d = double.parse(s[0]);
+            Value('d', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_d = double.parse(s[0].text);
             }),
-            Value('e', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_e = double.parse(s[0]);
+            Value('e', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_e = double.parse(s[0].text);
             }),
-            Value('f', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_f = double.parse(s[0]);
+            Value('f', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_f = double.parse(s[0].text);
             }),
           ], optional: true),
           NamedValue('COEFFS_LINEAR', [
-            Value('a', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_a = double.parse(s[0]);
+            Value('a', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_a = double.parse(s[0].text);
             }),
-            Value('b', ValueType.integer, (ValueType t, List<String> s) {
-              comp.coefficient_b = double.parse(s[0]);
+            Value('b', ValueType.integer, (ValueType t, List<Token> s) {
+              comp.coefficient_b = double.parse(s[0].text);
             }),
           ], optional: true),
           NamedValue('COMPU_TAB_REF', [
-            Value('format', ValueType.id, (ValueType t, List<String> s) {
-              comp.referenced_table = s[0];
+            Value('format', ValueType.id, (ValueType t, List<Token> s) {
+              comp.referenced_table = s[0].text;
             })
           ], optional: true),
           NamedValue('FORMULA', [
-            Value('forumla', ValueType.text, (ValueType t, List<String> s) {
-              comp.formula = removeQuotes(s[0]);
+            Value('forumla', ValueType.text, (ValueType t, List<Token> s) {
+              comp.formula = removeQuotes(s[0].text);
             })
           ], optional: true),
           NamedValue('REF_UNIT', [
-            Value('unit', ValueType.id, (ValueType t, List<String> s) {
-              comp.referenced_unit = s[0];
+            Value('unit', ValueType.id, (ValueType t, List<Token> s) {
+              comp.referenced_unit = s[0].text;
             })
           ], optional: true),
           NamedValue('STATUS_STRING_REF', [
-            Value('segment', ValueType.id, (ValueType t, List<String> s) {
-              comp.referenced_statusString = s[0];
+            Value('segment', ValueType.id, (ValueType t, List<Token> s) {
+              comp.referenced_statusString = s[0].text;
             })
           ], optional: true)
         ];
         return A2LElementParsingOptions(comp, values, optional);
 
       } else {
-        throw ParsingException(
-            'Parse tree built wrong, parent of MEASUREMENT must be module!',
-            '',
-            0);
+        throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
       }
     }, optional: true, unique: false);
   }
@@ -975,45 +948,42 @@ class TokenParser {
         var tab = ComputeTable();
         p.computeTables.add(tab);
 
-        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<String> s) {
-            tab.table.add(ComputeTableEntry(x: double.parse(s[0]), outNumeric: double.parse(s[1]), outString: s[1]));
+        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<Token> s) {
+            tab.table.add(ComputeTableEntry(x: double.parse(s[0].text), outNumeric: double.parse(s[1].text), outString: s[1].text));
         }, requiredTokens: 2);
 
         var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            tab.name = s[0];
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+            tab.name = s[0].text;
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-            tab.description = removeQuotes(s[0]);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
+            tab.description = removeQuotes(s[0].text);
           }),
-          Value('ConversionType', ValueType.text, (ValueType t, List<String> s) {
+          Value('ConversionType', ValueType.text, (ValueType t, List<Token> s) {
             tab.type = computeMethodTypeFromSting(s[0]);
           }),
-          Value('NumberValuePairs', ValueType.integer, (ValueType t, List<String> s) {
-            pairs.multiplicity = int.parse(s[0]);
+          Value('NumberValuePairs', ValueType.integer, (ValueType t, List<Token> s) {
+            pairs.multiplicity = int.parse(s[0].text);
           }),
           pairs
         ];
 
         var optional = <A2LElement>[
           NamedValue('DEFAULT_VALUE', [
-            Value('default value double', ValueType.text, (ValueType t, List<String> s) {
-              tab.fallbackValue = removeQuotes(s[0]);
+            Value('default value double', ValueType.text, (ValueType t, List<Token> s) {
+              tab.fallbackValue = removeQuotes(s[0].text);
             }),
           ], optional: true),
           NamedValue('DEFAULT_VALUE_NUMERIC', [
-            Value('default value string', ValueType.floating, (ValueType t, List<String> s) {
-              tab.fallbackValueNumeric = double.parse(s[0]);
+            Value('default value string', ValueType.floating, (ValueType t, List<Token> s) {
+              tab.fallbackValueNumeric = double.parse(s[0].text);
             }),
           ], optional: true),
         ];
         return A2LElementParsingOptions(tab, values, optional);
 
       } else {
-        throw ParsingException(
-            'Parse tree built wrong, parent of MEASUREMENT must be module!',
-            '',
-            0);
+        throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
       }
     }, optional: true, unique: false);
   }
@@ -1024,39 +994,36 @@ class TokenParser {
         var tab = VerbatimTable();
         p.computeTables.add(tab);
 
-        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<String> s) {
-            tab.table.add(ComputeTableEntry(x: double.parse(s[0]), outString: removeQuotes(s[1])));
+        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<Token> s) {
+            tab.table.add(ComputeTableEntry(x: double.parse(s[0].text), outString: removeQuotes(s[1].text)));
         }, requiredTokens: 2);
 
         var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            tab.name = s[0];
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+            tab.name = s[0].text;
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-            tab.description = removeQuotes(s[0]);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
+            tab.description = removeQuotes(s[0].text);
           }),
-          Value('ConversionType', ValueType.text, (ValueType t, List<String> s) {
+          Value('ConversionType', ValueType.text, (ValueType t, List<Token> s) {
             tab.type = computeMethodTypeFromSting(s[0]);
           }),
-          Value('NumberValuePairs', ValueType.integer, (ValueType t, List<String> s) {
-            pairs.multiplicity = int.parse(s[0]);
+          Value('NumberValuePairs', ValueType.integer, (ValueType t, List<Token> s) {
+            pairs.multiplicity = int.parse(s[0].text);
           }),
           pairs
         ];
 
         var optional = <A2LElement>[
           NamedValue('DEFAULT_VALUE', [
-            Value('default value double', ValueType.text, (ValueType t, List<String> s) {
-              tab.fallbackValue = removeQuotes(s[0]);
+            Value('default value double', ValueType.text, (ValueType t, List<Token> s) {
+              tab.fallbackValue = removeQuotes(s[0].text);
             }),
           ], optional: true),
         ];
         return A2LElementParsingOptions(tab, values, optional);
       } else {
-        throw ParsingException(
-            'Parse tree built wrong, parent of MEASUREMENT must be module!',
-            '',
-            0);
+        throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
       }
     }, optional: true, unique: false);
   }
@@ -1067,36 +1034,33 @@ class TokenParser {
         var tab = VerbatimRangeTable();
         p.computeTables.add(tab);
 
-        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<String> s) {
-            tab.table.add(ComputeTableEntry(x: double.parse(s[0]), x_up: double.parse(s[1]), isFloat: s[1].contains('.'), outString: removeQuotes(s[2])));
+        var pairs = Value('Pairs', ValueType.text, (ValueType t, List<Token> s) {
+            tab.table.add(ComputeTableEntry(x: double.parse(s[0].text), x_up: double.parse(s[1].text), isFloat: s[1].text.contains('.'), outString: removeQuotes(s[2].text)));
         }, requiredTokens: 3);
 
         var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            tab.name = s[0];
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+            tab.name = s[0].text;
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-            tab.description = removeQuotes(s[0]);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
+            tab.description = removeQuotes(s[0].text);
           }),
-          Value('NumberValueTriples', ValueType.integer, (ValueType t, List<String> s) {
-            pairs.multiplicity = int.parse(s[0]);
+          Value('NumberValueTriples', ValueType.integer, (ValueType t, List<Token> s) {
+            pairs.multiplicity = int.parse(s[0].text);
           }),
           pairs
         ];
 
         var optional = <A2LElement>[
           NamedValue('DEFAULT_VALUE', [
-            Value('default value double', ValueType.text, (ValueType t, List<String> s) {
-              tab.fallbackValue = removeQuotes(s[0]);
+            Value('default value double', ValueType.text, (ValueType t, List<Token> s) {
+              tab.fallbackValue = removeQuotes(s[0].text);
             }),
           ], optional: true),
         ];
         return A2LElementParsingOptions(tab, values, optional);
       } else {
-        throw ParsingException(
-            'Parse tree built wrong, parent of MEASUREMENT must be module!',
-            '',
-            0);
+        throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
       }
     }, optional: true, unique: false);
   }
@@ -1108,20 +1072,20 @@ class TokenParser {
 
         var optional = <A2LElement>[
           NamedValue('LEFT_SHIFT', [
-            Value('LEFT_SHIFT', ValueType.text, (ValueType t, List<String> s) {
-              p.bitOperation!.leftShift = int.parse(s[0]);
+            Value('LEFT_SHIFT', ValueType.text, (ValueType t, List<Token> s) {
+              p.bitOperation!.leftShift = int.parse(s[0].text);
             }),
           ], optional: true),
           NamedValue('RIGHT_SHIFT', [
-            Value('RIGHT_SHIFT', ValueType.text, (ValueType t, List<String> s) {
-              p.bitOperation!.rightShift = int.parse(s[0]);
+            Value('RIGHT_SHIFT', ValueType.text, (ValueType t, List<Token> s) {
+              p.bitOperation!.rightShift = int.parse(s[0].text);
             }),
           ], optional: true),
           NamedValue('SIGN_EXTEND', [], callback: () => p.bitOperation!.signExtend = true, optional: true)
         ];
         return A2LElementParsingOptions(p, [], optional);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of ANNOTATION must be derived from AnnotationContainer!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of ANNOTATION must be derived from AnnotationContainer!');
       }
     }, optional: true, unique: false);
   }
@@ -1134,29 +1098,29 @@ class TokenParser {
 
         var optional = <A2LElement>[
           NamedValue('ANNOTATION_LABEL', [
-            Value('ANNOTATION_LABEL', ValueType.text, (ValueType t, List<String> s) {
-              anno.label = removeQuotes(s[0]);
+            Value('ANNOTATION_LABEL', ValueType.text, (ValueType t, List<Token> s) {
+              anno.label = removeQuotes(s[0].text);
             }),
           ], optional: true),
           NamedValue('ANNOTATION_ORIGIN', [
-            Value('ANNOTATION_ORIGIN', ValueType.text, (ValueType t, List<String> s) {
-              anno.origin = removeQuotes(s[0]);
+            Value('ANNOTATION_ORIGIN', ValueType.text, (ValueType t, List<Token> s) {
+              anno.origin = removeQuotes(s[0].text);
             }),
           ], optional: true),
           BlockElement('ANNOTATION_TEXT', (s, p) {
             if(p is Annotation) {
               return A2LElementParsingOptions(anno, [
-                Value('TEXT', ValueType.text, (ValueType t, List<String> s) {
-                  anno.text.add(removeQuotes(s[0]));
+                Value('TEXT', ValueType.text, (ValueType t, List<Token> s) {
+                  anno.text.add(removeQuotes(s[0].text));
                 }, multiplicity: -1)], []);
             } else {
-              throw ParsingException('Parse tree built wrong, parent of ANNOTATION_TEXT must be derived from Annotation!','', 0);
+              throw ValidationError('Parse tree built wrong, parent of ANNOTATION_TEXT must be derived from Annotation!');
             }
           },optional: true)
         ];
         return A2LElementParsingOptions(anno, [], optional);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of ANNOTATION must be derived from AnnotationContainer!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of ANNOTATION must be derived from AnnotationContainer!');
       }
     }, optional: true, unique: false);
   }
@@ -1166,11 +1130,11 @@ class TokenParser {
     return BlockElement('FUNCTION_LIST', (s, p) {
       if (p is DataContainer) {
         return A2LElementParsingOptions(p, [
-                Value('Function id', ValueType.text, (ValueType t, List<String> s) {
-                  p.functions.add(s[0]);
+                Value('Function id', ValueType.text, (ValueType t, List<Token> s) {
+                  p.functions.add(s[0].text);
                 }, multiplicity: -1)], []);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of FUNCTION_LIST must be derived from DataContainer!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of FUNCTION_LIST must be derived from DataContainer!');
       }
     }, optional: true, unique: false);
   }
@@ -1179,11 +1143,11 @@ class TokenParser {
     return BlockElement(key, (s, p) {
       if (p is DataContainer) {
         return A2LElementParsingOptions(p, [
-                Value('Characteristics id', ValueType.text, (ValueType t, List<String> s) {
-                  p.characteristics.add(s[0]);
+                Value('Characteristics id', ValueType.text, (ValueType t, List<Token> s) {
+                  p.characteristics.add(s[0].text);
                 }, multiplicity: -1)], []);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of $key must be derived from DataContainer!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of $key must be derived from DataContainer!');
       }
     }, optional: true, unique: false);
   }
@@ -1192,11 +1156,11 @@ class TokenParser {
     return BlockElement(key, (s, p) {
       if (p is DataContainer) {
         return A2LElementParsingOptions(p, [
-                Value('Measurements id', ValueType.text, (ValueType t, List<String> s) {
-                  p.measurements.add(s[0]);
+                Value('Measurements id', ValueType.text, (ValueType t, List<Token> s) {
+                  p.measurements.add(s[0].text);
                 }, multiplicity: -1)], []);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of $key must be derived from DataContainer!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of $key must be derived from DataContainer!');
       }
     }, optional: true, unique: false);
   }
@@ -1205,11 +1169,11 @@ class TokenParser {
     return BlockElement(key, (s, p) {
       if (p is DataContainer) {
         return A2LElementParsingOptions(p, [
-                Value('Group id', ValueType.text, (ValueType t, List<String> s) {
-                  p.groups.add(s[0]);
+                Value('Group id', ValueType.text, (ValueType t, List<Token> s) {
+                  p.groups.add(s[0].text);
                 }, multiplicity: -1)], []);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of $key must be derived from DataContainer!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of $key must be derived from DataContainer!');
       }
     }, optional: true, unique: false);
   }
@@ -1221,11 +1185,11 @@ class TokenParser {
         p.groups.add(grp);
 
         var values = [
-          Value('Name', ValueType.id, (ValueType t, List<String> s) {
-            grp.name = s[0];
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) {
+            grp.name = s[0].text;
           }),
-          Value('LongIdentifier', ValueType.text, (ValueType t, List<String> s) {
-            grp.description = removeQuotes(s[0]);
+          Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
+            grp.description = removeQuotes(s[0].text);
           })
         ];
 
@@ -1239,7 +1203,7 @@ class TokenParser {
         ];
         return A2LElementParsingOptions(grp, values, optional);
       } else {
-        throw ParsingException('Parse tree built wrong, parent of GROUP must be module!','', 0);
+        throw ValidationError('Parse tree built wrong, parent of GROUP must be module!');
       }
     }, optional: true, unique: false);
   }

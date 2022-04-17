@@ -1,5 +1,6 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/parsing_exception.dart';
+import 'package:a2l/src/token.dart';
 
 enum CharacteristicType {
   /// String
@@ -20,8 +21,8 @@ enum CharacteristicType {
   VALUE
 }
 
-CharacteristicType characteristicTypeFromString(String s) {
-    switch(s){
+CharacteristicType characteristicTypeFromString(Token s) {
+    switch(s.text){
     case 'ASCII': return CharacteristicType.ASCII;
     case 'CURVE': return CharacteristicType.CURVE;
     case 'MAP': return CharacteristicType.MAP;
@@ -30,7 +31,7 @@ CharacteristicType characteristicTypeFromString(String s) {
     case 'CUBE_5': return CharacteristicType.CUBE_5;
     case 'VAL_BLK': return CharacteristicType.VAL_BLK;
     case 'VALUE': return CharacteristicType.VALUE;
-    default: throw ParsingException('Unknown Characteristic Type $s', '', 0);
+    default: throw ParsingException('Unknown Characteristic Type', s);
   }
 }
 
@@ -47,13 +48,13 @@ enum CalibrationAccess {
  
 }
 
-CalibrationAccess calibrationAccessFromString(String s) {
-    switch(s){
+CalibrationAccess calibrationAccessFromString(Token s) {
+    switch(s.text){
     case 'CALIBRATION': return CalibrationAccess.CALIBRATION;
     case 'NO_CALIBRATION': return CalibrationAccess.NO_CALIBRATION;
     case 'NOT_IN_MCD_SYSTEM': return CalibrationAccess.NOT_IN_MCD_SYSTEM;
     case 'OFFLINE_CALIBRATION': return CalibrationAccess.OFFLINE_CALIBRATION;
-    default: throw ParsingException('Unknown Calibration Access $s', '', 0);
+    default: throw ParsingException('Unknown Calibration Access', s);
   }
 }
 
@@ -68,6 +69,7 @@ class DependentCharacteristics {
   DependentCharacteristics() : characteristics=[];
 }
 
+/// This class represents a configurable value in the ECU.
 class Characteristic extends MeasurementCharacteristicBase {
   // name is in base
   // desciption is in base

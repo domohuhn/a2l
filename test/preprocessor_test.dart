@@ -1,48 +1,48 @@
-import 'package:a2l/src/a2l_split_file.dart';
+import 'package:a2l/a2l.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Remove Comments', () {
-    test('No comments', () {
-      expect(removeComments(textNoComments), textNoComments);
-    });
-
-    test('Line comments', () {
-      expect(removeComments(textLineComments), textNoComments);
-    });
-
-    test('Block comments', () {
-      expect(removeComments(textBlockComments), textNoComments);
-    });
-
-    test('mixed comments', () {
-      expect(removeComments(textMixedComments), textNoComments);
-    });
-  });
 
   group('Split file', (){
 
     test('No comments', () {
-      expect(splitA2L(textNoComments), expectedSplit);
+      var tokens = convertFileContentsToTokens(textNoComments);
+      expect(tokens.length, expectedSplit.length);
+      for(var i=0;i<tokens.length; ++i) {
+        expect(tokens[i].text, expectedSplit[i]);
+      }
     });
-    
+
     test('Line comments', () {
-      expect(splitA2L(textLineComments), expectedSplit);
+      var tokens = convertFileContentsToTokens(textLineComments);
+      expect(tokens.length, expectedSplit.length);
+      for(var i=0;i<tokens.length; ++i) {
+        expect(tokens[i].text, expectedSplit[i]);
+      }
     });
     
     test('Block comments', () {
-      expect(splitA2L(textBlockComments), expectedSplit);
+      var tokens = convertFileContentsToTokens(textBlockComments);
+      expect(tokens.length, expectedSplit.length);
+      for(var i=0;i<tokens.length; ++i) {
+        expect(tokens[i].text, expectedSplit[i]);
+      }
     });
     
     test('mixed comments', () {
-      expect(splitA2L(textMixedComments), expectedSplit);
+      var tokens = convertFileContentsToTokens(textMixedComments);
+      expect(tokens.length, expectedSplit.length);
+      for(var i=0;i<tokens.length; ++i) {
+        expect(tokens[i].text, expectedSplit[i]);
+      }
     });
+
     test('Exception1', () {
-      expect(() => splitA2L(textEx1), throwsException);
+      expect(() => convertFileContentsToTokens(textEx1), throwsException);
     });
 
     test('Exception2', () {
-      expect(() => splitA2L(textEx2), throwsException);
+      expect(() => convertFileContentsToTokens(textEx2), throwsException);
     });
 
   });

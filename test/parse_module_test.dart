@@ -1,14 +1,15 @@
 import 'package:a2l/src/a2l_parser.dart';
+import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
 
   var parser = TokenParser();
   parser.currentIndex = 0;
-  final startList = ['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"'];
-  final module1 = [ '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE'];
-  final module2 = [ '/begin', 'MODULE', 'Test.Module2', '"This is a test module2"','/end', 'MODULE'];
-  final endList = ['/end', 'PROJECT'];
+  final startList = convertStringsToTokens(['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"']);
+  final module1 = convertStringsToTokens([ '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE']);
+  final module2 = convertStringsToTokens([ '/begin', 'MODULE', 'Test.Module2', '"This is a test module2"','/end', 'MODULE']);
+  final endList = convertStringsToTokens(['/end', 'PROJECT']);
   group('Parse project', (){
     test('Parse Versions', (){
       parser.currentIndex = 0;
@@ -31,25 +32,25 @@ void main() {
       expect(() => parser.parse(), throwsException);
     });
     test('Parse Versions - mandatory missing', (){
-      parser.tokens = ['somestuff', 'A2ML_VERSION', '1', '63', '/begin', 'PROJECT', 'Moo', '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE', '/end', 'PROJECT', 'asaasd'];
+      parser.tokens = convertStringsToTokens(['somestuff', 'A2ML_VERSION', '1', '63', '/begin', 'PROJECT', 'Moo', '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE', '/end', 'PROJECT', 'asaasd']);
       parser.currentIndex = 0;
       expect(() => parser.parse(), throwsException);
     });
 
     
     test('Parse Project', (){
-      parser.tokens = ['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"',
+      parser.tokens = convertStringsToTokens(['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"',
        '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE',
-      '/end', 'PROJECT' ];
+      '/end', 'PROJECT' ]);
       parser.currentIndex = 0;
       var file = parser.parse();
       expect(file.project.name, 'Moo');
       expect(file.project.description, 'MooProject');
     });
     test('Parse Header', (){
-      parser.tokens = ['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"',
+      parser.tokens = convertStringsToTokens(['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"',
       '/begin', 'HEADER', '"Commemt"', 'VERSION', '"versio"', 'PROJECT_NO', 'XCP123', '/end', 'HEADER', 
-       '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE','/end', 'PROJECT' ];
+       '/begin', 'MODULE', 'Test.Module', '"This is a test module"','/end', 'MODULE','/end', 'PROJECT' ]);
       parser.currentIndex = 0;
       var file = parser.parse();
       expect(file.project.header!.description, 'Commemt');

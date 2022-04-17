@@ -1,6 +1,7 @@
 
 
 import 'package:a2l/src/parsing_exception.dart';
+import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
 
 
@@ -13,11 +14,11 @@ enum UnitType {
 }
 
 /// Converts [s] to the unit type enum.
-UnitType unitTypeFromString(String s) {
-  switch(s) {
+UnitType unitTypeFromString(Token s) {
+  switch(s.text) {
     case 'DERIVED': return UnitType.DERIVED;
     case 'EXTENDED_SI': return UnitType.EXTENDED_SI;
-    default: throw ParsingException('Unkown unit type "$s"', '', 0);
+    default: throw ParsingException('Unkown unit type', s);
   }
 }
 

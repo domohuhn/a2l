@@ -1,6 +1,7 @@
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
+import 'package:a2l/src/token.dart';
 
 class DataContainer extends AnnotationContainer {
   String name='';
@@ -31,8 +32,8 @@ enum Datatype {
   float64
 }
 
-Datatype dataTypeFromString(String s) {
-  switch(s) {
+Datatype dataTypeFromString(Token s) {
+  switch(s.text) {
     case 'UBYTE': return Datatype.uint8;
     case 'SBYTE': return Datatype.int8;
     case 'UWORD': return Datatype.uint16;
@@ -43,7 +44,7 @@ Datatype dataTypeFromString(String s) {
     case 'A_INT64': return Datatype.int64;
     case 'FLOAT32_IEEE': return Datatype.float32;
     case 'FLOAT64_IEEE': return Datatype.float64;
-    default: throw ParsingException('Unknown data type $s', '', 0);
+    default: throw ParsingException('Unknown data type', s);
   }
 }
 
@@ -52,15 +53,15 @@ enum ByteOrder {
   MSB_FIRST
 }
 
-ByteOrder byteOrderFromString(String s) {
-  switch(s) {
+ByteOrder byteOrderFromString(Token s) {
+  switch(s.text) {
     case 'MSB_LAST': return ByteOrder.MSB_LAST;
     case 'MSB_FIRST': return ByteOrder.MSB_FIRST;
     // wtf? ASAP2 standard is wrong? Standard even mentions that it uses different names to normal, therefore MSB_LAST was introduced
     case 'BIG_ENDIAN': return ByteOrder.MSB_LAST; 
     // wtf? ASAP2 standard is wrong? Standard even mentions that it uses different names to normal, therefore MSB_FIRST was introduced
     case 'LITTLE_ENDIAN': return ByteOrder.MSB_FIRST;
-    default: throw ParsingException('Unknown byte order $s', '', 0);
+    default: throw ParsingException('Unknown byte order', s);
   }
 }
 
@@ -72,14 +73,14 @@ enum IndexMode {
   ROW_DIR
 }
 
-IndexMode indexModeFromString(String s) {
-  switch(s) {
+IndexMode indexModeFromString(Token s) {
+  switch(s.text) {
     case 'ALTERNATE_CURVES': return IndexMode.ALTERNATE_CURVES;
     case 'ALTERNATE_WITH_X': return IndexMode.ALTERNATE_WITH_X;
     case 'ALTERNATE_WITH_Y': return IndexMode.ALTERNATE_WITH_Y;
     case 'COLUMN_DIR': return IndexMode.COLUMN_DIR;
     case 'ROW_DIR': return IndexMode.ROW_DIR;
-    default: throw ParsingException('Unknown index mode $s', '', 0);
+    default: throw ParsingException('Unknown index mode', s);
   }
 }
 
@@ -117,8 +118,8 @@ enum MaxRefreshUnit {
   non_deterministic
 }
 
-MaxRefreshUnit maxRefreshUnitFromString(String s){
-  switch(s){
+MaxRefreshUnit maxRefreshUnitFromString(Token s){
+  switch(s.text){
     case '0': return MaxRefreshUnit.time_1usec;
     case '1': return MaxRefreshUnit.time_10usec;
     case '2': return MaxRefreshUnit.time_100usec;
@@ -137,7 +138,7 @@ MaxRefreshUnit maxRefreshUnitFromString(String s){
     case '998': return MaxRefreshUnit.event_frame;
     case '999': return MaxRefreshUnit.event_newvalue;
     case '1000': return MaxRefreshUnit.non_deterministic;
-    default: throw ParsingException('Unknown ScalingUnit $s', '', 0);
+    default: throw ParsingException('Unknown ScalingUnit', s);
   }
 }
 
@@ -188,13 +189,13 @@ enum AddressType {
 }
 
 /// Converts a string to the address type
-AddressType addressTypeFromString(String s){
-  switch(s) {
+AddressType addressTypeFromString(Token s){
+  switch(s.text) {
     case 'PBYTE': return AddressType.PBYTE;
     case 'PWORD': return AddressType.PWORD;
     case 'PLONG': return AddressType.PLONG;
     case 'DIRECT': return AddressType.DIRECT;
-    default: throw ParsingException('Unknown address type $s', '', 0);
+    default: throw ParsingException('Unknown address type $s', s);
   }
 }
 
@@ -207,11 +208,11 @@ enum Deposit {
 }
 
 /// Converts a string to deposit mode
-Deposit depositFromString(String s){
-  switch(s) {
+Deposit depositFromString(Token s){
+  switch(s.text) {
     case 'ABSOLUTE': return Deposit.ABSOLUTE;
     case 'DIFFERENCE': return Deposit.DIFFERENCE;
-    default: throw ParsingException('Unknown deposit type $s', '', 0);
+    default: throw ParsingException('Unknown deposit type', s);
   }
 }
 

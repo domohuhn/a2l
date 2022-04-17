@@ -1,6 +1,8 @@
 import 'package:a2l/src/parsing_exception.dart';
 import 'dart:math';
 
+import 'package:a2l/src/token.dart';
+
 enum ComputeMethodType {
   IDENTICAL,
   FORM,
@@ -11,8 +13,8 @@ enum ComputeMethodType {
   TAB_VERB
 }
 
-ComputeMethodType computeMethodTypeFromSting(String s) {
-  switch(s) {
+ComputeMethodType computeMethodTypeFromSting(Token s) {
+  switch(s.text) {
     case 'IDENTICAL': return ComputeMethodType.IDENTICAL;
     case 'FORM': return ComputeMethodType.FORM;
     case 'LINEAR': return ComputeMethodType.LINEAR;
@@ -20,7 +22,7 @@ ComputeMethodType computeMethodTypeFromSting(String s) {
     case 'TAB_INTP': return ComputeMethodType.TAB_INTP;
     case 'TAB_NOINTP': return ComputeMethodType.TAB_NOINTP;
     case 'TAB_VERB': return ComputeMethodType.TAB_VERB;
-    default: throw ParsingException('Unknown Compute Method Type $s', '', 0);
+    default: throw ParsingException('Unknown Compute Method Type', s);
   }
 }
 

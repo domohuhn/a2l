@@ -1,21 +1,23 @@
 import 'package:a2l/src/a2l_parser.dart';
+import 'package:a2l/src/token.dart';
+import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Parse values', () {
     var parser = TokenParser();
     parser.currentIndex = 0;
-    final list = ['somestuff', 'ASAP2_VERSION', '1', '63', '/begin', 'PROJECT', 'Moo', '"MooProject"', '/end', 'PROJECT', 'xxx', 'sdf', 'asaasd', 'A2ML_VERSION', '2', '20'];
+    final list = convertStringsToTokens(['somestuff', 'ASAP2_VERSION', '1', '63', '/begin', 'PROJECT', 'Moo', '"MooProject"', '/end', 'PROJECT', 'xxx', 'sdf', 'asaasd', 'A2ML_VERSION', '2', '20']);
     parser.tokens = [];
     parser.tokens.addAll(list);
     var major = 0;
     var minor = 0;
     var values = <Value>[
-        Value('Major a2l version', ValueType.integer, (ValueType t, List<String> s) {
-          major = int.parse(s[0]);
+        Value('Major a2l version', ValueType.integer, (ValueType t, List<Token> s) {
+          major = int.parse(s[0].text);
         }),
-        Value('Minor a2l version', ValueType.integer, (ValueType t, List<String> s) {
-          minor = int.parse(s[0]);
+        Value('Minor a2l version', ValueType.integer, (ValueType t, List<Token> s) {
+          minor = int.parse(s[0].text);
         })
       ];
 
@@ -43,7 +45,7 @@ void main() {
     
     test('find matching end - no end token', (){
       parser.currentIndex = 10;
-      parser.tokens[10] = '/begin';
+      parser.tokens[10].text = '/begin';
       expect(() => parser.findMatchingEndToken(), throwsException);
     });
 

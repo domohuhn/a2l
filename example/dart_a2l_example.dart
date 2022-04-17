@@ -11,7 +11,7 @@ import 'dart:io';
 void main(List<String> arguments) {
   final source = File(arguments[0]).readAsStringSync();
   var parser = TokenParser();
-  parser.tokens = splitA2L(source);
+  parser.tokens = convertFileContentsToTokens(source);
   parser.currentIndex = 0;
   var file = parser.parse();
   print(file.toString());
