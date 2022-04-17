@@ -13,6 +13,7 @@ import 'package:a2l/src/a2l_tree/module_common.dart';
 import 'package:a2l/src/a2l_tree/module_parameters.dart';
 import 'package:a2l/src/a2l_tree/record_layout.dart';
 import 'package:a2l/src/a2l_tree/unit.dart';
+import 'package:a2l/src/a2l_tree/user_rights.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -385,9 +386,39 @@ class TokenParser {
      _createRecordLayout(),
      _createModuleCommon(),
      _createModuleParameters(),
-     _createFrames()];
+     _createFrames(),
+     _createUserRights()];
   }
 
+  BlockElement _createUserRights() {
+    return BlockElement('USER_RIGHTS', (s, p) {
+      if(p is Module) {
+        var ur = UserRights();
+        p.userRights.add(ur);
+        var values = [
+          Value('UserLevelId', ValueType.id, (ValueType t, List<Token> s) { ur.userId = s[0].text;})
+        ];
+        var optional = <A2LElement>[
+          NamedValue('READ_ONLY', [], callback: () => ur.readOnly = true, optional: true),
+          BlockElement('REF_GROUP', (s, p2) {
+            if(p2 is UserRights) {
+              return A2LElementParsingOptions(p2, [
+                Value('Group id', ValueType.text, (ValueType t, List<Token> s) {
+                  p2.groups.add(s[0].text);
+                }, multiplicity: -1)], []);
+            }
+            else {
+              throw ValidationError('Parse tree built wrong, parent of REF_GROUP must be a USER_RIGHTS!');
+            }
+          }, optional: true),
+        ];
+        return A2LElementParsingOptions(ur, values, optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of USER_RIGHTS must be a module!');
+      }
+    }, optional: true, unique: false);
+  }
   
   BlockElement _createFrames() {
     return BlockElement('FRAME', (s, p) {
@@ -406,7 +437,7 @@ class TokenParser {
         return A2LElementParsingOptions(frame, values, optional);
       }
       else {
-        throw ValidationError('Parse tree built wrong, parent of MOD_COMMON must be a module!');
+        throw ValidationError('Parse tree built wrong, parent of FRAME must be a module!');
       }
     }, optional: true,
     // TODO maybe this should be unique?

@@ -9,6 +9,7 @@ import 'package:a2l/src/a2l_tree/unit.dart';
 import 'package:a2l/src/a2l_tree/module_common.dart';
 import 'package:a2l/src/a2l_tree/module_parameters.dart';
 import 'package:a2l/src/a2l_tree/record_layout.dart';
+import 'package:a2l/src/a2l_tree/user_rights.dart';
 import 'package:a2l/src/utility.dart';
 
 
@@ -28,6 +29,7 @@ class Module {
   /// The frames in the a2l file. (It is possible that there is only one allowed frame - no star in standard. 
   /// But everything else refers to frames in plural.)
   List<Frame> frames;
+  List<UserRights> userRights;
   
   Module() :
     measurements = [],
@@ -37,7 +39,8 @@ class Module {
     computeTables = [],
     groups = [],
     recordLayouts = [],
-    frames = []
+    frames = [],
+    userRights = []
   ;
 
   
@@ -52,6 +55,7 @@ class Module {
     rv+='Groups: ${groups.length}\n';
     rv+='Record layouts: ${recordLayouts.length}\n';
     rv+='Frames: ${frames.length}\n';
+    rv+='User rights: ${userRights.length}\n';
     return rv;
   }
 
