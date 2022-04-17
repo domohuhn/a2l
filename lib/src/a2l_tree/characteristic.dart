@@ -1,7 +1,9 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
+import 'package:a2l/src/utility.dart';
 
+/// Represents the characteristic type in the a2l file.
 enum CharacteristicType {
   /// String
   ASCII,
@@ -21,6 +23,7 @@ enum CharacteristicType {
   VALUE
 }
 
+/// Converts the token [s] to the characteristic type enum.
 CharacteristicType characteristicTypeFromString(Token s) {
     switch(s.text){
     case 'ASCII': return CharacteristicType.ASCII;
@@ -35,7 +38,22 @@ CharacteristicType characteristicTypeFromString(Token s) {
   }
 }
 
+/// Converts the enum value [s] to the a2l string.
+String characteristicTypeToString(CharacteristicType s) {
+    switch(s){
+    case CharacteristicType.ASCII  : return 'ASCII'  ;
+    case CharacteristicType.CURVE  : return 'CURVE'  ;
+    case CharacteristicType.MAP    : return 'MAP'    ;
+    case CharacteristicType.CUBOID : return 'CUBOID' ;
+    case CharacteristicType.CUBE_4 : return 'CUBE_4' ;
+    case CharacteristicType.CUBE_5 : return 'CUBE_5' ;
+    case CharacteristicType.VAL_BLK: return 'VAL_BLK';
+    case CharacteristicType.VALUE  : return 'VALUE'  ;
+    default: throw ValidationError('Unknown Characteristic Type $s');
+  }
+}
 
+/// Represents the possible access modes of the value.
 enum CalibrationAccess {
   /// object can be modified
   CALIBRATION,
@@ -48,6 +66,7 @@ enum CalibrationAccess {
  
 }
 
+/// Converts the token [s] to the CalibrationAccess enum.
 CalibrationAccess calibrationAccessFromString(Token s) {
     switch(s.text){
     case 'CALIBRATION': return CalibrationAccess.CALIBRATION;
@@ -58,15 +77,45 @@ CalibrationAccess calibrationAccessFromString(Token s) {
   }
 }
 
+/// Converts the enum [s] to the a2l string.
+String calibrationAccessToString(CalibrationAccess s) {
+    switch(s){
+    case CalibrationAccess.CALIBRATION        : return 'CALIBRATION'        ;
+    case CalibrationAccess.NO_CALIBRATION     : return 'NO_CALIBRATION'     ;
+    case CalibrationAccess.NOT_IN_MCD_SYSTEM  : return 'NOT_IN_MCD_SYSTEM'  ;
+    case CalibrationAccess.OFFLINE_CALIBRATION: return 'OFFLINE_CALIBRATION';
+    default: throw ValidationError('Unknown Calibration Access $s');
+  }
+}
+
+/// Extended limits. The calibration system may allow to leave the normal limits.
 class ExtendedLimits {
   double lowerLimit=0.0;
   double upperLimit=0.0;
+
+  /// Converts the object to its an a2l string representation with the given indentation [depth].
+  String toFileContents(int depth){
+    return indent('EXTENDED_LIMITS $lowerLimit $upperLimit',depth);
+  }
 }
 
+/// Contains the list of characteristics that depend on this characteristic.
 class DependentCharacteristics {
   String formula='';
   List<String> characteristics;
   DependentCharacteristics() : characteristics=[];
+
+  
+  /// Converts the object to its an a2l string representation with the given indentation [depth].
+  String toFileContents(String key,int depth){
+    var rv = indent('/begin $key',depth);
+    rv += indent('"$formula"',depth+1);
+    for(final c in characteristics) {
+      rv += indent('$c',depth+1);
+    }
+    rv += indent('/end $key',depth);
+    return rv;
+  }
 }
 
 /// This class represents a configurable value in the ECU.
@@ -114,6 +163,56 @@ class Characteristic extends MeasurementCharacteristicBase {
 
   Characteristic() : mapList=[] {
     readWrite = true;
+  }
+
+  /// Converts the characteristic to an a2l file with the given indentation [depth].
+  String toFileContents(int depth){
+    var rv = indent('/begin CHARACTERISTIC $name',depth);
+    rv += indent('"$description"',depth+1);
+    rv += indent('${characteristicTypeToString(type)} 0x${address.toRadixString(16).padLeft(8,"0")} $recordLayout $maxDiff $conversionMethod $lowerLimit $upperLimit',depth+1);
+    rv += optionalsToFileContents(depth+1);
+    if(calibrationAccess!=null) {
+      rv += indent('CALIBRATION_ACCESS ${calibrationAccessToString(calibrationAccess!)}',depth+1);
+    }
+    if(comparisionQuantity!=null) {
+      rv += indent('COMPARISON_QUANTITY $comparisionQuantity',depth+1);
+    }
+    if(extendedLimits!=null) {
+      rv += extendedLimits!.toFileContents(depth+1);
+    }
+    if(guardRails) {
+      rv += indent('GUARD_RAILS',depth+1);
+    }   
+    if(mapList.isNotEmpty) {
+      rv += indent('/begin MAP_LIST',depth+1);
+      for(final data in mapList) {
+        rv += indent('$data',depth+2);
+      }
+      rv += indent('/end MAP_LIST',depth+1);
+    }
+    if(type == CharacteristicType.ASCII || type == CharacteristicType.VAL_BLK) {
+      if(number!=null || number! <= 0) {
+        rv += indent('NUMBER $number',depth+1);
+      }
+      else {
+        throw ValidationError('Charactristic $name of $type needs a number > 0! got $number');
+      }
+    }
+    if(stepSize!=null) {
+      rv += indent('STEP_SIZE $stepSize',depth+1);
+    }
+    if(!readWrite) {
+      rv += indent('READ_ONLY',depth+1);
+    }
+    if(dependentCharacteristics != null) {
+      rv += dependentCharacteristics!.toFileContents('DEPENDENT_CHARACTERISTIC',depth+1);
+    }
+    if(virtualCharacteristics != null) {
+      rv += virtualCharacteristics!.toFileContents('VIRTUAL_CHARACTERISTIC',depth+1);
+    }
+    rv += annotationsToFileContents(depth+1);
+    rv += indent('/end CHARACTERISTIC\n\n',depth);
+    return rv;
   }
 }
 

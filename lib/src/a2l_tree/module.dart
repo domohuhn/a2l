@@ -58,9 +58,20 @@ class Module {
     if(parameters!=null) {
       rv += parameters!.toFileContents(depth+1);
     }
-    
+    for(final rl in recordLayouts) {
+      rv += rl.toFileContents(depth+1);
+    }
     for(final c in computeMethods) {
       rv += c.toFileContents(depth+1);
+    }
+    for(final t in computeTables) {
+      rv += t.toFileContents(depth+1);
+    }
+    for(final c in characteristics) {
+      rv += c.toFileContents(depth+1);
+    }
+    for(final m in measurements) {
+      rv += m.toFileContents(depth+1);
     }
     for(final u in units) {
       rv += u.toFileContents(depth+1);

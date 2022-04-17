@@ -108,7 +108,7 @@ ASAP2_VERSION 1 61
 /********************************************************************************************/
 
     /begin CHARACTERISTIC CHAR_DOUBLE
-	  "characteristic double\\nAdding more lines of description\\nTo test this."
+	  "characteristic double\nAdding more lines of description\nTo test this."
 	  VALUE 0x00000000 VALUE_DOUBLE 100 CONVERSION_IDENTICAL -100.0 100.0
 	/end CHARACTERISTIC
 

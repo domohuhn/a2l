@@ -671,7 +671,7 @@ class TokenParser {
       NamedValue('DISCRETE',[], callback: () {base.discrete = true;}, optional: true),
       NamedValue('DISPLAY_IDENTIFIER', [
         Value('id', ValueType.text, (ValueType t, List<Token> s) {
-          base.displayIdentifier = removeQuotes(s[0].text);
+          base.displayIdentifier = s[0].text;
         })
       ], optional: true),
       NamedValue('ECU_ADDRESS_EXTENSION', [

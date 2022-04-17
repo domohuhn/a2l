@@ -1,5 +1,7 @@
 
 import 'package:a2l/src/a2l_tree/compute_method.dart';
+import 'package:a2l/src/parsing_exception.dart';
+import 'package:a2l/src/utility.dart';
 
 
 class ComputeTableEntry {
@@ -34,6 +36,9 @@ abstract class ComputeTableBase {
 
   String? fallbackValue;
   double? fallbackValueNumeric;
+
+  /// Converts the compute table to an a2l file with the given indentation [depth].
+  String toFileContents(int depth);
 }
 
 
@@ -81,6 +86,29 @@ class ComputeTable extends ComputeTableBase {
     }
   }
 
+  
+  /// Converts the compute table to an a2l file with the given indentation [depth].
+  @override
+  String toFileContents(int depth){
+    var rv = indent('/begin COMPU_TAB $name',depth);
+    rv += indent('"$description"',depth+1);
+    rv += indent('${computeMethodTypeToSting(type)} ${table.length}',depth+1);
+    for(var val in table) {
+      rv += indent('${val.x} ${val.outNumeric}',depth+1);
+    }
+    if(fallbackValue!=null && fallbackValueNumeric!=null) {
+      throw ValidationError('Compute table "$name": DEFAULT_VALUE and DEFAULT_VALUE_NUMERIC cannot both be used!');
+    }
+    else if (fallbackValue!=null) {
+      rv += indent('DEFAULT_VALUE "$fallbackValue"',depth+1);
+    }
+    else if (fallbackValueNumeric!=null) {
+      rv += indent('DEFAULT_VALUE_NUMERIC $fallbackValueNumeric',depth+1);
+    }
+    rv += indent('/end COMPU_TAB\n\n',depth);
+    return rv;
+  }
+
 }
 
 
@@ -101,6 +129,22 @@ class VerbatimTable extends ComputeTableBase {
     }
     return 'Value out of range';
   }
+
+  /// Converts the compute table to an a2l file with the given indentation [depth].
+  @override
+  String toFileContents(int depth){
+    var rv = indent('/begin COMPU_VTAB $name',depth);
+    rv += indent('"$description"',depth+1);
+    rv += indent('${computeMethodTypeToSting(type)} ${table.length}',depth+1);
+    for(var val in table) {
+      rv += indent('${val.x} "${val.outString}"',depth+1);
+    }
+    if (fallbackValue!=null) {
+      rv += indent('DEFAULT_VALUE "$fallbackValue"',depth+1);
+    }
+    rv += indent('/end COMPU_VTAB\n\n',depth);
+    return rv;
+  }
 }
 
 
@@ -120,6 +164,22 @@ class VerbatimRangeTable extends ComputeTableBase {
       return fallbackValue!;
     }
     return 'Value out of range';
+  }
+
+  /// Converts the compute table to an a2l file with the given indentation [depth].
+  @override
+  String toFileContents(int depth){
+    var rv = indent('/begin COMPU_VTAB_RANGE $name',depth);
+    rv += indent('"$description"',depth+1);
+    rv += indent('${table.length}',depth+1);
+    for(var val in table) {
+      rv += indent('${val.x} ${val.x_up} "${val.outString}"',depth+1);
+    }
+    if (fallbackValue!=null) {
+      rv += indent('DEFAULT_VALUE "$fallbackValue"',depth+1);
+    }
+    rv += indent('/end COMPU_VTAB_RANGE\n\n',depth);
+    return rv;
   }
 }
 
