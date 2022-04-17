@@ -2,35 +2,6 @@
 import 'package:a2l/src/a2l_tree/module.dart';
 import 'package:a2l/src/utility.dart';
 
-/// Represents the project header structure.
-class Header {
-  /// Description of the Header/Project.
-  String description = '';
-
-  // optional
-  /// Version read from the HEADER element.
-  String? version;
-  /// Project number from the HEADER element.
-  String? number;
-  
-  bool get hasVersion => version!=null;
-  bool get hasNumber => number!=null && number!.isNotEmpty && !number!.contains(' ');
-
-  /// Converts the object to an a2l file.
-  String toFileContents(int depth) {
-    var rv = indent('/begin HEADER\n', depth);
-    rv += indent('"$description"\n', depth+1);
-    if (hasVersion) {
-      rv += indent('VERSION "$version"', depth+1);
-    }
-    if (hasNumber) {
-      rv += indent('PROJECT_NO $number', depth+1);
-    }
-    rv += indent('/end HEADER\n\n', depth);
-    return rv;
-  }
-}
-
 /// Representation of a Calibration project from the A2L file.
 class Project {
   /// Name of the Project. Mandatory.
@@ -71,7 +42,7 @@ class Project {
 
   /// Converts the project to an a2l file.
   String toFileContents() {
-    var rv = '/begin PROJECT\n\n';
+    var rv = '/begin PROJECT $name\n  "$description"\n\n';
     if(header != null) {
       rv += header!.toFileContents(1);
     }
@@ -79,6 +50,35 @@ class Project {
       rv += m.toFileContents(1);
     }
     rv += '/end PROJECT\n\n';
+    return rv;
+  }
+}
+
+/// Represents the project header structure.
+class Header {
+  /// Description of the Header/Project.
+  String description = '';
+
+  // optional
+  /// Version read from the HEADER element.
+  String? version;
+  /// Project number from the HEADER element.
+  String? number;
+  
+  bool get hasVersion => version!=null;
+  bool get hasNumber => number!=null && number!.isNotEmpty && !number!.contains(' ');
+
+  /// Converts the object to an a2l file.
+  String toFileContents(int depth) {
+    var rv = indent('/begin HEADER\n', depth);
+    rv += indent('"$description"\n', depth+1);
+    if (hasVersion) {
+      rv += indent('VERSION "$version"', depth+1);
+    }
+    if (hasNumber) {
+      rv += indent('PROJECT_NO $number', depth+1);
+    }
+    rv += indent('/end HEADER\n\n', depth);
     return rv;
   }
 }

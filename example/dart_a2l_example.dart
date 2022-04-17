@@ -16,4 +16,6 @@ void main(List<String> arguments) {
   var file = parser.parse();
   print(file.toString());
   print('\n\nValid A2L');
+
+  print(file.toFileContents());
 }

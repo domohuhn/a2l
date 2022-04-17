@@ -2,6 +2,7 @@ import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
+import 'package:a2l/src/a2l_tree/formula.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
@@ -886,43 +887,27 @@ class TokenParser {
 
         var optional = <A2LElement>[
           NamedValue('COEFFS', [
-            Value('a', ValueType.integer, (ValueType t, List<Token> s) {
+            Value('a', ValueType.floating, (ValueType t, List<Token> s) {
               comp.coefficient_a = double.parse(s[0].text);
-            }),
-            Value('b', ValueType.integer, (ValueType t, List<Token> s) {
-              comp.coefficient_b = double.parse(s[0].text);
-            }),
-            Value('c', ValueType.integer, (ValueType t, List<Token> s) {
-              comp.coefficient_c = double.parse(s[0].text);
-            }),
-            Value('d', ValueType.integer, (ValueType t, List<Token> s) {
-              comp.coefficient_d = double.parse(s[0].text);
-            }),
-            Value('e', ValueType.integer, (ValueType t, List<Token> s) {
-              comp.coefficient_e = double.parse(s[0].text);
-            }),
-            Value('f', ValueType.integer, (ValueType t, List<Token> s) {
-              comp.coefficient_f = double.parse(s[0].text);
-            }),
+              comp.coefficient_b = double.parse(s[1].text);
+              comp.coefficient_c = double.parse(s[2].text);
+              comp.coefficient_d = double.parse(s[3].text);
+              comp.coefficient_e = double.parse(s[4].text);
+              comp.coefficient_f = double.parse(s[5].text);
+            }, requiredTokens: 6)
           ], optional: true),
           NamedValue('COEFFS_LINEAR', [
-            Value('a', ValueType.integer, (ValueType t, List<Token> s) {
+            Value('a', ValueType.floating, (ValueType t, List<Token> s) {
               comp.coefficient_a = double.parse(s[0].text);
-            }),
-            Value('b', ValueType.integer, (ValueType t, List<Token> s) {
-              comp.coefficient_b = double.parse(s[0].text);
-            }),
+              comp.coefficient_b = double.parse(s[1].text);
+            }, requiredTokens: 2)
           ], optional: true),
           NamedValue('COMPU_TAB_REF', [
             Value('format', ValueType.id, (ValueType t, List<Token> s) {
               comp.referenced_table = s[0].text;
             })
           ], optional: true),
-          NamedValue('FORMULA', [
-            Value('forumla', ValueType.text, (ValueType t, List<Token> s) {
-              comp.formula = removeQuotes(s[0].text);
-            })
-          ], optional: true),
+          _createFormula(),
           NamedValue('REF_UNIT', [
             Value('unit', ValueType.id, (ValueType t, List<Token> s) {
               comp.referenced_unit = s[0].text;
@@ -1061,6 +1046,30 @@ class TokenParser {
         return A2LElementParsingOptions(tab, values, optional);
       } else {
         throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
+      }
+    }, optional: true, unique: false);
+  }
+
+  
+  BlockElement _createFormula() {
+    return BlockElement('FORMULA', (s, p) {
+      if (p is ComputeMethod) {
+        p.formula ??= Formula();
+        var values = <Value>[
+          Value('Formula',ValueType.text,((ValueType t, List<Token> s) {
+              p.formula!.formula = removeQuotes(s[0].text);
+          }))
+        ];
+        var optional = <A2LElement>[
+          NamedValue('FORMULA_INV', [
+            Value('FORMULA_INV', ValueType.text, (ValueType t, List<Token> s) {
+              p.formula!.inverseFormula = removeQuotes(s[0].text);
+            }),
+          ], optional: true)
+        ];
+        return A2LElementParsingOptions(p, values, optional);
+      } else {
+        throw ValidationError('Parse tree built wrong, parent of Formula must be derived from ComputeMethod!');
       }
     }, optional: true, unique: false);
   }

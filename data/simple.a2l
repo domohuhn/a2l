@@ -100,7 +100,7 @@ ASAP2_VERSION 1 61
 	/begin COMPU_METHOD CONVERSION_TABLE
 	  "Example for a conversion method using a table"
       TAB_VERB "%9.5" "no unit"
-	  COMPUT_TAB_REF TABLE_COND
+	  COMPU_TAB_REF TABLE_COND
 	/end COMPU_METHOD
 
 /********************************************************************************************/

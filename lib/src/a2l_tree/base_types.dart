@@ -48,11 +48,13 @@ Datatype dataTypeFromString(Token s) {
   }
 }
 
+/// Represents how data is stored on the ECU.
 enum ByteOrder {
   MSB_LAST,
   MSB_FIRST
 }
 
+/// Converts token [s] to the enum or throws an exception.
 ByteOrder byteOrderFromString(Token s) {
   switch(s.text) {
     case 'MSB_LAST': return ByteOrder.MSB_LAST;
@@ -62,6 +64,15 @@ ByteOrder byteOrderFromString(Token s) {
     // wtf? ASAP2 standard is wrong? Standard even mentions that it uses different names to normal, therefore MSB_FIRST was introduced
     case 'LITTLE_ENDIAN': return ByteOrder.MSB_FIRST;
     default: throw ParsingException('Unknown byte order', s);
+  }
+}
+
+/// Converts [b] to the an a2l string.
+String byteOrderToString(ByteOrder b) {
+  switch(b) {
+    case ByteOrder.MSB_LAST: return 'MSB_LAST';
+    case ByteOrder.MSB_FIRST: return 'MSB_FIRST';
+    default: throw ValidationError('Unknown byte order');
   }
 }
 
@@ -216,5 +227,13 @@ Deposit depositFromString(Token s){
   }
 }
 
+/// Converts a deposit mode to a2l string
+String depositToString(Deposit s){
+  switch(s) {
+    case Deposit.ABSOLUTE: return 'ABSOLUTE';
+    case Deposit.DIFFERENCE: return 'DIFFERENCE';
+    default: throw ValidationError('Unknown deposit type');
+  }
+}
 
 

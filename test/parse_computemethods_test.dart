@@ -138,7 +138,7 @@ void main() {
 
     test('Parse optional FORMULA', (){
       prepareTestData(parser, ['/begin','COMPU_METHOD','test_cm', '"This is a test cm"', 'TAB_VERB', '"%8.4"', '"[m]"',
-       'FORMULA', '"3*X1/100 + 22.7"','/end', 'COMPU_METHOD']);
+       '/begin', 'FORMULA', '"3*X1/100 + 22.7"', 'FORMULA_INV', '"5.0-X1"', '/end', 'FORMULA','/end', 'COMPU_METHOD']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].computeMethods.length, 1);
@@ -153,7 +153,8 @@ void main() {
       expect(file.project.modules[0].computeMethods[0].coefficient_d, null);
       expect(file.project.modules[0].computeMethods[0].coefficient_e, null);
       expect(file.project.modules[0].computeMethods[0].coefficient_f, null);
-      expect(file.project.modules[0].computeMethods[0].formula, '3*X1/100 + 22.7');
+      expect(file.project.modules[0].computeMethods[0].formula!.formula, '3*X1/100 + 22.7');
+      expect(file.project.modules[0].computeMethods[0].formula!.inverseFormula, '5.0-X1');
       expect(file.project.modules[0].computeMethods[0].referenced_statusString, null);
       expect(file.project.modules[0].computeMethods[0].referenced_table, null);
       expect(file.project.modules[0].computeMethods[0].referenced_unit, null);

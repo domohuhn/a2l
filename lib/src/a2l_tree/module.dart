@@ -8,6 +8,7 @@ import 'package:a2l/src/a2l_tree/unit.dart';
 import 'package:a2l/src/a2l_tree/module_common.dart';
 import 'package:a2l/src/a2l_tree/module_parameters.dart';
 import 'package:a2l/src/a2l_tree/record_layout.dart';
+import 'package:a2l/src/utility.dart';
 
 
 
@@ -49,11 +50,25 @@ class Module {
 
   /// Converts the module to an a2l file with the given indentation [depth].
   String toFileContents(int depth) {
-    var rv = '/begin MODULE\n\n';
+    var rv = indent('/begin MODULE $name',depth);
+    rv += indent('"$description"\n\n',depth+1);
+    if(common!=null) {
+      rv += common!.toFileContents(depth+1);
+    }
+    if(parameters!=null) {
+      rv += parameters!.toFileContents(depth+1);
+    }
+    
+    for(final c in computeMethods) {
+      rv += c.toFileContents(depth+1);
+    }
     for(final u in units) {
       rv += u.toFileContents(depth+1);
     }
-    rv += '/end MODULE\n\n';
+    for(final g in groups) {
+      rv += g.toFileContents(depth+1);
+    }
+    rv += indent('/end MODULE\n\n',depth);
     return rv;
   }
 }
