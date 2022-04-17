@@ -3,6 +3,7 @@ import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/formula.dart';
+import 'package:a2l/src/a2l_tree/frame.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
@@ -39,9 +40,9 @@ class Value extends A2LElement {
   ValueType type;
   bool _valueSet = false;
   List<Token> _value;
-  /// how many times a value should be read
+  /// how many times a value should be read. Set this to -1 to read all remaining values.
   int multiplicity;
-  /// how many String tokens are needed to initialize this value
+  /// how many String tokens are needed to initialize this value.
   int requiredTokens;
 
   final void Function(ValueType,List<Token>) _callback;
@@ -383,7 +384,33 @@ class TokenParser {
      _createGroups(),
      _createRecordLayout(),
      _createModuleCommon(),
-     _createModuleParameters()];
+     _createModuleParameters(),
+     _createFrames()];
+  }
+
+  
+  BlockElement _createFrames() {
+    return BlockElement('FRAME', (s, p) {
+      if(p is Module) {
+        var frame = Frame();
+        p.frames.add(frame);
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) { frame.name = s[0].text;}),
+          Value('Description', ValueType.text, (ValueType t, List<Token> s) { frame.description = removeQuotes(s[0].text);}),
+          Value('ScalingUnit', ValueType.integer, (ValueType t, List<Token> s) { frame.scalingUnit = maxRefreshUnitFromString(s[0]);}),
+          Value('Rate', ValueType.integer, (ValueType t, List<Token> s) { frame.rate = int.parse(s[0].text);}),
+        ];
+        var optional = <A2LElement>[
+          NamedValue('FRAME_MEASUREMENT', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { frame.measurements.add(s[0].text); },multiplicity: -1)], optional: true),
+        ];
+        return A2LElementParsingOptions(frame, values, optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of MOD_COMMON must be a module!');
+      }
+    }, optional: true,
+    // TODO maybe this should be unique?
+    unique: false);
   }
   
   BlockElement _createModuleCommon() {

@@ -2,6 +2,7 @@
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
+import 'package:a2l/src/a2l_tree/frame.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
 import 'package:a2l/src/a2l_tree/unit.dart';
@@ -24,6 +25,10 @@ class Module {
   List<ComputeTableBase> computeTables;
   List<Group> groups;
   List<RecordLayout> recordLayouts;
+  /// The frames in the a2l file. (It is possible that there is only one allowed frame - no star in standard. 
+  /// But everything else refers to frames in plural.)
+  List<Frame> frames;
+  
   Module() :
     measurements = [],
     characteristics = [],
@@ -31,7 +36,8 @@ class Module {
     computeMethods = [],
     computeTables = [],
     groups = [],
-    recordLayouts = []
+    recordLayouts = [],
+    frames = []
   ;
 
   
@@ -45,6 +51,7 @@ class Module {
     rv+='Compute Tables: ${computeTables.length}\n';
     rv+='Groups: ${groups.length}\n';
     rv+='Record layouts: ${recordLayouts.length}\n';
+    rv+='Frames: ${frames.length}\n';
     return rv;
   }
 
@@ -78,6 +85,9 @@ class Module {
     }
     for(final g in groups) {
       rv += g.toFileContents(depth+1);
+    }
+    for(final f in frames) {
+      rv += f.toFileContents(depth+1);
     }
     rv += indent('/end MODULE\n\n',depth);
     return rv;
