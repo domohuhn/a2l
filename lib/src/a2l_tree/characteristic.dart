@@ -1,3 +1,4 @@
+import 'package:a2l/src/a2l_tree/axis_descr.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
@@ -132,7 +133,8 @@ class Characteristic extends MeasurementCharacteristicBase {
 
   // optional
   // annotation  is in base
-  // TODO AXIS_DESCR
+  // Description of the axis in order x,y,z,4,5 (a2l key: AXIS_DESCR)
+  List<AxisDescription> axisDescription;
   // bitMask  is in base
   // endianess is in base
   CalibrationAccess? calibrationAccess;
@@ -161,7 +163,7 @@ class Characteristic extends MeasurementCharacteristicBase {
   double? stepSize;
   DependentCharacteristics? virtualCharacteristics;
 
-  Characteristic() : mapList=[] {
+  Characteristic() : mapList=[], axisDescription=[] {
     readWrite = true;
   }
 
@@ -209,6 +211,9 @@ class Characteristic extends MeasurementCharacteristicBase {
     }
     if(virtualCharacteristics != null) {
       rv += virtualCharacteristics!.toFileContents('VIRTUAL_CHARACTERISTIC',depth+1);
+    }
+    for(final a in axisDescription) {
+      rv += a.toFileContents(depth+1);
     }
     rv += annotationsToFileContents(depth+1);
     rv += indent('/end CHARACTERISTIC\n\n',depth);

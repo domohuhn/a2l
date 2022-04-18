@@ -9,6 +9,7 @@ import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Represents the description for an axis stored at another memory location compared to its characteristic.
+/// (a2l key: AXIS_PTS)
 class AxisPoints extends DataContainer {
   // mandatory values
   /// memory address of the first axis value
@@ -120,7 +121,7 @@ class AxisPoints extends DataContainer {
       rv += symbolLink!.toFileContents(depth+1);
     }
     rv += annotationsToFileContents(depth+1);
-    rv += indent('/end AXIS_PTS', depth);
+    rv += indent('/end AXIS_PTS\n\n', depth);
 
     return rv;
   }

@@ -1,5 +1,4 @@
 
-import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/utility.dart';
 
 /// A constant to be used in the system

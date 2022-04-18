@@ -56,6 +56,9 @@ class Module {
   List<CFunction> functions;
   /// Describes axis data of curves if they are stored at different locations. (a2l key: AXIS_PTS)
   List<AxisPoints> axisPoints;
+
+  // TODO A2ML
+  // TODO IF_DATA
   
   Module() :
     measurements = [],

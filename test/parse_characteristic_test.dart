@@ -47,6 +47,7 @@ void main() {
       expect(chara[0].number, null);
       expect(chara[0].virtualCharacteristics, null);
       expect(chara[0].stepSize, null);
+      expect(chara[0].axisDescription.length, 0);
     });
 
     test('Parse multiple', (){

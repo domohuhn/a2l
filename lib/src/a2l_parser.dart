@@ -1,3 +1,4 @@
+import 'package:a2l/src/a2l_tree/axis_descr.dart';
 import 'package:a2l/src/a2l_tree/axis_pts.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
@@ -466,6 +467,67 @@ class TokenParser {
       }
       else {
         throw ValidationError('Parse tree built wrong, parent of AXIS_PTS must be a module!');
+      }
+    }, optional: true, unique: false);
+  }
+
+  
+  BlockElement _createAxisDescription() {
+    return BlockElement('AXIS_DESCR', (s, p) {
+      if(p is Characteristic) {
+        var axis = AxisDescription();
+        p.axisDescription.add(axis);
+
+        var values = [
+          Value('Attribute', ValueType.text, (ValueType t, List<Token> s) { axis.type = axisTypeFromString(s[0]);}),
+          Value('InputQuantity', ValueType.id, (ValueType t, List<Token> s) { axis.inputQuantity = s[0].text;}),
+          Value('Conversion', ValueType.id, (ValueType t, List<Token> s) { axis.conversionMethod = s[0].text;}),
+          Value('MaxAxisPoints', ValueType.integer, (ValueType t, List<Token> s) { axis.maxAxisPoints = int.parse(s[0].text);}),
+          Value('LowerLimit', ValueType.floating, (ValueType t, List<Token> s) { axis.lowerLimit = double.parse(s[0].text);}),
+          Value('UpperLimit', ValueType.floating, (ValueType t, List<Token> s) { axis.upperLimit = double.parse(s[0].text);}),
+        ];
+
+        var optional = <A2LElement>[
+          _createAnnotation(),
+          NamedValue('READ_ONLY',[], callback: () {axis.readWrite = false;}, optional: true),
+          NamedValue('STEP_SIZE',[Value('Step size', ValueType.floating, (p0, p1) { axis.stepSize = double.parse(p1[0].text); })], optional: true),
+          NamedValue('AXIS_PTS_REF',[Value('axis_pts reference', ValueType.id, (p0, p1) { axis.axisPoints = p1[0].text; })], optional: true),
+          NamedValue('CURVE_AXIS_REF',[Value('axis_pts reference', ValueType.id, (p0, p1) { axis.rescaleAxisPoints = p1[0].text; })], optional: true),
+          NamedValue('MAX_GRAD',[Value('max gradient', ValueType.floating, (p0, p1) { axis.maxGradient = double.parse(p1[0].text); })], optional: true),
+          NamedValue('FIX_AXIS_PAR',[Value('offset, shift, number', ValueType.integer, (p0, p1) {
+            axis.fixedAxisPoints1 ??= FixedAxisPoints();
+            axis.fixedAxisPoints1!.p0 = int.parse(p1[0].text);
+            axis.fixedAxisPoints1!.p1 = 1<<int.parse(p1[1].text);
+            axis.fixedAxisPoints1!.max = int.parse(p1[2].text);
+          }, requiredTokens: 3)], optional: true),
+          NamedValue('FIX_AXIS_PAR_DIST',[Value('offset, distance, number', ValueType.integer, (p0, p1) {
+            axis.fixedAxisPoints2 ??= FixedAxisPoints();
+            axis.fixedAxisPoints2!.p0 = int.parse(p1[0].text);
+            axis.fixedAxisPoints2!.p1 = int.parse(p1[1].text);
+            axis.fixedAxisPoints2!.max = int.parse(p1[2].text);
+          }, requiredTokens: 3)], optional: true),
+          BlockElement('FIX_AXIS_PAR_LIST', (s, p2) {
+            if(p2 is AxisDescription) {
+              return A2LElementParsingOptions(p2, [Value('AxisPts_Value', ValueType.floating, (p0, p1) { axis.ecuAxisPoints.add(double.parse(p1[0].text)); }, multiplicity: -1)], []);
+            } else {
+              throw ValidationError('Parse tree built wrong, parent of FIX_AXIS_PAR_LIST must be an AxisDescription!');
+            }
+          }, optional: true),
+          NamedValue('EXTENDED_LIMITS',[Value('EXTENDED_LIMITS', ValueType.floating, (p0, p1) {
+            axis.extendedLimits ??= ExtendedLimits();
+            axis.extendedLimits!.lowerLimit = double.parse(p1[0].text); 
+            axis.extendedLimits!.upperLimit = double.parse(p1[1].text); 
+          },requiredTokens: 2)], optional: true),
+          NamedValue('BYTE_ORDER', [Value('order', ValueType.text, (ValueType t, List<Token> s) {axis.endianess = byteOrderFromString(s[0]);})], optional: true),
+          NamedValue('FORMAT', [Value('format', ValueType.text, (ValueType t, List<Token> s) {axis.format = removeQuotes(s[0].text);})], optional: true),
+          NamedValue('PHYS_UNIT', [Value('unit', ValueType.text, (ValueType t, List<Token> s) {axis.unit = removeQuotes(s[0].text);})], optional: true),
+          NamedValue('DEPOSIT', [Value('depositMode', ValueType.text, (ValueType t, List<Token> s) { axis.depositMode = depositFromString(s[0]); })], optional: true), 
+          NamedValue('MONOTONY', [Value('monotony', ValueType.text, (ValueType t, List<Token> s) { axis.monotony = monotonyFromString(s[0]); })], optional: true), 
+        ];
+        return A2LElementParsingOptions(axis, values, optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of AXIS_DESCR must be a characteristic!');
       }
     }, optional: true, unique: false);
   }
@@ -1076,7 +1138,8 @@ class TokenParser {
           _createAnnotation(),
           _createFunctionList(),
           _createVirtualCharacteristics(),
-          _createVirtualCharacteristics(key: 'DEPENDENT_CHARACTERISTIC', virtual: false)
+          _createVirtualCharacteristics(key: 'DEPENDENT_CHARACTERISTIC', virtual: false),
+          _createAxisDescription()
         ]);
         return A2LElementParsingOptions(char, values, optional);
       } else {
