@@ -6,11 +6,17 @@ import 'package:a2l/src/utility.dart';
 
 /// This is a base container for various other a2l elements that hold the same data.
 class DataContainer extends AnnotationContainer {
+  /// unique id
   String name='';
+  /// description of the object
   String description='';
+  /// referenced functions
   List<String> functions;
+  /// referenced characteristics
   List<String> characteristics;
+  /// referenced measurements
   List<String> measurements;
+  /// referenced groups
   List<String> groups;
 
   DataContainer() : 

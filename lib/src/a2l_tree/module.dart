@@ -3,6 +3,7 @@ import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/frame.dart';
+import 'package:a2l/src/a2l_tree/function.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
 import 'package:a2l/src/a2l_tree/unit.dart';
@@ -32,6 +33,7 @@ class Module {
   /// But everything else refers to frames in plural.)
   List<Frame> frames;
   List<UserRights> userRights;
+  List<CFunction> functions;
   
   Module() :
     measurements = [],
@@ -42,7 +44,8 @@ class Module {
     groups = [],
     recordLayouts = [],
     frames = [],
-    userRights = []
+    userRights = [],
+    functions = []
   ;
 
   
@@ -58,6 +61,7 @@ class Module {
     rv+='Record layouts: ${recordLayouts.length}\n';
     rv+='Frames: ${frames.length}\n';
     rv+='User rights: ${userRights.length}\n';
+    rv+='Functions: ${functions.length}\n';
     return rv;
   }
 
@@ -91,6 +95,9 @@ class Module {
     }
     for(final g in groups) {
       rv += g.toFileContents(depth+1);
+    }
+    for(final f in functions) {
+      rv += f.toFileContents(depth+1);
     }
     for(final f in frames) {
       rv += f.toFileContents(depth+1);

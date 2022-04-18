@@ -1,10 +1,10 @@
-import 'package:a2l/a2l.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
 import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/formula.dart';
 import 'package:a2l/src/a2l_tree/frame.dart';
+import 'package:a2l/src/a2l_tree/function.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
@@ -407,7 +407,37 @@ class TokenParser {
      _createModuleParameters(),
      _createFrames(),
      _createUserRights(),
-     _createVariantCoding()];
+     _createVariantCoding(),
+     _createFunction()];
+  }
+
+  BlockElement _createFunction() {
+    return BlockElement('FUNCTION', (s, p) {
+      if(p is Module) {
+        var fun = CFunction();
+        p.functions.add(fun);
+
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) { fun.name = s[0].text;}),
+          Value('Description', ValueType.text, (ValueType t, List<Token> s) { fun.description = removeQuotes(s[0].text);}),
+        ];
+
+        var optional = <A2LElement>[
+          NamedValue('FUNCTION_VERSION', [Value('version', ValueType.text, (p0, p1) { fun.version = removeQuotes(p1[0].text); })], optional: true),
+          _createAnnotation(),
+          _createCharacteristicsList(),
+          _createCharacteristicsList(key: 'DEF_CHARACTERISTIC', cb: (a) => a.definedCharacteristics),
+          _createFunctionList(key: 'SUB_FUNCTION'),
+          _createMeasurementsList(key: 'IN_MEASUREMENT', cb: (a) => a.inputMeasurements),
+          _createMeasurementsList(key: 'LOC_MEASUREMENT'),
+          _createMeasurementsList(key: 'OUT_MEASUREMENT', cb: (a) => a.outputMeasurements),
+        ];
+        return A2LElementParsingOptions(fun, values, optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of VARIANT_CODING must be a module!');
+      }
+    }, optional: true, unique: false);
   }
 
   
@@ -1297,8 +1327,8 @@ class TokenParser {
   }
 
   
-  BlockElement _createFunctionList() {
-    return BlockElement('FUNCTION_LIST', (s, p) {
+  BlockElement _createFunctionList({String key = 'FUNCTION_LIST'}) {
+    return BlockElement(key, (s, p) {
       if (p is DataContainer) {
         return A2LElementParsingOptions(p, [
                 Value('Function id', ValueType.text, (ValueType t, List<Token> s) {
@@ -1310,12 +1340,14 @@ class TokenParser {
     }, optional: true, unique: false);
   }
 
-  BlockElement _createCharacteristicsList({String key='REF_CHARACTERISTIC'}) {
+
+
+  BlockElement _createCharacteristicsList({String key='REF_CHARACTERISTIC', List<String> Function(dynamic) cb = getCharacteristics}) {
     return BlockElement(key, (s, p) {
       if (p is DataContainer) {
         return A2LElementParsingOptions(p, [
                 Value('Characteristics id', ValueType.text, (ValueType t, List<Token> s) {
-                  p.characteristics.add(s[0].text);
+                  cb(p).add(s[0].text);
                 }, multiplicity: -1)], []);
       } else {
         throw ValidationError('Parse tree built wrong, parent of $key must be derived from DataContainer!');
@@ -1323,12 +1355,12 @@ class TokenParser {
     }, optional: true, unique: false);
   }
   
-  BlockElement _createMeasurementsList({String key='REF_MEASUREMENT'}) {
+  BlockElement _createMeasurementsList({String key='REF_MEASUREMENT', List<String> Function(dynamic) cb = getMeasurements}) {
     return BlockElement(key, (s, p) {
       if (p is DataContainer) {
         return A2LElementParsingOptions(p, [
                 Value('Measurements id', ValueType.text, (ValueType t, List<Token> s) {
-                  p.measurements.add(s[0].text);
+                  cb(p).add(s[0].text);
                 }, multiplicity: -1)], []);
       } else {
         throw ValidationError('Parse tree built wrong, parent of $key must be derived from DataContainer!');
@@ -1378,4 +1410,14 @@ class TokenParser {
       }
     }, optional: true, unique: false);
   }
+}
+
+/// returns the characteristics member list.
+List<String> getCharacteristics(dynamic p) {
+  return p.characteristics;
+}
+
+/// returns the measurements member list.
+List<String> getMeasurements(dynamic p) {
+  return p.measurements;
 }

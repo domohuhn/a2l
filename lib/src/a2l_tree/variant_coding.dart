@@ -163,7 +163,7 @@ class VariantCoding {
     for(final c in characteristics) {
       rv += c.toFileContents(depth+1);
     }
-    rv += indent('/end VARIANT_CODING',depth);
+    rv += indent('/end VARIANT_CODING\n\n',depth);
     return rv;
   }
 
