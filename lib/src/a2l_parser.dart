@@ -1,3 +1,4 @@
+import 'package:a2l/a2l.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
@@ -14,6 +15,7 @@ import 'package:a2l/src/a2l_tree/module_parameters.dart';
 import 'package:a2l/src/a2l_tree/record_layout.dart';
 import 'package:a2l/src/a2l_tree/unit.dart';
 import 'package:a2l/src/a2l_tree/user_rights.dart';
+import 'package:a2l/src/a2l_tree/variant_coding.dart';
 
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
@@ -43,12 +45,14 @@ class Value extends A2LElement {
   List<Token> _value;
   /// how many times a value should be read. Set this to -1 to read all remaining values.
   int multiplicity;
+  /// in case multiplicity ist set to a negative value, this value determines at what tokens we stop
+  List<String> stopAt;
   /// how many String tokens are needed to initialize this value.
   int requiredTokens;
 
   final void Function(ValueType,List<Token>) _callback;
 
-  Value(String name, this.type, this._callback, {this.multiplicity = 1, this.requiredTokens = 1}) : _value = [], super(name,false);
+  Value(String name, this.type, this._callback, {this.multiplicity = 1, this.requiredTokens = 1, this.stopAt=const []}) : _value = [], super(name,false);
 
   set value(List<Token> values) {
     for(final val in values) {
@@ -223,18 +227,22 @@ class TokenParser {
     }
 
     for(var k=0; k<values.length; k++) {
-        if(values[k].multiplicity>=0){
-          _parseSingleValue(values, max, k);
-        }
-        else {
-          _parseRemainingTokens(values, max, k);
-          break;
-        }
+      if(values[k].multiplicity>=0){
+        _parseSingleValue(values, max, k);
+      }
+      else if(values[k].stopAt.isEmpty){
+        _parseRemainingTokens(values, max, k, checkIndex: true);
+        break;
+      }
+      else {
+        var end = findNextBegin(max, values[k].stopAt);
+        _parseRemainingTokens(values, end, k, checkIndex: false);
+      }
     }
   }
 
-  void _parseRemainingTokens(List<Value> values, int max, int k,) {
-    if (k != values.length - 1) {
+  void _parseRemainingTokens(List<Value> values, int max, int k, {bool checkIndex=true}) {
+    if (checkIndex && k != values.length - 1) {
       throw ParsingException('Value ${values[k]} at $k (of ${values.length}) requested all remaining tokens! Some values could not be processed', tokens[currentIndex]);
     }
 
@@ -266,6 +274,17 @@ class TokenParser {
     }
   }
 
+  int findNextBegin(int max, List<String> stopTokens) {
+    var rv = max;
+    for(var k = currentIndex; k<max; ++k) {
+      for(final t in stopTokens) {
+        if(tokens[k].text==t) {
+          return k;
+        }
+      }
+    }
+    return rv;
+  }
 
   int findMatchingEndToken() {
     var beginCount = 0;
@@ -387,7 +406,92 @@ class TokenParser {
      _createModuleCommon(),
      _createModuleParameters(),
      _createFrames(),
-     _createUserRights()];
+     _createUserRights(),
+     _createVariantCoding()];
+  }
+
+  
+  BlockElement _createVariantCoding() {
+    return BlockElement('VARIANT_CODING', (s, p) {
+      if(p is Module) {
+        var cod = VariantCoding();
+        p.coding ??= cod;
+        var optional = <A2LElement>[
+          NamedValue('VAR_SEPARATOR', [Value('separator', ValueType.text, (p0, p1) { cod.separator = removeQuotes(p1[0].text); })], optional: true),
+          NamedValue('VAR_NAMING', [Value('NamingScheme', ValueType.text, (p0, p1) { cod.namingScheme = variantNamingFromString(p1[0]); })], optional: true),
+          _createVariantEnumeration(),
+          _createForbiddenCombination(),
+          _createVariantCharacteristic()
+        ];
+        return A2LElementParsingOptions(cod, [], optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of VARIANT_CODING must be a module!');
+      }
+    }, optional: true);
+  }
+
+  BlockElement _createVariantEnumeration() {
+    return BlockElement('VAR_CRITERION', (s, p) {
+      if(p is VariantCoding) {
+        var enu = VariantEnumeration();
+        p.enumerations.add(enu);
+        var values = <Value>[
+          Value('name', ValueType.id, (p0, p1) { enu.name = p1[0].text; }),
+          Value('description', ValueType.text, (p0, p1) { enu.description = removeQuotes(p1[0].text); }),
+          Value('value', ValueType.text, (p0, p1) { enu.values.add(p1[0].text); }, multiplicity: -1, stopAt: ['VAR_MEASUREMENT', 'VAR_SELECTION_CHARACTERISTIC'])
+        ];
+        var optional = <A2LElement>[
+          NamedValue('VAR_MEASUREMENT', [Value('measurement', ValueType.id, (p0, p1) { enu.measurement = p1[0].text; })], optional: true),
+          NamedValue('VAR_SELECTION_CHARACTERISTIC', [Value('characteristic', ValueType.id, (p0, p1) { enu.characteristic = p1[0].text; })], optional: true),
+        ];
+        return A2LElementParsingOptions(enu, values , optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of VAR_CRITERION must be a VariantCoding!');
+      }
+    }, optional: true);
+  }
+
+  BlockElement _createForbiddenCombination() {
+    return BlockElement('VAR_FORBIDDEN_COMB', (s, p) {
+      if(p is VariantCoding) {
+        var forb = ForbiddenCombination();
+        p.forbidden.add(forb);
+        var values = <Value>[
+          Value('value', ValueType.text, (p0, p1) { forb.comibination.add(NameValuePair(p1[0].text,p1[1].text)); }, multiplicity: -1, requiredTokens: 2)
+        ];
+        return A2LElementParsingOptions(forb, values , []);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of VAR_FORBIDDEN_COMB must be a VariantCoding!');
+      }
+    }, optional: true);
+  }
+
+  BlockElement _createVariantCharacteristic() {
+    return BlockElement('VAR_CHARACTERISTIC', (s, p) {
+      if(p is VariantCoding) {
+        var ch = VariantCharacteristic();
+        p.characteristics.add(ch);
+        var values = <Value>[
+          Value('name', ValueType.id, (p0, p1) { ch.name = p1[0].text; }),
+          Value('enumerations', ValueType.id, (p0, p1) { ch.enumerations.add(p1[0].text); }, multiplicity: -1, stopAt: ['/begin'])
+        ];
+        var optional = <A2LElement>[
+          BlockElement('VAR_ADDRESS', (s, p2) {
+            if(p2 is VariantCharacteristic) {
+              return A2LElementParsingOptions(p2, [Value('address', ValueType.integer, (p0, p1) { ch.address.add(int.parse(p1[0].text)); }, multiplicity: -1)] , []);
+            } else {
+              throw ValidationError('Parse tree built wrong, parent of VAR_ADDRESS must be a VariantCharacteristic!');
+            }},optional: true)
+        ];
+        return A2LElementParsingOptions(ch, values , optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of VAR_CHARACTERISTIC must be a VariantCoding!');
+      }
+    }, optional: true);
   }
 
   BlockElement _createUserRights() {
