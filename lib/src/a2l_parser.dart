@@ -1,3 +1,4 @@
+import 'package:a2l/src/a2l_tree/axis_pts.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
@@ -408,7 +409,65 @@ class TokenParser {
      _createFrames(),
      _createUserRights(),
      _createVariantCoding(),
-     _createFunction()];
+     _createFunction(),
+     _createAxisPoints()];
+  }
+
+  BlockElement _createAxisPoints() {
+    return BlockElement('AXIS_PTS', (s, p) {
+      if(p is Module) {
+        var axis = AxisPoints();
+        p.axisPoints.add(axis);
+
+        var values = [
+          Value('Name', ValueType.id, (ValueType t, List<Token> s) { axis.name = s[0].text;}),
+          Value('Description', ValueType.text, (ValueType t, List<Token> s) { axis.description = removeQuotes(s[0].text);}),
+          Value('address', ValueType.integer, (ValueType t, List<Token> s) { axis.address = int.parse(s[0].text);}),
+          Value('InputQuantity', ValueType.id, (ValueType t, List<Token> s) { axis.inputQuantity = s[0].text;}),
+          Value('Deposit', ValueType.id, (ValueType t, List<Token> s) { axis.recordLayout = s[0].text;}),
+          Value('MaxDiff', ValueType.floating, (ValueType t, List<Token> s) { axis.maxDifferenceFromTable = double.parse(s[0].text);}),
+          Value('Conversion', ValueType.id, (ValueType t, List<Token> s) { axis.conversionMethod = s[0].text;}),
+          Value('MaxAxisPoints', ValueType.integer, (ValueType t, List<Token> s) { axis.maxAxisPoints = int.parse(s[0].text);}),
+          Value('LowerLimit', ValueType.floating, (ValueType t, List<Token> s) { axis.lowerLimit = double.parse(s[0].text);}),
+          Value('UpperLimit', ValueType.floating, (ValueType t, List<Token> s) { axis.upperLimit = double.parse(s[0].text);}),
+        ];
+
+        var optional = <A2LElement>[
+          _createAnnotation(),
+          _createFunctionList(),
+          NamedValue('READ_ONLY',[], callback: () {axis.readWrite = false;}, optional: true),
+          NamedValue('GUARD_RAILS',[], callback: () {axis.guardRails = true;}, optional: true),
+          NamedValue('STEP_SIZE',[Value('Step size', ValueType.floating, (p0, p1) { axis.stepSize = double.parse(p1[0].text); })], optional: true),
+          NamedValue('CALIBRATION_ACCESS',[Value('CALIBRATION_ACCESS', ValueType.text, (p0, p1) { axis.calibrationAccess = calibrationAccessFromString(p1[0]); })], optional: true),
+          NamedValue('EXTENDED_LIMITS',[Value('EXTENDED_LIMITS', ValueType.floating, (p0, p1) {
+            axis.extendedLimits ??= ExtendedLimits();
+            axis.extendedLimits!.lowerLimit = double.parse(p1[0].text); 
+            axis.extendedLimits!.upperLimit = double.parse(p1[1].text); 
+          },requiredTokens: 2)], optional: true),
+          NamedValue('BYTE_ORDER', [Value('order', ValueType.text, (ValueType t, List<Token> s) {axis.endianess = byteOrderFromString(s[0]);})], optional: true),
+          NamedValue('DISPLAY_IDENTIFIER', [Value('id', ValueType.text, (ValueType t, List<Token> s) {axis.displayIdentifier = s[0].text;})], optional: true),
+          NamedValue('ECU_ADDRESS_EXTENSION', [Value('address extension', ValueType.integer, (ValueType t, List<Token> s) {axis.addressExtension = int.parse(s[0].text);})], optional: true),
+          NamedValue('FORMAT', [Value('format', ValueType.text, (ValueType t, List<Token> s) {axis.format = removeQuotes(s[0].text);})], optional: true),
+          NamedValue('PHYS_UNIT', [Value('unit', ValueType.text, (ValueType t, List<Token> s) {axis.unit = removeQuotes(s[0].text);})], optional: true),
+          NamedValue('REF_MEMORY_SEGMENT', [Value('segment', ValueType.text, (ValueType t, List<Token> s) {axis.memorySegment = s[0].text;})], optional: true),
+          NamedValue('DEPOSIT', [Value('depositMode', ValueType.text, (ValueType t, List<Token> s) { axis.depositMode = depositFromString(s[0]); })], optional: true), 
+          NamedValue('MONOTONY', [Value('monotony', ValueType.text, (ValueType t, List<Token> s) { axis.monotony = monotonyFromString(s[0]); })], optional: true), 
+          NamedValue('SYMBOL_LINK', [
+            Value('SymbolName', ValueType.text, (ValueType t, List<Token> s) {
+              axis.symbolLink ??= SymbolLink();
+              axis.symbolLink!.name = removeQuotes(s[0].text);
+            }),
+            Value('Offset', ValueType.integer, (ValueType t, List<Token> s) {
+              axis.symbolLink!.offset = int.parse(s[0].text);
+            }),
+          ], optional: true),
+        ];
+        return A2LElementParsingOptions(axis, values, optional);
+      }
+      else {
+        throw ValidationError('Parse tree built wrong, parent of AXIS_PTS must be a module!');
+      }
+    }, optional: true, unique: false);
   }
 
   BlockElement _createFunction() {
@@ -597,7 +656,7 @@ class TokenParser {
           NamedValue('ALIGNMENT_FLOAT64_IEEE', [Value('alignment', ValueType.integer, (ValueType t, List<Token> s) { common.aligmentFloat64 = int.parse(s[0].text); }), ], optional: true),
           NamedValue('BYTE_ORDER', [Value('order', ValueType.text, (ValueType t, List<Token> s) { common.endianess = byteOrderFromString(s[0]); })], optional: true),
           NamedValue('DATA_SIZE', [Value('Position', ValueType.integer, (ValueType t, List<Token> s) { common.dataSize = int.parse(s[0].text); })], optional: true), 
-          NamedValue('DEPOSIT', [Value('Position', ValueType.text, (ValueType t, List<Token> s) { common.standardDeposit = depositFromString(s[0]); })], optional: true), 
+          NamedValue('DEPOSIT', [Value('deposit mode', ValueType.text, (ValueType t, List<Token> s) { common.standardDeposit = depositFromString(s[0]); })], optional: true), 
           NamedValue('S_REC_LAYOUT', [Value('Identifier', ValueType.id, (ValueType t, List<Token> s) { common.standardRecordLayout = s[0].text; })], optional: true), 
         ];
         return A2LElementParsingOptions(common, values, optional);

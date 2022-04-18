@@ -1,4 +1,5 @@
 
+import 'package:a2l/src/a2l_tree/axis_pts.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
@@ -15,25 +16,46 @@ import 'package:a2l/src/a2l_tree/variant_coding.dart';
 import 'package:a2l/src/utility.dart';
 
 
-
+/// Holds the top level module information.
+/// A project may have multiple modules.
+/// a2l key: MODULE
 class Module {
+  // mandatory
+  /// name of the module. must be unique.
   String name = '';
+  /// description of the module.
   String description = '';
+
+  // optional
+  /// Common module data (e.g. type alignments.). (a2l key: MOD_COMMON)
   ModuleCommon? common;
+  /// Some general module parameters (e.g. version, supplier, cpu). (a2l key: MOD_PAR)
   ModuleParameters? parameters;
+  /// Describes characteristics that change based on coding. (a2l key: VARIANT_CODING)
   VariantCoding? coding;
+  /// Describes measurement values. (a2l key: MEASUREMENT)
   List<Measurement> measurements;
+  /// Describes calibration parameters. (a2l key: CHARACTERISTIC)
   List<Characteristic> characteristics;
+  /// Describes physical units. (a2l key: UNIT)
   List<Unit> units;
+  /// Describes conversion methods of raw data to displayed values. (a2l key: COMPU_METHOD)
   List<ComputeMethod> computeMethods;
+  /// Describes conversion tables of raw data to displayed values. (a2l key: COMPU_TAB, COMPU_VTAB, COMPU_VTAB_RANGE depending on selected class)
   List<ComputeTableBase> computeTables;
+  /// Can be used to group other values (a2l key: GROUP)
   List<Group> groups;
+  /// Data record layout. Describes the representation of the objects in ECU memory. (a2l key: RECORD_LAYOUT)
   List<RecordLayout> recordLayouts;
   /// The frames in the a2l file. (It is possible that there is only one allowed frame - no star in standard. 
-  /// But everything else refers to frames in plural.)
+  /// But everything else refers to frames in plural.) (a2l key: FRAME)
   List<Frame> frames;
+  /// Describes visible values and access rights for certain users (a2l key: USER_RIGHTS)
   List<UserRights> userRights;
+  /// Can be used to group measurements and characteristics from a functional point of view (a2l key: FUNCTION)
   List<CFunction> functions;
+  /// Describes axis data of curves if they are stored at different locations. (a2l key: AXIS_PTS)
+  List<AxisPoints> axisPoints;
   
   Module() :
     measurements = [],
@@ -45,7 +67,8 @@ class Module {
     recordLayouts = [],
     frames = [],
     userRights = [],
-    functions = []
+    functions = [],
+    axisPoints = []
   ;
 
   
@@ -86,6 +109,9 @@ class Module {
     }
     for(final c in characteristics) {
       rv += c.toFileContents(depth+1);
+    }
+    for(final a in axisPoints) {
+      rv += a.toFileContents(depth+1);
     }
     for(final m in measurements) {
       rv += m.toFileContents(depth+1);
