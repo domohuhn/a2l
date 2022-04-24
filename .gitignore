@@ -10,4 +10,5 @@ build/
 pubspec.lock
 
 test/.test_coverage.dart
-coverage/lcov.info
+coverage/
+.vscode
