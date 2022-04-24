@@ -1,5 +1,6 @@
 import 'package:a2l/src/a2l_tree/axis_descr.dart';
 import 'package:a2l/src/a2l_tree/axis_pts.dart';
+import 'package:a2l/src/a2l_tree/calibration_method.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/a2l_tree/compute_table.dart';
@@ -10,6 +11,8 @@ import 'package:a2l/src/a2l_tree/function.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
+import 'package:a2l/src/a2l_tree/memory_layout.dart';
+import 'package:a2l/src/a2l_tree/memory_segment.dart';
 import 'package:a2l/src/a2l_tree/project.dart';
 import 'package:a2l/src/a2l_tree/module.dart';
 import 'package:a2l/src/a2l_tree/module_common.dart';
@@ -756,11 +759,120 @@ class TokenParser {
             Value('name', ValueType.text, (ValueType t, List<Token> s) { pars.systemConstants.add(SystemConstant()); pars.systemConstants.last.name = removeQuotes(s[0].text); }),
             Value('value', ValueType.text, (ValueType t, List<Token> s) { pars.systemConstants.last.value = removeQuotes(s[0].text); }),
           ], optional: true, unique: false),
+          _createCalibrationMethod(),
+          _createMemoryLayout(),
+          _createMemorySegment()
         ];
         return A2LElementParsingOptions(pars, values, optional);
       } 
       else {
         throw ValidationError('Parse tree built wrong, parent of MOD_PAR must be a module!');
+      }
+    }, optional: true, unique: true);
+  }
+
+  List<Value> _createSharedSegmentData(dynamic x) {
+    return [
+      Value('address', ValueType.integer, (ValueType t, List<Token> s) { x.address = int.parse(s[0].text);}),
+      Value('size', ValueType.integer, (ValueType t, List<Token> s) { x.size = int.parse(s[0].text);}),
+      Value('offsets', ValueType.integer, (ValueType t, List<Token> s) {
+        x.offsets = [int.parse(s[0].text), int.parse(s[1].text), int.parse(s[2].text), int.parse(s[3].text), int.parse(s[4].text)];}, requiredTokens: 5),
+    ];
+  }
+
+  BlockElement _createMemorySegment() {
+    return BlockElement('MEMORY_SEGMENT', (s, p) {
+      if(p is ModuleParameters) {
+        var seg = MemorySegment();
+        p.memorySegments.add(seg);
+        var values = <Value>[
+          Value('Name', ValueType.text, (ValueType t, List<Token> s) {
+            seg.name = s[0].text;
+          }),
+          Value('description', ValueType.text, (ValueType t, List<Token> s) {
+            seg.description = removeQuotes(s[0].text);
+          }),
+          Value('PrgType', ValueType.text, (ValueType t, List<Token> s) {
+            seg.type = segmentTypeFromString(s[0]);
+          }),
+          Value('MemoryType', ValueType.text, (ValueType t, List<Token> s) {
+            seg.memoryType = memoryTypeFromString(s[0]);
+          }),
+          Value('Attribute', ValueType.text, (ValueType t, List<Token> s) {
+            seg.attribute = segmentAttributeFromString(s[0]);
+          }),
+        ];
+        values.addAll(_createSharedSegmentData(seg));
+
+        return A2LElementParsingOptions(seg, values, []);
+      } 
+      else {
+        throw ValidationError('Parse tree built wrong, parent of MEMORY_LAYOUT must be a ModuleParameters!');
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createMemoryLayout() {
+    return BlockElement('MEMORY_LAYOUT', (s, p) {
+      if(p is ModuleParameters) {
+        var lay = MemoryLayout();
+        p.memoryLayouts.add(lay);
+        var values = <Value>[
+          Value('PrgType', ValueType.text, (ValueType t, List<Token> s) {
+            lay.type = memoryLayoutTypeFromString(s[0]);
+          }),
+        ];
+        values.addAll(_createSharedSegmentData(lay));
+
+        return A2LElementParsingOptions(lay, values, []);
+      } 
+      else {
+        throw ValidationError('Parse tree built wrong, parent of MEMORY_LAYOUT must be a ModuleParameters!');
+      }
+    }, optional: true, unique: false);
+  }
+  
+  BlockElement _createCalibrationMethod() {
+    return BlockElement('CALIBRATION_METHOD', (s, p) {
+      if(p is ModuleParameters) {
+        var method = CalibrationMethod();
+        p.calibrationMethods.add(method);
+        var values = [
+          Value('Method', ValueType.id, (ValueType t, List<Token> s) {
+            method.method = removeQuotes(s[0].text);
+          }),
+          Value('Version', ValueType.integer, (ValueType t, List<Token> s) {
+            method.version = int.parse(s[0].text);
+          })];
+          
+        var optional = <A2LElement>[
+         _createCalibrationHandle()
+        ];
+        return A2LElementParsingOptions(method, values, optional);
+      } 
+      else {
+        throw ValidationError('Parse tree built wrong, parent of CALIBRATION_METHOD must be a ModuleParameters!');
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createCalibrationHandle() {
+    return BlockElement('CALIBRATION_HANDLE', (s, p) {
+      if(p is CalibrationMethod) {
+        var values = [
+          Value('handle', ValueType.id, (ValueType t, List<Token> s) {
+            p.handles.add(int.parse(s[0].text));
+          }, multiplicity: -1, stopAt: ['CALIBRATION_HANDLE_TEXT'])
+        ];
+          
+        var optional = <A2LElement>[
+          NamedValue('CALIBRATION_HANDLE_TEXT', [Value('string', ValueType.text, (ValueType t, List<Token> s) { p.handleText = removeQuotes(s[0].text); })], optional: true),
+         
+        ];
+        return A2LElementParsingOptions(p, values, optional);
+      } 
+      else {
+        throw ValidationError('Parse tree built wrong, parent of CALIBRATION_METHOD must be a ModuleParameters!');
       }
     }, optional: true, unique: true);
   }

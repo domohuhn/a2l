@@ -1,4 +1,7 @@
 
+import 'package:a2l/src/a2l_tree/calibration_method.dart';
+import 'package:a2l/src/a2l_tree/memory_layout.dart';
+import 'package:a2l/src/a2l_tree/memory_segment.dart';
 import 'package:a2l/src/utility.dart';
 
 /// A constant to be used in the system
@@ -11,32 +14,50 @@ class SystemConstant {
 /// Common parameters for the module.
 class ModuleParameters {
   // mandatory
+  /// Description for the module parameters
   String description = '';
 
   // optional
+  /// version of the module
   String? version;
+  /// CPU on the control unit.
   String? cpuType;
+  /// Customer receiving the a2l file
   String? customer;
+  /// Customer number
   String? customerNumber;
   /// phone number of the responsible person for the a2l
   String? phoneNumber;
+  /// Supplier creating the a2l file
   String? supplier;
+  /// the user creating the file
   String? user;
+  /// Name of the control unit
   String? controlUnit;
-  /// offset to ba added to alle calibration values
+  /// offset to be added to all calibration values
   int? calibrationOffset;
+  /// Number of supported interfaces
   int? numberOfInterfaces;
 
   String? epromIdentifier;
   List<int> eepromIdentifiers;
+  /// Constants that are used in formulas
   List<SystemConstant> systemConstants;
+  /// Lists the implemented calibration methods
+  List<CalibrationMethod> calibrationMethods;
+  /// Memory segment description (deprecated)
+  List<MemoryLayout> memoryLayouts;
+  /// Memory segment description
+  List<MemorySegment> memorySegments;
 
-  // TODO CALIBRATION_METHOD
-  // TODO Memory layout
-  // TODO memory segment
 
-
-  ModuleParameters() : eepromIdentifiers = [], systemConstants=[];
+  ModuleParameters() : 
+   eepromIdentifiers = [],
+   systemConstants=[],
+   calibrationMethods=[],
+   memoryLayouts=[],
+   memorySegments=[]
+  ;
 
   /// Converts the object to an a2l file.
   String toFileContents(int depth) {
@@ -77,6 +98,15 @@ class ModuleParameters {
     }
     if (version!=null) {
       rv += indent('VERSION "$version"', depth+1);
+    }
+    for(final m in calibrationMethods) {
+      rv += m.toFileContents(depth+1);
+    }
+    for(final m in memoryLayouts) {
+      rv += m.toFileContents(depth+1);
+    }
+    for(final m in memorySegments) {
+      rv += m.toFileContents(depth+1);
     }
     rv += indent('/end MOD_PAR\n\n', depth);
     return rv;
