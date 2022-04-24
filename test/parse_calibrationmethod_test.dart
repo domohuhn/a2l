@@ -1,6 +1,4 @@
 import 'package:a2l/src/a2l_parser.dart';
-import 'package:a2l/src/a2l_tree/memory_layout.dart';
-import 'package:a2l/src/a2l_tree/memory_segment.dart';
 import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 

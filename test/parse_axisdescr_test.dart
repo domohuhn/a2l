@@ -2,7 +2,6 @@ import 'package:a2l/src/a2l_parser.dart';
 import 'package:a2l/src/a2l_tree/axis_descr.dart';
 import 'package:a2l/src/a2l_tree/axis_pts.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
-import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
