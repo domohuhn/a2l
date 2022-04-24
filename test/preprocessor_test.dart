@@ -2,13 +2,11 @@ import 'package:a2l/a2l.dart';
 import 'package:test/test.dart';
 
 void main() {
-
-  group('Split file', (){
-
+  group('Split file', () {
     test('No comments', () {
       var tokens = convertFileContentsToTokens(textNoComments);
       expect(tokens.length, expectedSplit.length);
-      for(var i=0;i<tokens.length; ++i) {
+      for (var i = 0; i < tokens.length; ++i) {
         expect(tokens[i].text, expectedSplit[i]);
       }
     });
@@ -16,23 +14,23 @@ void main() {
     test('Line comments', () {
       var tokens = convertFileContentsToTokens(textLineComments);
       expect(tokens.length, expectedSplit.length);
-      for(var i=0;i<tokens.length; ++i) {
+      for (var i = 0; i < tokens.length; ++i) {
         expect(tokens[i].text, expectedSplit[i]);
       }
     });
-    
+
     test('Block comments', () {
       var tokens = convertFileContentsToTokens(textBlockComments);
       expect(tokens.length, expectedSplit.length);
-      for(var i=0;i<tokens.length; ++i) {
+      for (var i = 0; i < tokens.length; ++i) {
         expect(tokens[i].text, expectedSplit[i]);
       }
     });
-    
+
     test('mixed comments', () {
       var tokens = convertFileContentsToTokens(textMixedComments);
       expect(tokens.length, expectedSplit.length);
-      for(var i=0;i<tokens.length; ++i) {
+      for (var i = 0; i < tokens.length; ++i) {
         expect(tokens[i].text, expectedSplit[i]);
       }
     });
@@ -44,24 +42,28 @@ void main() {
     test('Exception2', () {
       expect(() => convertFileContentsToTokens(textEx2), throwsException);
     });
-
   });
 }
 
 List<String> expectedSplit = [
-'THIS',
-'IS',
-'A',
-'LONG','TEXT',
-'IT',
-'HAS',
-'NO',
-'COMMENTS',
-'but', '123',
-'numbers', '23.345',
-'Text.Joined',
-'/begin', 'DATA', '"some strings"',
-'/end'
+  'THIS',
+  'IS',
+  'A',
+  'LONG',
+  'TEXT',
+  'IT',
+  'HAS',
+  'NO',
+  'COMMENTS',
+  'but',
+  '123',
+  'numbers',
+  '23.345',
+  'Text.Joined',
+  '/begin',
+  'DATA',
+  '"some strings"',
+  '/end'
 ];
 
 var textNoComments = '''

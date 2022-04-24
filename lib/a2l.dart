@@ -2,9 +2,9 @@
 /// The ASAM MCD-2MC standard is an automotive standard that is used to describe the memory layout
 /// of embedded systems. In combination with a calibration protocol (for example the Universal Measurement and Calibration Protocol XCP - Standard ASAM MCD-1 XCP)
 /// and a calibration system an embedded system can be calibrated in-situ in a vehicle/drone/robot.
-/// 
+///
 /// The library provides an abstract syntax tree that describes an ECU according to the A2L format called
-/// [A2LFile]. It can be read from a file in the file system with the following method [parseA2LFileSync()]:
+/// [A2LFile()]. It can be read from a file in the file system with the following method [parseA2LFileSync()]:
 /// ```dart
 ///   var file = parseA2LFileSync(path);
 /// ```
@@ -16,7 +16,6 @@
 /// for a wrong syntax in the file. Another possibility is that while creating the output some
 /// requirements to create a correct A2L file were not met (e.g. illegal combinations of options).
 library a2l;
-
 
 export 'package:a2l/src/a2l_parser.dart';
 export 'package:a2l/src/preprocessor.dart';

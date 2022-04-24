@@ -30,48 +30,48 @@ class CFunction extends DataContainer {
   String toFileContents(int depth) {
     var rv = indent('/begin FUNCTION $name', depth);
     rv += indent('"$description"', depth + 1);
-    if(version!=null) {
+    if (version != null) {
       rv += indent('FUNCTION_VERSION "$version"', depth + 1);
     }
     rv += annotationsToFileContents(depth + 1);
     if (definedCharacteristics.isNotEmpty) {
       rv += indent('/begin DEF_CHARACTERISTIC', depth + 1);
-      for(final v in definedCharacteristics) {
+      for (final v in definedCharacteristics) {
         rv += indent(v, depth + 2);
       }
       rv += indent('/end DEF_CHARACTERISTIC', depth + 1);
     }
     if (inputMeasurements.isNotEmpty) {
       rv += indent('/begin IN_MEASUREMENT', depth + 1);
-      for(final v in inputMeasurements) {
+      for (final v in inputMeasurements) {
         rv += indent(v, depth + 2);
       }
       rv += indent('/end IN_MEASUREMENT', depth + 1);
     }
     if (measurements.isNotEmpty) {
       rv += indent('/begin LOC_MEASUREMENT', depth + 1);
-      for(final v in measurements) {
+      for (final v in measurements) {
         rv += indent(v, depth + 2);
       }
       rv += indent('/end LOC_MEASUREMENT', depth + 1);
     }
     if (outputMeasurements.isNotEmpty) {
       rv += indent('/begin OUT_MEASUREMENT', depth + 1);
-      for(final v in outputMeasurements) {
+      for (final v in outputMeasurements) {
         rv += indent(v, depth + 2);
       }
       rv += indent('/end OUT_MEASUREMENT', depth + 1);
     }
     if (characteristics.isNotEmpty) {
       rv += indent('/begin REF_CHARACTERISTIC', depth + 1);
-      for(final v in characteristics) {
+      for (final v in characteristics) {
         rv += indent(v, depth + 2);
       }
       rv += indent('/end REF_CHARACTERISTIC', depth + 1);
     }
     if (functions.isNotEmpty) {
       rv += indent('/begin SUB_FUNCTION', depth + 1);
-      for(final v in functions) {
+      for (final v in functions) {
         rv += indent(v, depth + 2);
       }
       rv += indent('/end SUB_FUNCTION', depth + 1);

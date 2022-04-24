@@ -4,13 +4,25 @@ import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   var parser = TokenParser();
-  group('Parse verbatim table', (){
-    test('Parse mandatory', (){
-      prepareTestData(parser, ['/begin','COMPU_VTAB','test_ct', '"This is a test ct"', 'TAB_VERB', '3', 
-      '1', '"A"', '2', '"BB"', '5', '"CCC"',
-      '/end', 'COMPU_VTAB']);
+  group('Parse verbatim table', () {
+    test('Parse mandatory', () {
+      prepareTestData(parser, [
+        '/begin',
+        'COMPU_VTAB',
+        'test_ct',
+        '"This is a test ct"',
+        'TAB_VERB',
+        '3',
+        '1',
+        '"A"',
+        '2',
+        '"BB"',
+        '5',
+        '"CCC"',
+        '/end',
+        'COMPU_VTAB'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].computeTables.length, 1);
@@ -28,10 +40,35 @@ void main() {
       expect(file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
     });
 
-    test('Parse mandatory mutiple', (){
+    test('Parse mandatory mutiple', () {
       prepareTestData(parser, [
-        '/begin','COMPU_VTAB','test_ct', '"This is a test ct"', 'TAB_VERB', '3', '1', '"A"', '2', '"BB"', '5', '"CCC"','/end', 'COMPU_VTAB',
-        '/begin','COMPU_VTAB','test_ct2', '"This is a test ct2"', 'TAB_VERB', '2', '6', '"X"', '7', '"Y"','/end', 'COMPU_VTAB']);
+        '/begin',
+        'COMPU_VTAB',
+        'test_ct',
+        '"This is a test ct"',
+        'TAB_VERB',
+        '3',
+        '1',
+        '"A"',
+        '2',
+        '"BB"',
+        '5',
+        '"CCC"',
+        '/end',
+        'COMPU_VTAB',
+        '/begin',
+        'COMPU_VTAB',
+        'test_ct2',
+        '"This is a test ct2"',
+        'TAB_VERB',
+        '2',
+        '6',
+        '"X"',
+        '7',
+        '"Y"',
+        '/end',
+        'COMPU_VTAB'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].computeTables.length, 2);
@@ -60,10 +97,25 @@ void main() {
       expect(file.project.modules[0].computeTables[1].fallbackValueNumeric, null);
     });
 
-    test('Parse optional DEFAULT_VALUE', (){
-      prepareTestData(parser, ['/begin','COMPU_VTAB','test_ct', '"This is a test ct"', 'TAB_VERB', '3', 
-      '1', '"A"', '2', '"BB"', '5', '"CCC"', 'DEFAULT_VALUE', '"N/A"',
-      '/end', 'COMPU_VTAB']);
+    test('Parse optional DEFAULT_VALUE', () {
+      prepareTestData(parser, [
+        '/begin',
+        'COMPU_VTAB',
+        'test_ct',
+        '"This is a test ct"',
+        'TAB_VERB',
+        '3',
+        '1',
+        '"A"',
+        '2',
+        '"BB"',
+        '5',
+        '"CCC"',
+        'DEFAULT_VALUE',
+        '"N/A"',
+        '/end',
+        'COMPU_VTAB'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].computeTables.length, 1);
@@ -80,7 +132,5 @@ void main() {
       expect(file.project.modules[0].computeTables[0].fallbackValue, 'N/A');
       expect(file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
     });
-
   });
-
 }

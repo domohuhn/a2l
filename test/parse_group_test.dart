@@ -3,11 +3,10 @@ import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   var parser = TokenParser();
-  group('Parse groups', (){
-    test('Parse mandatory', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', '/end', 'GROUP']);
+  group('Parse groups', () {
+    test('Parse mandatory', () {
+      prepareTestData(parser, ['/begin', 'GROUP', 'TEST.GRP', '"This is a test group"', '/end', 'GROUP']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -22,9 +21,21 @@ void main() {
       expect(grps[0].groups.length, 0);
     });
 
-    test('Parse mandatory multiple', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', '/end', 'GROUP',
-      '/begin','GROUP','TEST.GRP2', '"This is a test group2"', '/end', 'GROUP']);
+    test('Parse mandatory multiple', () {
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/end',
+        'GROUP',
+        '/begin',
+        'GROUP',
+        'TEST.GRP2',
+        '"This is a test group2"',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -48,8 +59,8 @@ void main() {
       expect(grps[1].groups.length, 0);
     });
 
-    test('Parse optional ROOT', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', 'ROOT', '/end', 'GROUP']);
+    test('Parse optional ROOT', () {
+      prepareTestData(parser, ['/begin', 'GROUP', 'TEST.GRP', '"This is a test group"', 'ROOT', '/end', 'GROUP']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -64,8 +75,9 @@ void main() {
       expect(grps[0].groups.length, 0);
     });
 
-    test('Parse optional ANNOTATION', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', '/begin', 'ANNOTATION', '/end', 'ANNOTATION', '/end', 'GROUP']);
+    test('Parse optional ANNOTATION', () {
+      prepareTestData(
+          parser, ['/begin', 'GROUP', 'TEST.GRP', '"This is a test group"', '/begin', 'ANNOTATION', '/end', 'ANNOTATION', '/end', 'GROUP']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -80,8 +92,21 @@ void main() {
       expect(grps[0].groups.length, 0);
     });
 
-    test('Parse optional REF_CHARACTERISTIC', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', '/begin', 'REF_CHARACTERISTIC', 'AAA', 'BBB', '/end', 'REF_CHARACTERISTIC', '/end', 'GROUP']);
+    test('Parse optional REF_CHARACTERISTIC', () {
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/begin',
+        'REF_CHARACTERISTIC',
+        'AAA',
+        'BBB',
+        '/end',
+        'REF_CHARACTERISTIC',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -98,8 +123,21 @@ void main() {
       expect(grps[0].groups.length, 0);
     });
 
-    test('Parse optional REF_MEASUREMENT', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', '/begin', 'REF_MEASUREMENT', 'AAA', 'BBB', '/end', 'REF_MEASUREMENT', '/end', 'GROUP']);
+    test('Parse optional REF_MEASUREMENT', () {
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/begin',
+        'REF_MEASUREMENT',
+        'AAA',
+        'BBB',
+        '/end',
+        'REF_MEASUREMENT',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -116,8 +154,21 @@ void main() {
       expect(grps[0].groups.length, 0);
     });
 
-    test('Parse optional SUB_GROUP', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', '/begin', 'SUB_GROUP', 'AAA', 'BBB', '/end', 'SUB_GROUP', '/end', 'GROUP']);
+    test('Parse optional SUB_GROUP', () {
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/begin',
+        'SUB_GROUP',
+        'AAA',
+        'BBB',
+        '/end',
+        'SUB_GROUP',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -134,8 +185,21 @@ void main() {
       expect(grps[0].measurements.length, 0);
     });
 
-    test('Parse optional FUNCTION_LIST', (){
-      prepareTestData(parser, ['/begin','GROUP','TEST.GRP', '"This is a test group"', '/begin', 'FUNCTION_LIST', 'AAA', 'BBB', '/end', 'FUNCTION_LIST', '/end', 'GROUP']);
+    test('Parse optional FUNCTION_LIST', () {
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/begin',
+        'FUNCTION_LIST',
+        'AAA',
+        'BBB',
+        '/end',
+        'FUNCTION_LIST',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -151,6 +215,5 @@ void main() {
       expect(grps[0].characteristics.length, 0);
       expect(grps[0].measurements.length, 0);
     });
-
   });
 }

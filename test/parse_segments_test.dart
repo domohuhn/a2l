@@ -5,13 +5,28 @@ import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   var parser = TokenParser();
-  group('Parse mandatory memory layout', (){
-    test('Parse one', (){
-      prepareTestData(parser, ['/begin','MOD_PAR', '"Description of pars module pars"',
-      '/begin', 'MEMORY_LAYOUT', 'PRG_DATA', '0x42', '0x10', '1', '2', '3', '4', '0x100', '/end', 'MEMORY_LAYOUT',
-      '/end', 'MOD_PAR']);
+  group('Parse mandatory memory layout', () {
+    test('Parse one', () {
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module pars"',
+        '/begin',
+        'MEMORY_LAYOUT',
+        'PRG_DATA',
+        '0x42',
+        '0x10',
+        '1',
+        '2',
+        '3',
+        '4',
+        '0x100',
+        '/end',
+        'MEMORY_LAYOUT',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -29,11 +44,38 @@ void main() {
       expect(data[0].offsets[4], 0x100);
     });
 
-    test('Parse multiple', (){
-      prepareTestData(parser, ['/begin','MOD_PAR', '"Description of pars module pars"',
-      '/begin', 'MEMORY_LAYOUT', 'PRG_CODE', '0x42', '0x10', '-1', '-1', '-1', '-1', '-1', '/end', 'MEMORY_LAYOUT',
-      '/begin', 'MEMORY_LAYOUT', 'PRG_RESERVED', '0x84', '0x20', '-1', '-1', '-1', '-1', '-1', '/end', 'MEMORY_LAYOUT',
-      '/end', 'MOD_PAR']);
+    test('Parse multiple', () {
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module pars"',
+        '/begin',
+        'MEMORY_LAYOUT',
+        'PRG_CODE',
+        '0x42',
+        '0x10',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '/end',
+        'MEMORY_LAYOUT',
+        '/begin',
+        'MEMORY_LAYOUT',
+        'PRG_RESERVED',
+        '0x84',
+        '0x20',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '/end',
+        'MEMORY_LAYOUT',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -49,7 +91,7 @@ void main() {
       expect(data[0].offsets[2], -1);
       expect(data[0].offsets[3], -1);
       expect(data[0].offsets[4], -1);
-      
+
       expect(data[1].type, MemoryLayoutType.PRG_RESERVED);
       expect(data[1].address, 0x84);
       expect(data[1].size, 0x20);
@@ -63,12 +105,31 @@ void main() {
     });
   });
 
-  
-  group('Parse mandatory memory segment', (){
-    test('Parse one', (){
-      prepareTestData(parser, ['/begin','MOD_PAR', '"Description of pars module pars"',
-      '/begin', 'MEMORY_SEGMENT', 'SEG', '"This is a description"', 'OFFLINE_DATA','RAM','INTERN', '0x42', '0x10', '1', '2', '3', '4', '0x100', '/end', 'MEMORY_SEGMENT',
-      '/end', 'MOD_PAR']);
+  group('Parse mandatory memory segment', () {
+    test('Parse one', () {
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module pars"',
+        '/begin',
+        'MEMORY_SEGMENT',
+        'SEG',
+        '"This is a description"',
+        'OFFLINE_DATA',
+        'RAM',
+        'INTERN',
+        '0x42',
+        '0x10',
+        '1',
+        '2',
+        '3',
+        '4',
+        '0x100',
+        '/end',
+        'MEMORY_SEGMENT',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -90,11 +151,46 @@ void main() {
       expect(data[0].offsets[4], 0x100);
     });
 
-    test('Parse multiple', (){
-      prepareTestData(parser, ['/begin','MOD_PAR', '"Description of pars module pars"',
-      '/begin', 'MEMORY_SEGMENT', 'SEG', '"This is a description"', 'DATA','EPROM','INTERN', '0x42', '0x10', '-1', '-1', '-1', '-1', '-1', '/end', 'MEMORY_SEGMENT',
-      '/begin', 'MEMORY_SEGMENT', 'SEG2', '"This is a description2"', 'CODE','FLASH','EXTERN', '0x84', '0x20', '-1', '-1', '-1', '-1', '-1', '/end', 'MEMORY_SEGMENT',
-      '/end', 'MOD_PAR']);
+    test('Parse multiple', () {
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module pars"',
+        '/begin',
+        'MEMORY_SEGMENT',
+        'SEG',
+        '"This is a description"',
+        'DATA',
+        'EPROM',
+        'INTERN',
+        '0x42',
+        '0x10',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '/end',
+        'MEMORY_SEGMENT',
+        '/begin',
+        'MEMORY_SEGMENT',
+        'SEG2',
+        '"This is a description2"',
+        'CODE',
+        'FLASH',
+        'EXTERN',
+        '0x84',
+        '0x20',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '-1',
+        '/end',
+        'MEMORY_SEGMENT',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -114,7 +210,7 @@ void main() {
       expect(data[0].offsets[2], -1);
       expect(data[0].offsets[3], -1);
       expect(data[0].offsets[4], -1);
-      
+
       expect(data[1].name, 'SEG2');
       expect(data[1].description, 'This is a description2');
       expect(data[1].type, SegmentType.CODE);
@@ -131,7 +227,4 @@ void main() {
       expect(data[1].offsets[4], -1);
     });
   });
-
 }
-
-

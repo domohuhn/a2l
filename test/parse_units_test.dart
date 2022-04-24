@@ -4,11 +4,10 @@ import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   var parser = TokenParser();
-  group('Parse units', (){
-    test('Parse mandatory', (){
-      prepareTestData(parser, ['/begin','UNIT','test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', '/end', 'UNIT']);
+  group('Parse units', () {
+    test('Parse mandatory', () {
+      prepareTestData(parser, ['/begin', 'UNIT', 'test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', '/end', 'UNIT']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
@@ -17,14 +16,30 @@ void main() {
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[0].referencedUnit, null);
-      expect(file.project.modules[0].units[0].conversionLinear_offset, null);
-      expect(file.project.modules[0].units[0].conversionLinear_slope, null);
+      expect(file.project.modules[0].units[0].conversionLinearOffset, null);
+      expect(file.project.modules[0].units[0].conversionLinearSlope, null);
       expect(file.project.modules[0].units[0].exponents, null);
     });
 
-    test('Parse mandatory, multiple units', (){
-      prepareTestData(parser, ['/begin','UNIT','test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', '/end', 'UNIT',
-      '/begin','UNIT','test_unit2', '"This is a test unit2"', '"[m]2"', 'DERIVED', '/end', 'UNIT']);
+    test('Parse mandatory, multiple units', () {
+      prepareTestData(parser, [
+        '/begin',
+        'UNIT',
+        'test_unit',
+        '"This is a test unit"',
+        '"[m]"',
+        'EXTENDED_SI',
+        '/end',
+        'UNIT',
+        '/begin',
+        'UNIT',
+        'test_unit2',
+        '"This is a test unit2"',
+        '"[m]2"',
+        'DERIVED',
+        '/end',
+        'UNIT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 2);
@@ -38,9 +53,9 @@ void main() {
       expect(file.project.modules[0].units[1].type, UnitType.DERIVED);
     });
 
-    
-    test('Parse optional REF_UNIT', (){
-      prepareTestData(parser, ['/begin','UNIT','test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI','REF_UNIT', 'otherU' , '/end', 'UNIT']);
+    test('Parse optional REF_UNIT', () {
+      prepareTestData(
+          parser, ['/begin', 'UNIT', 'test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', 'REF_UNIT', 'otherU', '/end', 'UNIT']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
@@ -48,10 +63,22 @@ void main() {
       expect(file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
-      expect(file.project.modules[0].units[0].referencedUnit,'otherU');
+      expect(file.project.modules[0].units[0].referencedUnit, 'otherU');
     });
-    test('Parse optional UNIT_CONVERSION', (){
-      prepareTestData(parser, ['/begin','UNIT','test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', 'UNIT_CONVERSION','1.0', '2.0' , '/end', 'UNIT']);
+    test('Parse optional UNIT_CONVERSION', () {
+      prepareTestData(parser, [
+        '/begin',
+        'UNIT',
+        'test_unit',
+        '"This is a test unit"',
+        '"[m]"',
+        'EXTENDED_SI',
+        'UNIT_CONVERSION',
+        '1.0',
+        '2.0',
+        '/end',
+        'UNIT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
@@ -59,11 +86,28 @@ void main() {
       expect(file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
-      expect(file.project.modules[0].units[0].conversionLinear_offset, 2.0);
-      expect(file.project.modules[0].units[0].conversionLinear_slope, 1.0);
+      expect(file.project.modules[0].units[0].conversionLinearOffset, 2.0);
+      expect(file.project.modules[0].units[0].conversionLinearSlope, 1.0);
     });
-    test('Parse optional SI_EXPONENTS', (){
-      prepareTestData(parser, ['/begin','UNIT','test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', 'SI_EXPONENTS','1', '2', '3', '4', '5', '6', '7' , '/end', 'UNIT']);
+    test('Parse optional SI_EXPONENTS', () {
+      prepareTestData(parser, [
+        '/begin',
+        'UNIT',
+        'test_unit',
+        '"This is a test unit"',
+        '"[m]"',
+        'EXTENDED_SI',
+        'SI_EXPONENTS',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '/end',
+        'UNIT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
@@ -81,8 +125,8 @@ void main() {
     });
   });
 
-  group('Serialization', (){
-    test('complete', (){
+  group('Serialization', () {
+    test('complete', () {
       var unit = Unit();
       unit.name = 'U.Test';
       unit.display = 'm';
@@ -91,8 +135,8 @@ void main() {
       unit.exponents = SIExponents();
       unit.exponents!.length = 1;
       unit.referencedUnit = 'U.Other';
-      unit.conversionLinear_slope = 1.0;
-      unit.conversionLinear_offset = 2.0;
+      unit.conversionLinearSlope = 1.0;
+      unit.conversionLinearOffset = 2.0;
       var rv = unit.toFileContents(1);
       final out = '''  /begin UNIT U.Test
     "Meter"
@@ -104,7 +148,6 @@ void main() {
 
 ''';
       expect(rv, out);
-
     });
   });
 }

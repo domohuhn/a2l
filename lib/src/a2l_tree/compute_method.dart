@@ -6,41 +6,49 @@ import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Describes the type of compute method to use.
-enum ComputeMethodType {
-  IDENTICAL,
-  FORM,
-  LINEAR,
-  RAT_FUNC,
-  TAB_INTP,
-  TAB_NOINTP,
-  TAB_VERB
-}
+enum ComputeMethodType { IDENTICAL, FORM, LINEAR, RAT_FUNC, TAB_INTP, TAB_NOINTP, TAB_VERB }
 
 /// Converts the a2l Token [s] to the enum.
 ComputeMethodType computeMethodTypeFromSting(Token s) {
-  switch(s.text) {
-    case 'IDENTICAL': return ComputeMethodType.IDENTICAL;
-    case 'FORM': return ComputeMethodType.FORM;
-    case 'LINEAR': return ComputeMethodType.LINEAR;
-    case 'RAT_FUNC': return ComputeMethodType.RAT_FUNC;
-    case 'TAB_INTP': return ComputeMethodType.TAB_INTP;
-    case 'TAB_NOINTP': return ComputeMethodType.TAB_NOINTP;
-    case 'TAB_VERB': return ComputeMethodType.TAB_VERB;
-    default: throw ParsingException('Unknown Compute Method Type', s);
+  switch (s.text) {
+    case 'IDENTICAL':
+      return ComputeMethodType.IDENTICAL;
+    case 'FORM':
+      return ComputeMethodType.FORM;
+    case 'LINEAR':
+      return ComputeMethodType.LINEAR;
+    case 'RAT_FUNC':
+      return ComputeMethodType.RAT_FUNC;
+    case 'TAB_INTP':
+      return ComputeMethodType.TAB_INTP;
+    case 'TAB_NOINTP':
+      return ComputeMethodType.TAB_NOINTP;
+    case 'TAB_VERB':
+      return ComputeMethodType.TAB_VERB;
+    default:
+      throw ParsingException('Unknown Compute Method Type', s);
   }
 }
 
 /// Converts the method type [s] to the a2l String.
 String computeMethodTypeToSting(ComputeMethodType s) {
-  switch(s) {
-    case ComputeMethodType.IDENTICAL: return 'IDENTICAL';
-    case ComputeMethodType.FORM: return 'FORM';
-    case ComputeMethodType.LINEAR: return 'LINEAR';
-    case ComputeMethodType.RAT_FUNC: return 'RAT_FUNC';
-    case ComputeMethodType.TAB_INTP: return 'TAB_INTP';
-    case ComputeMethodType.TAB_NOINTP: return 'TAB_NOINTP';
-    case ComputeMethodType.TAB_VERB: return 'TAB_VERB';
-    default: throw ValidationError('Unknown Compute Method Type');
+  switch (s) {
+    case ComputeMethodType.IDENTICAL:
+      return 'IDENTICAL';
+    case ComputeMethodType.FORM:
+      return 'FORM';
+    case ComputeMethodType.LINEAR:
+      return 'LINEAR';
+    case ComputeMethodType.RAT_FUNC:
+      return 'RAT_FUNC';
+    case ComputeMethodType.TAB_INTP:
+      return 'TAB_INTP';
+    case ComputeMethodType.TAB_NOINTP:
+      return 'TAB_NOINTP';
+    case ComputeMethodType.TAB_VERB:
+      return 'TAB_VERB';
+    default:
+      throw ValidationError('Unknown Compute Method Type');
   }
 }
 
@@ -52,15 +60,15 @@ class ComputeException implements Exception {
 
   @override
   String toString() {
-    return '$cause';
+    return cause;
   }
 }
 
 /// This class holds the data to convert physical values to bus data and vice versa.
-/// 
+///
 /// For linear conversions, the following formula is used (internal -> physical):
 ///     physical = a*x + b
-/// 
+///
 /// For rational conversions, the following formula is used (physical -> internal):
 ///     internal = (a*x*x + b*x +c)/(d*x*x + e*x + f)
 class ComputeMethod {
@@ -70,42 +78,47 @@ class ComputeMethod {
   String format = '';
   String unit = '';
 
-  double? coefficient_a;
-  double? coefficient_b;
-  double? coefficient_c;
-  double? coefficient_d;
-  double? coefficient_e;
-  double? coefficient_f;
-  String? referenced_table;
+  double? coefficientA;
+  double? coefficientB;
+  double? coefficientC;
+  double? coefficientD;
+  double? coefficientE;
+  double? coefficientF;
+  String? referencedTable;
   Formula? formula;
-  String? referenced_unit;
-  String? referenced_statusString;
+  String? referencedUnit;
+  String? referencedStatusString;
 
-  double convertToPhysical(BigInt input){
-    switch(type) {
+  double convertToPhysical(BigInt input) {
+    switch (type) {
       case ComputeMethodType.IDENTICAL:
         return input.toDouble();
       case ComputeMethodType.FORM:
         throw ComputeException('$type is not imlemented for "$name"!');
       case ComputeMethodType.LINEAR:
-        if (coefficient_a == null || coefficient_b == null) {
+        if (coefficientA == null || coefficientB == null) {
           throw ComputeException('Coefficients for compute method "$name" LINEAR not defined!');
         }
-        return coefficient_a! * input.toDouble() + coefficient_b!;
+        return coefficientA! * input.toDouble() + coefficientB!;
       case ComputeMethodType.RAT_FUNC:
-        if (coefficient_a == null || coefficient_b == null || coefficient_c == null || coefficient_d == null || coefficient_e == null || coefficient_f == null) {
+        if (coefficientA == null ||
+            coefficientB == null ||
+            coefficientC == null ||
+            coefficientD == null ||
+            coefficientE == null ||
+            coefficientF == null) {
           throw ComputeException('Coefficients for compute method "$name" RAT_FUNC not defined!');
         }
         var x = input.toDouble();
-        var p_a = (coefficient_d!*x-coefficient_a!);
-        var p_b = (coefficient_e!*x-coefficient_b!);
-        var p_c = (coefficient_f!*x-coefficient_c!);
-        if(p_a!=0.0) {
-          return (-p_b + sqrt(p_b*p_b - 4*p_a*p_c))/(2*p_a);
-        } else if(p_b!=0.0) {
-          return -p_c/p_b;
+        var A = (coefficientD! * x - coefficientA!);
+        var B = (coefficientE! * x - coefficientB!);
+        var C = (coefficientF! * x - coefficientC!);
+        if (A != 0.0) {
+          return (-B + sqrt(B * B - 4 * A * C)) / (2 * A);
+        } else if (B != 0.0) {
+          return -C / B;
         } else {
-          return p_c;
+          return C;
         }
       case ComputeMethodType.TAB_INTP:
         throw ComputeException('$type is not imlemented for "$name"!');
@@ -116,22 +129,28 @@ class ComputeMethod {
     }
   }
 
-  BigInt convertToInternal(double input){
-    switch(type) {
+  BigInt convertToInternal(double input) {
+    switch (type) {
       case ComputeMethodType.IDENTICAL:
         return BigInt.from(input.toInt());
       case ComputeMethodType.FORM:
         throw ComputeException('$type is not imlemented for "$name"!');
       case ComputeMethodType.LINEAR:
-        if (coefficient_a == null || coefficient_b == null) {
+        if (coefficientA == null || coefficientB == null) {
           throw ComputeException('Coefficients for compute method "$name" LINEAR not defined!');
         }
-        return BigInt.from((input - coefficient_b!)~/coefficient_a!);
+        return BigInt.from((input - coefficientB!) ~/ coefficientA!);
       case ComputeMethodType.RAT_FUNC:
-        if (coefficient_a == null || coefficient_b == null || coefficient_c == null || coefficient_d == null || coefficient_e == null || coefficient_f == null) {
+        if (coefficientA == null ||
+            coefficientB == null ||
+            coefficientC == null ||
+            coefficientD == null ||
+            coefficientE == null ||
+            coefficientF == null) {
           throw ComputeException('Coefficients for compute method "$name" RAT_FUNC not defined!');
         }
-        return BigInt.from((coefficient_a! *input*input+ coefficient_b! *input + coefficient_c!)~/(coefficient_d!*input*input + coefficient_e!*input+ coefficient_f!));
+        return BigInt.from((coefficientA! * input * input + coefficientB! * input + coefficientC!) ~/
+            (coefficientD! * input * input + coefficientE! * input + coefficientF!));
       case ComputeMethodType.TAB_INTP:
         throw ComputeException('$type is not imlemented!');
       case ComputeMethodType.TAB_NOINTP:
@@ -143,58 +162,56 @@ class ComputeMethod {
 
   /// Converts the compute method to an a2l file with the given indentation [depth].
   String toFileContents(int depth) {
-    var rv = indent('/begin COMPU_METHOD $name',depth);
-    rv += indent('"$description"',depth+1);
-    rv += indent('${computeMethodTypeToSting(type)} "$format" "$unit"',depth+1);
-    switch(type) {
-      case ComputeMethodType.IDENTICAL: break;
+    var rv = indent('/begin COMPU_METHOD $name', depth);
+    rv += indent('"$description"', depth + 1);
+    rv += indent('${computeMethodTypeToSting(type)} "$format" "$unit"', depth + 1);
+    switch (type) {
+      case ComputeMethodType.IDENTICAL:
+        break;
       case ComputeMethodType.FORM:
-        if(formula!=null) {
-          rv += formula!.toFileContents(depth+1);
-        }
-        else {
+        if (formula != null) {
+          rv += formula!.toFileContents(depth + 1);
+        } else {
           throw ValidationError('Compute method "$name" has $type but no Formula');
         }
         break;
       case ComputeMethodType.LINEAR:
-        if(coefficient_a!=null && coefficient_b!=null) {
-          rv += indent('COEFFS_LINEAR $coefficient_a $coefficient_b',depth+1);
+        if (coefficientA != null && coefficientB != null) {
+          rv += indent('COEFFS_LINEAR $coefficientA $coefficientB', depth + 1);
         } else {
-          throw ValidationError('Compute method "$name" has $type but no coefficients a: $coefficient_a and b: $coefficient_b!');
+          throw ValidationError('Compute method "$name" has $type but no coefficients a: $coefficientA and b: $coefficientB!');
         }
         break;
       case ComputeMethodType.RAT_FUNC:
-        if(coefficient_a!=null && coefficient_b!=null && coefficient_c!=null
-          && coefficient_d!=null && coefficient_e!=null && coefficient_f!=null) {
-          rv += indent('COEFFS $coefficient_a $coefficient_b $coefficient_c $coefficient_d $coefficient_e $coefficient_f',depth+1);
+        if (coefficientA != null &&
+            coefficientB != null &&
+            coefficientC != null &&
+            coefficientD != null &&
+            coefficientE != null &&
+            coefficientF != null) {
+          rv += indent('COEFFS $coefficientA $coefficientB $coefficientC $coefficientD $coefficientE $coefficientF', depth + 1);
         } else {
-          throw ValidationError('Compute method "$name" has $type but no missing coefficients a: $coefficient_a b: $coefficient_b c: $coefficient_c d: $coefficient_d e: $coefficient_e f: $coefficient_f!');
+          throw ValidationError(
+              'Compute method "$name" has $type but no missing coefficients a: $coefficientA b: $coefficientB c: $coefficientC d: $coefficientD e: $coefficientE f: $coefficientF!');
         }
         break;
       case ComputeMethodType.TAB_INTP:
       case ComputeMethodType.TAB_NOINTP:
       case ComputeMethodType.TAB_VERB:
-        if(referenced_table!=null && referenced_table!.isNotEmpty) {
-          rv += indent('COMPU_TAB_REF $referenced_table',depth+1);
+        if (referencedTable != null && referencedTable!.isNotEmpty) {
+          rv += indent('COMPU_TAB_REF $referencedTable', depth + 1);
         } else {
           throw ValidationError('Compute method "$name" has $type but no referenced table!');
         }
         break;
     }
-    if(referenced_unit!=null && referenced_unit!.isNotEmpty) {
-      rv += indent('REF_UNIT $referenced_unit',depth+1);
+    if (referencedUnit != null && referencedUnit!.isNotEmpty) {
+      rv += indent('REF_UNIT $referencedUnit', depth + 1);
     }
-    if(referenced_statusString!=null && referenced_statusString!.isNotEmpty) {
-      rv += indent('STATUS_STRING_REF $referenced_statusString',depth+1);
+    if (referencedStatusString != null && referencedStatusString!.isNotEmpty) {
+      rv += indent('STATUS_STRING_REF $referencedStatusString', depth + 1);
     }
-    rv += indent('/end COMPU_METHOD\n\n',depth);
+    rv += indent('/end COMPU_METHOD\n\n', depth);
     return rv;
   }
-
 }
-
-
-
-
-
-

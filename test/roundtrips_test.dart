@@ -1,11 +1,8 @@
-
 import 'package:a2l/a2l.dart';
 import 'package:test/test.dart';
 
 void main() {
-
-  var parser = TokenParser();
-  group('Roundtrip tests', (){
+  group('Roundtrip tests', () {
     test('simple.a2l', () {
       var file = parseA2L(simpleText);
       var out = file.toFileContents();
@@ -13,9 +10,6 @@ void main() {
     });
   });
 }
-
-
-
 
 final simpleText = '''
 /* This a2l file was generated with the dart a2l package */

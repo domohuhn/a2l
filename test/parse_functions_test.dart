@@ -3,11 +3,10 @@ import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   var parser = TokenParser();
-  group('Parse functions mandatory', (){
-    test('Parse one', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', '/end', 'FUNCTION']);
+  group('Parse functions mandatory', () {
+    test('Parse one', () {
+      prepareTestData(parser, ['/begin', 'FUNCTION', 'TEST.FUN', '"This is a test fun"', '/end', 'FUNCTION']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -24,9 +23,21 @@ void main() {
       expect(funs[0].groups.length, 0);
     });
 
-    test('Parse multiple', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', '/end', 'FUNCTION',
-      '/begin','FUNCTION','TEST.FUN2', '"This is a test fun2"', '/end', 'FUNCTION']);
+    test('Parse multiple', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/end',
+        'FUNCTION',
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN2',
+        '"This is a test fun2"',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -55,11 +66,10 @@ void main() {
     });
   });
 
-  group('Parse functions optional', (){
-    test('FUNCTION_VERSION', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      'FUNCTION_VERSION', '"v1.0.0"',
-      '/end', 'FUNCTION']);
+  group('Parse functions optional', () {
+    test('FUNCTION_VERSION', () {
+      prepareTestData(
+          parser, ['/begin', 'FUNCTION', 'TEST.FUN', '"This is a test fun"', 'FUNCTION_VERSION', '"v1.0.0"', '/end', 'FUNCTION']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -67,11 +77,30 @@ void main() {
       expect(funs[0].version, 'v1.0.0');
     });
 
-    test('ANNOTATION', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      '/begin', 'ANNOTATION', '/begin', 'ANNOTATION_TEXT', '"AA\\n"', '"BB\\n"', '"CC\\n"', '/end', 'ANNOTATION_TEXT',
-      'ANNOTATION_ORIGIN', '"some origin"', 'ANNOTATION_LABEL', '"some label"', '/end', 'ANNOTATION',
-      '/end', 'FUNCTION']);
+    test('ANNOTATION', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'ANNOTATION',
+        '/begin',
+        'ANNOTATION_TEXT',
+        '"AA\\n"',
+        '"BB\\n"',
+        '"CC\\n"',
+        '/end',
+        'ANNOTATION_TEXT',
+        'ANNOTATION_ORIGIN',
+        '"some origin"',
+        'ANNOTATION_LABEL',
+        '"some label"',
+        '/end',
+        'ANNOTATION',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -86,10 +115,22 @@ void main() {
       expect(annotations[0].text[2], 'CC\\n');
     });
 
-    test('DEF_CHARACTERISTIC', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      '/begin', 'DEF_CHARACTERISTIC', 'AAA', 'BBB', 'CCC', '/end', 'DEF_CHARACTERISTIC',
-      '/end', 'FUNCTION']);
+    test('DEF_CHARACTERISTIC', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'DEF_CHARACTERISTIC',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'DEF_CHARACTERISTIC',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -101,10 +142,22 @@ void main() {
       expect(data[2], 'CCC');
     });
 
-    test('REF_CHARACTERISTIC', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      '/begin', 'REF_CHARACTERISTIC', 'AAA', 'BBB', 'CCC', '/end', 'REF_CHARACTERISTIC',
-      '/end', 'FUNCTION']);
+    test('REF_CHARACTERISTIC', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'REF_CHARACTERISTIC',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'REF_CHARACTERISTIC',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -116,10 +169,22 @@ void main() {
       expect(data[2], 'CCC');
     });
 
-    test('IN_MEASUREMENT', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      '/begin', 'IN_MEASUREMENT', 'AAA', 'BBB', 'CCC', '/end', 'IN_MEASUREMENT',
-      '/end', 'FUNCTION']);
+    test('IN_MEASUREMENT', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'IN_MEASUREMENT',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'IN_MEASUREMENT',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -131,10 +196,22 @@ void main() {
       expect(data[2], 'CCC');
     });
 
-    test('LOC_MEASUREMENT', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      '/begin', 'LOC_MEASUREMENT', 'AAA', 'BBB', 'CCC', '/end', 'LOC_MEASUREMENT',
-      '/end', 'FUNCTION']);
+    test('LOC_MEASUREMENT', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'LOC_MEASUREMENT',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'LOC_MEASUREMENT',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -146,10 +223,22 @@ void main() {
       expect(data[2], 'CCC');
     });
 
-    test('OUT_MEASUREMENT', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      '/begin', 'OUT_MEASUREMENT', 'AAA', 'BBB', 'CCC', '/end', 'OUT_MEASUREMENT',
-      '/end', 'FUNCTION']);
+    test('OUT_MEASUREMENT', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'OUT_MEASUREMENT',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'OUT_MEASUREMENT',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -161,10 +250,22 @@ void main() {
       expect(data[2], 'CCC');
     });
 
-    test('SUB_FUNCTION', (){
-      prepareTestData(parser, ['/begin','FUNCTION','TEST.FUN', '"This is a test fun"', 
-      '/begin', 'SUB_FUNCTION', 'AAA', 'BBB', 'CCC', '/end', 'SUB_FUNCTION',
-      '/end', 'FUNCTION']);
+    test('SUB_FUNCTION', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'SUB_FUNCTION',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'SUB_FUNCTION',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;

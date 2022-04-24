@@ -5,12 +5,24 @@ import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   var parser = TokenParser();
-  group('Parse characteristic', (){
-    test('Parse mandatory', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5', '/end', 'CHARACTERISTIC']);
+  group('Parse characteristic', () {
+    test('Parse mandatory', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -50,11 +62,35 @@ void main() {
       expect(chara[0].axisDescription.length, 0);
     });
 
-    test('Parse multiple', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5', '/end', 'CHARACTERISTIC',
-        '/begin','CHARACTERISTIC','TEST.CHAR2', '"This is a test char2"', 'VALUE', '0xCAFEBABE',
-        'RL.MOO2', '100.25', 'CM_moo2', '-40.5', '66.5', '/end', 'CHARACTERISTIC']);
+    test('Parse multiple', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        '/end',
+        'CHARACTERISTIC',
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR2',
+        '"This is a test char2"',
+        'VALUE',
+        '0xCAFEBABE',
+        'RL.MOO2',
+        '100.25',
+        'CM_moo2',
+        '-40.5',
+        '66.5',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -88,7 +124,7 @@ void main() {
       expect(chara[0].mapList.length, 0);
       expect(chara[0].number, null);
       expect(chara[0].virtualCharacteristics, null);
-      
+
       expect(chara[1].name, 'TEST.CHAR2');
       expect(chara[1].description, 'This is a test char2');
       expect(chara[1].type, CharacteristicType.VALUE);
@@ -120,10 +156,24 @@ void main() {
       expect(chara[1].virtualCharacteristics, null);
     });
 
-    test('Parse optional ECU_ADDRESS_EXTENSION', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'ECU_ADDRESS_EXTENSION', '25', '/end', 'CHARACTERISTIC']);
+    test('Parse optional ECU_ADDRESS_EXTENSION', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'ECU_ADDRESS_EXTENSION',
+        '25',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -161,10 +211,24 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-    test('Parse optional BIT_MASK', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'BIT_MASK', '0xFFFFFFFF', '/end', 'CHARACTERISTIC']);
+    test('Parse optional BIT_MASK', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'BIT_MASK',
+        '0xFFFFFFFF',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -202,10 +266,24 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-    test('Parse optional DISPLAY_IDENTIFIER', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'DISPLAY_IDENTIFIER', 'SOME.ID', '/end', 'CHARACTERISTIC']);
+    test('Parse optional DISPLAY_IDENTIFIER', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'DISPLAY_IDENTIFIER',
+        'SOME.ID',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -243,10 +321,24 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-    test('Parse optional BYTE_ORDER', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'BYTE_ORDER', 'MSB_FIRST', '/end', 'CHARACTERISTIC']);
+    test('Parse optional BYTE_ORDER', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'BYTE_ORDER',
+        'MSB_FIRST',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -284,12 +376,24 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-
-
-    test('Parse optional FORMAT', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'FORMAT', '"%7.3"', '/end', 'CHARACTERISTIC']);
+    test('Parse optional FORMAT', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'FORMAT',
+        '"%7.3"',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -327,10 +431,24 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-    test('Parse optional REF_MEMORY_SEGMENT', (){
-     prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'REF_MEMORY_SEGMENT', 'Some.Segment', '/end', 'CHARACTERISTIC']);
+    test('Parse optional REF_MEMORY_SEGMENT', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'REF_MEMORY_SEGMENT',
+        'Some.Segment',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -368,11 +486,23 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-
-    test('Parse optional DISCRETE', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'DISCRETE', '/end', 'CHARACTERISTIC']);
+    test('Parse optional DISCRETE', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'DISCRETE',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -410,11 +540,23 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-    
-    test('Parse optional READ_ONLY', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'READ_ONLY', '/end', 'CHARACTERISTIC']);
+    test('Parse optional READ_ONLY', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'READ_ONLY',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -452,11 +594,24 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-
-    test('Parse optional PHYS_UNIT', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'PHYS_UNIT', '"[m]"', '/end', 'CHARACTERISTIC']);
+    test('Parse optional PHYS_UNIT', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'PHYS_UNIT',
+        '"[m]"',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -494,11 +649,37 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
     });
 
-    test('Parse optional ANNOTATION', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        '/begin', 'ANNOTATION', '/begin', 'ANNOTATION_TEXT', '"AA\\n"', '"BB\\n"', '"CC\\n"', '/end', 'ANNOTATION_TEXT',
-        'ANNOTATION_ORIGIN', '"some origin"', 'ANNOTATION_LABEL', '"some label"', '/end', 'ANNOTATION', '/end', 'CHARACTERISTIC']);
+    test('Parse optional ANNOTATION', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        '/begin',
+        'ANNOTATION',
+        '/begin',
+        'ANNOTATION_TEXT',
+        '"AA\\n"',
+        '"BB\\n"',
+        '"CC\\n"',
+        '/end',
+        'ANNOTATION_TEXT',
+        'ANNOTATION_ORIGIN',
+        '"some origin"',
+        'ANNOTATION_LABEL',
+        '"some label"',
+        '/end',
+        'ANNOTATION',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -544,9 +725,24 @@ void main() {
       expect(annotations[0].text[2], 'CC\\n');
     });
 
-    test('Parse optional STEP_SIZE', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5', 'STEP_SIZE', '3.5', '/end', 'CHARACTERISTIC']);
+    test('Parse optional STEP_SIZE', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'STEP_SIZE',
+        '3.5',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -585,9 +781,24 @@ void main() {
       expect(chara[0].stepSize, 3.5);
     });
 
-    test('Parse optional NUMBER', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5', 'NUMBER', '12', '/end', 'CHARACTERISTIC']);
+    test('Parse optional NUMBER', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'NUMBER',
+        '12',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -625,9 +836,24 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
       expect(chara[0].stepSize, null);
     });
-    test('Parse optional COMPARISON_QUANTITY', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5', 'COMPARISON_QUANTITY', 'SomeQuant', '/end', 'CHARACTERISTIC']);
+    test('Parse optional COMPARISON_QUANTITY', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'COMPARISON_QUANTITY',
+        'SomeQuant',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -666,9 +892,24 @@ void main() {
       expect(chara[0].stepSize, null);
     });
 
-    test('Parse optional CALIBRATION_ACCESS', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5', 'CALIBRATION_ACCESS', 'CALIBRATION', '/end', 'CHARACTERISTIC']);
+    test('Parse optional CALIBRATION_ACCESS', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'CALIBRATION_ACCESS',
+        'CALIBRATION',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -707,9 +948,25 @@ void main() {
       expect(chara[0].stepSize, null);
     });
 
-    test('Parse optional EXTENDED_LIMITS', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5', 'EXTENDED_LIMITS', '0.5', '22.5', '/end', 'CHARACTERISTIC']);
+    test('Parse optional EXTENDED_LIMITS', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'EXTENDED_LIMITS',
+        '0.5',
+        '22.5',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -750,12 +1007,32 @@ void main() {
       expect(chara[0].stepSize, null);
     });
 
-  //  [-> MAP_LIST]
-    
-    test('Parse optional VIRTUAL_CHARACTERISTIC', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        '/begin', 'VIRTUAL_CHARACTERISTIC', '"X1 + X2 + X3"', 'AAA', 'BBB', 'VVV', '/end', 'VIRTUAL_CHARACTERISTIC', '/end', 'CHARACTERISTIC']);
+    //  [-> MAP_LIST]
+
+    test('Parse optional VIRTUAL_CHARACTERISTIC', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        '/begin',
+        'VIRTUAL_CHARACTERISTIC',
+        '"X1 + X2 + X3"',
+        'AAA',
+        'BBB',
+        'VVV',
+        '/end',
+        'VIRTUAL_CHARACTERISTIC',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -798,11 +1075,30 @@ void main() {
       expect(chara[0].virtualCharacteristics!.characteristics[2], 'VVV');
     });
 
-    
-    test('Parse optional DEPENDENT_CHARACTERISTIC', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        '/begin', 'DEPENDENT_CHARACTERISTIC', '"X1 + X2 + X3"', 'AAA', 'BBB', 'VVV', '/end', 'DEPENDENT_CHARACTERISTIC', '/end', 'CHARACTERISTIC']);
+    test('Parse optional DEPENDENT_CHARACTERISTIC', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        '/begin',
+        'DEPENDENT_CHARACTERISTIC',
+        '"X1 + X2 + X3"',
+        'AAA',
+        'BBB',
+        'VVV',
+        '/end',
+        'DEPENDENT_CHARACTERISTIC',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -845,10 +1141,29 @@ void main() {
       expect(chara[0].dependentCharacteristics!.characteristics[2], 'VVV');
     });
 
-    test('Parse optional FUNCTION_LIST', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        '/begin', 'FUNCTION_LIST', 'AAA', 'BBB', 'VVV', '/end', 'FUNCTION_LIST', '/end', 'CHARACTERISTIC']);
+    test('Parse optional FUNCTION_LIST', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        '/begin',
+        'FUNCTION_LIST',
+        'AAA',
+        'BBB',
+        'VVV',
+        '/end',
+        'FUNCTION_LIST',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -890,11 +1205,23 @@ void main() {
       expect(chara[0].functions[2], 'VVV');
     });
 
-
-    test('Parse optional GUARD_RAILS', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'GUARD_RAILS', '/end', 'CHARACTERISTIC']);
+    test('Parse optional GUARD_RAILS', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'GUARD_RAILS',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -933,10 +1260,26 @@ void main() {
       expect(chara[0].functions.length, 0);
     });
 
-    test('Parse optional MATRIX_DIM', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'MATRIX_DIM', '2', '3', '4', '/end', 'CHARACTERISTIC']);
+    test('Parse optional MATRIX_DIM', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'MATRIX_DIM',
+        '2',
+        '3',
+        '4',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -978,10 +1321,25 @@ void main() {
       expect(chara[0].functions.length, 0);
     });
 
-    test('Parse optional MAX_REFRESH', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'MAX_REFRESH', '0', '2', '/end', 'CHARACTERISTIC']);
+    test('Parse optional MAX_REFRESH', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'MAX_REFRESH',
+        '0',
+        '2',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -1022,11 +1380,25 @@ void main() {
       expect(chara[0].functions.length, 0);
     });
 
-    
-    test('Parse optional SYMBOL_LINK', (){
-      prepareTestData(parser, ['/begin','CHARACTERISTIC','TEST.CHAR', '"This is a test char"', 'ASCII', '0xDEADBEEF',
-        'RL.MOO', '110.25', 'CM_moo', '-42.5', '54.5',
-        'SYMBOL_LINK', '"_SYMBOL"', '42', '/end', 'CHARACTERISTIC']);
+    test('Parse optional SYMBOL_LINK', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'SYMBOL_LINK',
+        '"_SYMBOL"',
+        '42',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var chara = file.project.modules[0].characteristics;
@@ -1066,6 +1438,5 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
       expect(chara[0].functions.length, 0);
     });
-
   });
 }

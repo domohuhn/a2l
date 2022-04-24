@@ -4,11 +4,10 @@ import 'prepare_test_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   var parser = TokenParser();
-  group('Parse variant mandatory', (){
-    test('one', (){
-      prepareTestData(parser, ['/begin','VARIANT_CODING', '/end', 'VARIANT_CODING']);
+  group('Parse variant mandatory', () {
+    test('one', () {
+      prepareTestData(parser, ['/begin', 'VARIANT_CODING', '/end', 'VARIANT_CODING']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
@@ -20,17 +19,15 @@ void main() {
       expect(mod.coding!.forbidden.length, 0);
     });
 
-    test('multiple', (){
-      prepareTestData(parser, ['/begin','VARIANT_CODING', '/end', 'VARIANT_CODING', '/begin','VARIANT_CODING', '/end', 'VARIANT_CODING']);
+    test('multiple', () {
+      prepareTestData(parser, ['/begin', 'VARIANT_CODING', '/end', 'VARIANT_CODING', '/begin', 'VARIANT_CODING', '/end', 'VARIANT_CODING']);
       expect(() => parser.parse(), throwsException);
     });
-
   });
 
-  
-  group('Parse variant optional', (){
-    test('VAR_SEPARATOR', (){
-      prepareTestData(parser, ['/begin','VARIANT_CODING', 'VAR_SEPARATOR', '"_"', '/end', 'VARIANT_CODING']);
+  group('Parse variant optional', () {
+    test('VAR_SEPARATOR', () {
+      prepareTestData(parser, ['/begin', 'VARIANT_CODING', 'VAR_SEPARATOR', '"_"', '/end', 'VARIANT_CODING']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
@@ -38,8 +35,8 @@ void main() {
       expect(mod.coding!.namingScheme, VariantNaming.NUMERIC);
     });
 
-    test('VAR_NAMING', (){
-      prepareTestData(parser, ['/begin','VARIANT_CODING', 'VAR_NAMING', 'ALPHA', '/end', 'VARIANT_CODING']);
+    test('VAR_NAMING', () {
+      prepareTestData(parser, ['/begin', 'VARIANT_CODING', 'VAR_NAMING', 'ALPHA', '/end', 'VARIANT_CODING']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
@@ -47,8 +44,25 @@ void main() {
       expect(mod.coding!.namingScheme, VariantNaming.ALPHA);
     });
 
-    test('VAR_CRITERION', (){
-      prepareTestData(parser, ['/begin','VARIANT_CODING', '/begin','VAR_CRITERION', 'Gear', '"Type of transmission"', 'stick', 'auto', 'VAR_MEASUREMENT', 'AAA', 'VAR_SELECTION_CHARACTERISTIC', 'BBB', '/end', 'VAR_CRITERION', '/end', 'VARIANT_CODING']);
+    test('VAR_CRITERION', () {
+      prepareTestData(parser, [
+        '/begin',
+        'VARIANT_CODING',
+        '/begin',
+        'VAR_CRITERION',
+        'Gear',
+        '"Type of transmission"',
+        'stick',
+        'auto',
+        'VAR_MEASUREMENT',
+        'AAA',
+        'VAR_SELECTION_CHARACTERISTIC',
+        'BBB',
+        '/end',
+        'VAR_CRITERION',
+        '/end',
+        'VARIANT_CODING'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
@@ -64,8 +78,21 @@ void main() {
       expect(mod.coding!.enumerations[0].characteristic, 'BBB');
     });
 
-    test('VAR_FORBIDDEN_COMB', (){
-      prepareTestData(parser, ['/begin','VARIANT_CODING', '/begin','VAR_FORBIDDEN_COMB', 'Gear', 'stick', 'Engine', 'electric', '/end', 'VAR_FORBIDDEN_COMB', '/end', 'VARIANT_CODING']);
+    test('VAR_FORBIDDEN_COMB', () {
+      prepareTestData(parser, [
+        '/begin',
+        'VARIANT_CODING',
+        '/begin',
+        'VAR_FORBIDDEN_COMB',
+        'Gear',
+        'stick',
+        'Engine',
+        'electric',
+        '/end',
+        'VAR_FORBIDDEN_COMB',
+        '/end',
+        'VARIANT_CODING'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
@@ -78,8 +105,25 @@ void main() {
       expect(mod.coding!.forbidden[0].comibination[1].value, 'electric');
     });
 
-    test('VAR_CHARACTERISTIC', (){
-      prepareTestData(parser, ['/begin','VARIANT_CODING', '/begin','VAR_CHARACTERISTIC', 'Moo','Gear', '/begin', 'VAR_ADDRESS', '0x1234', '0x5678', '/end', 'VAR_ADDRESS', '/end', 'VAR_CHARACTERISTIC', '/end', 'VARIANT_CODING']);
+    test('VAR_CHARACTERISTIC', () {
+      prepareTestData(parser, [
+        '/begin',
+        'VARIANT_CODING',
+        '/begin',
+        'VAR_CHARACTERISTIC',
+        'Moo',
+        'Gear',
+        '/begin',
+        'VAR_ADDRESS',
+        '0x1234',
+        '0x5678',
+        '/end',
+        'VAR_ADDRESS',
+        '/end',
+        'VAR_CHARACTERISTIC',
+        '/end',
+        'VARIANT_CODING'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
