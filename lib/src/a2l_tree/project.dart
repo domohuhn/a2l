@@ -3,6 +3,7 @@ import 'package:a2l/src/a2l_tree/module.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Representation of a Calibration project from the A2L file.
+/// Corresponds to a2l key PROJECT
 class Project {
   /// Name of the Project. Mandatory.
   String name = '';

@@ -3,7 +3,6 @@ import 'package:a2l/src/a2l_tree/project.dart';
 import 'package:a2l/src/version.dart';
 
 
-
 /// The representation of an A2L file as data structure in code.
 /// A file must contain an ASAP2 version and a single Project.
 class A2LFile {

@@ -119,7 +119,24 @@ class DependentCharacteristics {
   }
 }
 
-/// This class represents a configurable value in the ECU.
+/// This class represents a configurable value in the ECU (a2l key: CHARACTERISTIC).
+/// This is one of the primary components of A2L files. It allows the user to
+/// modify the memory of an embedded system during runtime.
+/// 
+/// A Characteristic needs a description how to read the values ([address] and a reference to [RecordLayout]), a conversion method to convert 
+/// internal ECU values to a physical value, and potentially further display/layout options. 
+/// 
+/// A Characteristic may be a single value, an array of values, or a curve with multiple axis.
+/// The valid values for [type] are:
+///  
+///   - ASCII: C-like char string (needs member [number] to be set).
+///   - CURVE: a x-axis lookup to find the index and interpolation positions, and an output array that uses the positions to compute the output.
+///   - MAP: a x-axis and y-axis lookup to find the index and interpolation positions, and an output array that uses the positions to compute the output.
+///   - CUBOID: a x,y,z-axis lookup to find the index and interpolation positions, and an output array that uses the positions to compute the output.
+///   - CUBE_4: a 4-axis lookup to find the index and interpolation positions, and an output array that uses the positions to compute the output.
+///   - CUBE_5: a 5-axis lookup to find the index and interpolation positions, and an output array that uses the positions to compute the output.
+///   - VAL_BLK: C-like array (needs member [number] to be set).
+///   - VALUE: a single value located at the [address].
 class Characteristic extends MeasurementCharacteristicBase {
   // name is in base
   // desciption is in base

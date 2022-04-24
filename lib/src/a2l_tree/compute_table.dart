@@ -3,26 +3,44 @@ import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';
 
-
+/// Holds the data entries for any type of computation table.
 class ComputeTableEntry {
+  /// Position of the values in the table.
+  /// Used for: all tables
   double x = 0.0;
+  /// Upper limit for the value.
+  /// Used for: VerbatimRangeTable.
   double x_up = 0.0;
+  /// If the values are floating point number.
+  /// Changes behaviour of VerbatimRangeTable.
   bool isFloat = false;
+  /// Output number.
+  /// Used for: ComputeTable.
   double outNumeric = 0.0;
+  /// Output string.
+  /// Used for: VerbatimTable and VerbatimRangeTable.
   String outString = '';
 
   ComputeTableEntry({this.x = 0.0, this.x_up = 0.0, this.isFloat = false, this.outNumeric = 0.0, this.outString = ''});
 }
 
+/// Base class for computation tables.
 abstract class ComputeTableBase {
+  /// Name of the converions table
   String name = '';
+  /// Description of the converions table
   String description = '';
+  /// type of the table
   ComputeMethodType type = ComputeMethodType.TAB_INTP;
+  /// the entries used for the conversion
   List<ComputeTableEntry> table;
+  /// Base constructor.
   ComputeTableBase() : table=[];
 
+  /// Converts the [input] to the display string.
   String convertToPhysical(double input);
 
+  /// Converts the [input] display string to the internal ECU value.
   double convertToInternal(String input)
   {
     // TODO interpolation tables?
@@ -41,7 +59,8 @@ abstract class ComputeTableBase {
   String toFileContents(int depth);
 }
 
-
+/// A standard conversion table that assigns numbers to output numbers.
+/// The table may use interpolations between the values.
 class ComputeTable extends ComputeTableBase {
 
   @override
@@ -112,6 +131,8 @@ class ComputeTable extends ComputeTableBase {
 }
 
 
+/// A standard conversion table that assigns numbers to output strings.
+/// The table can only assign fixed numbers to fixed strings, no interpolations.
 class VerbatimTable extends ComputeTableBase {
   VerbatimTable() {
     type = ComputeMethodType.TAB_VERB;
@@ -148,6 +169,8 @@ class VerbatimTable extends ComputeTableBase {
 }
 
 
+/// A standard conversion table that assigns ranges of numbers to output strings.
+/// The table can only assign fixed numbers to fixed strings, no interpolations.
 class VerbatimRangeTable extends ComputeTableBase {
   VerbatimRangeTable() {
     type = ComputeMethodType.TAB_VERB;

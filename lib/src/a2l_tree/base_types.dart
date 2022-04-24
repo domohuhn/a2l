@@ -175,6 +175,8 @@ class SymbolLink {
   }
 }
 
+/// The base unit describing the refresh rate.
+/// The actual refresh rate is computed by base*rate.
 enum MaxRefreshUnit {
   time_1usec,
   time_10usec,
@@ -274,10 +276,14 @@ class MatrixDim {
   }
 }
 
+/// Base class for measurements and characteristics.
 class MeasurementCharacteristicBase extends DataContainer {
   // mandatory values
+  /// Reference to the converion method
   String conversionMethod = '';
+  /// Lower limit of the allowed values
   double lowerLimit = 1.0;
+  /// Upper limit of the allowed values
   double upperLimit = 1.0;
 
   // optional values

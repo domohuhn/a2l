@@ -44,7 +44,9 @@ String computeMethodTypeToSting(ComputeMethodType s) {
   }
 }
 
+/// The expection thrown when an error happens during the converions.
 class ComputeException implements Exception {
+  /// Cause of the error.
   String cause;
   ComputeException(this.cause);
 

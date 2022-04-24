@@ -1,15 +1,24 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/utility.dart';
 
+/// Describes a measurement from the ECU memory (a2l key: MEASUREMENT).
+/// This is one of the primary componenst of A2L files.
+/// 
+/// A measurement needs a description how to read the values, a conversion method to convert 
+/// internal ECU values to a physical value, and potentially further display/layout options. 
 class Measurement extends MeasurementCharacteristicBase {
+  /// Data type of the measurement.
   Datatype datatype = Datatype.int8;
   // conversion method is in base
+  /// Resolution of the measurements.
   int resolution = 1;
+  /// Accuracy of the measurements.
   double accuracy = 1.0;
 
   // optional values
   // lowerLimit is in base
   // upperLimit is in base
+  /// Size of the Arrays for VAL_BLK
   int? arraySize;
   // bitMask  is in base
   BitOperation? bitOperation;

@@ -1,6 +1,9 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/utility.dart';
 
+/// Describes a group of measurements and characteristics.
+/// This can be used to allow users of the MCD system an easier way to
+/// find certain objects.
 class Group extends DataContainer {
   bool root = false;
 
