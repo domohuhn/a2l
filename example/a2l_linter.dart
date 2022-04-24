@@ -10,11 +10,11 @@ import 'package:a2l/a2l.dart';
 
 void main(List<String> arguments) {
   if(arguments.length != 1) {
-    print('Usage: a2l_validator <path>');
+    print('Usage: a2l_linter <path>');
     print('You must pass the <path> to the A2L file to check as first and only argument!');
   }
   try {
-    var file = parseA2lFileSync(arguments[0]);
+    var file = parseA2LFileSync(arguments[0]);
     print(file.toString());
     print(file.toFileContents());
     print('\n\n=================================\nValid A2L');

@@ -10,6 +10,7 @@ class Group extends DataContainer {
   /// Converts the group to an a2l file with the given indentation [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin GROUP $name',depth);
+    rv += indent('"$description"',depth+1);
     if(characteristics.isNotEmpty) {
       rv += indent('/begin REF_CHARACTERISTIC',depth+1);
       for(final char in characteristics) {

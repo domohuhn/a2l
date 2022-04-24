@@ -12,11 +12,20 @@ import 'package:a2l/src/preprocessor.dart';
 /// file system in a synchronous manner using the dart:io library.
 /// 
 /// May throw exceptions on error.
-A2LFile parseA2lFileSync(String path) {
+/// See also [parseA2L()],
+A2LFile parseA2LFileSync(String path) {
   final source = File(path).readAsStringSync();
+  // Todo : load includes.
+  return parseA2L(source);
+}
+
+/// Parses the given [text] as A2L file and converts it to the [A2LFile]
+/// data structure.
+/// 
+/// Throws exceptions if the there are snytax errors or dangling references.  
+A2LFile parseA2L(String text) {
   var parser = TokenParser();
-  parser.tokens = convertFileContentsToTokens(source);
+  parser.tokens = convertFileContentsToTokens(text);
   parser.currentIndex = 0;
   return parser.parse();
 }
-

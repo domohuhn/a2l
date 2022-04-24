@@ -4,9 +4,9 @@
 /// and a calibration system an embedded system can be calibrated in-situ in a vehicle/drone/robot.
 /// 
 /// The library provides an abstract syntax tree that describes an ECU according to the A2L format called
-/// [A2LFile]. It can be read from a file in the file system with the following method [parseA2lFileSync()]:
+/// [A2LFile]. It can be read from a file in the file system with the following method [parseA2LFileSync()]:
 /// ```dart
-///   var file = parseA2lFileSync(path);
+///   var file = parseA2LFileSync(path);
 /// ```
 /// Converting the file back to an A2L representation can also be done via a single method call:
 /// ```dart
