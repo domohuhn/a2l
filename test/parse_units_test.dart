@@ -19,6 +19,7 @@ void main() {
       expect(file.project.modules[0].units[0].conversionLinearOffset, null);
       expect(file.project.modules[0].units[0].conversionLinearSlope, null);
       expect(file.project.modules[0].units[0].exponents, null);
+      expect(file.project.modules[0].units[0].isValid(), true);
     });
 
     test('Parse mandatory, multiple units', () {
@@ -64,6 +65,7 @@ void main() {
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[0].referencedUnit, 'otherU');
+      expect(file.project.modules[0].units[0].isValid(), true);
     });
     test('Parse optional UNIT_CONVERSION', () {
       prepareTestData(parser, [
@@ -88,6 +90,7 @@ void main() {
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[0].conversionLinearOffset, 2.0);
       expect(file.project.modules[0].units[0].conversionLinearSlope, 1.0);
+      expect(file.project.modules[0].units[0].isValid(), true);
     });
     test('Parse optional SI_EXPONENTS', () {
       prepareTestData(parser, [
@@ -122,6 +125,7 @@ void main() {
       expect(file.project.modules[0].units[0].exponents!.temperature, 5);
       expect(file.project.modules[0].units[0].exponents!.amountOfSubstance, 6);
       expect(file.project.modules[0].units[0].exponents!.luminousIntensity, 7);
+      expect(file.project.modules[0].units[0].isValid(), true);
     });
   });
 

@@ -51,7 +51,7 @@ class ForbiddenCombination {
   String toFileContents(int depth) {
     var rv = indent('/begin VAR_FORBIDDEN_COMB', depth);
     for (final comb in comibination) {
-      rv += indent('${comb.name} ${comb.value}', depth + 2);
+      rv += indent('${comb.name} ${comb.value}', depth + 1);
     }
     rv += indent('/end VAR_FORBIDDEN_COMB', depth);
     return rv;

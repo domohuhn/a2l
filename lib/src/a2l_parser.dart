@@ -838,7 +838,7 @@ class TokenParser {
       } else {
         throw ValidationError('Parse tree built wrong, parent of VAR_CRITERION must be a VariantCoding!');
       }
-    }, optional: true);
+    }, optional: true, unique: false);
   }
 
   BlockElement _createForbiddenCombination() {
@@ -855,7 +855,7 @@ class TokenParser {
       } else {
         throw ValidationError('Parse tree built wrong, parent of VAR_FORBIDDEN_COMB must be a VariantCoding!');
       }
-    }, optional: true);
+    }, optional: true, unique: false);
   }
 
   BlockElement _createVariantCharacteristic() {
@@ -888,7 +888,7 @@ class TokenParser {
       } else {
         throw ValidationError('Parse tree built wrong, parent of VAR_CHARACTERISTIC must be a VariantCoding!');
       }
-    }, optional: true);
+    }, optional: true, unique: false);
   }
 
   BlockElement _createUserRights() {

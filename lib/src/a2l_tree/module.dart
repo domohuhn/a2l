@@ -141,6 +141,9 @@ class Module {
     for (final f in frames) {
       rv += f.toFileContents(depth + 1);
     }
+    for (final r in userRights) {
+      rv += r.toFileContents(depth + 1);
+    }
     if (coding != null) {
       rv += coding!.toFileContents(depth + 1);
     }

@@ -194,7 +194,12 @@ class VerbatimRangeTable extends ComputeTableBase {
     rv += indent('"$description"', depth + 1);
     rv += indent('${table.length}', depth + 1);
     for (var val in table) {
-      rv += indent('${val.x} ${val.xUp} "${val.outString}"', depth + 1);
+      if (val.isFloat) {
+        rv += indent('${val.x} ${val.xUp} "${val.outString}"', depth + 1);
+      }
+      else {
+        rv += indent('${val.x.round()} ${val.xUp.round()} "${val.outString}"', depth + 1);
+      }
     }
     if (fallbackValue != null) {
       rv += indent('DEFAULT_VALUE "$fallbackValue"', depth + 1);
