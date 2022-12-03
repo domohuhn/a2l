@@ -82,7 +82,7 @@ class Value extends A2LElement {
   }
 }
 
-/// Empty function, nneded for default argument.
+/// Empty function, needed as default argument for the callbacks.
 void doNothing() {}
 
 /// This class represent a named value inside the A2L file.
@@ -380,11 +380,9 @@ class TokenParser {
       p.project.modules.add(module);
       var values = [
         Value('Name', ValueType.id, (ValueType t, List<Token> s) {
-          //print("Setting name $s");
           module.name = s[0].text;
         }),
         Value('LongIdentifier', ValueType.text, (ValueType t, List<Token> s) {
-          //print("Setting desc $s");
           module.description = removeQuotes(s[0].text);
         })
       ];
@@ -2025,11 +2023,24 @@ class TokenParser {
           _createFunctionList(),
           _createVirtualCharacteristics(),
           _createVirtualCharacteristics(key: 'DEPENDENT_CHARACTERISTIC', virtual: false),
-          _createAxisDescription()
+          _createAxisDescription(),
+          _createMapListParser()
         ]);
         return A2LElementParsingOptions(char, values, optional);
       } else {
         throw ValidationError('Parse tree built wrong, parent of MEASUREMENT must be module!');
+      }
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createMapListParser() {
+    return BlockElement('MAP_LIST', (s, p) {
+      if (p is Characteristic) {
+        return A2LElementParsingOptions(p, [
+          Value('map name', ValueType.id, (ValueType t, List<Token> s) { p.mapList.add(s[0].text); }, multiplicity: -1)
+        ], []);
+      } else {
+        throw ValidationError('Parse tree built wrong, parent of "MAP_LIST" must be derived from Characteristic!');
       }
     }, optional: true, unique: false);
   }

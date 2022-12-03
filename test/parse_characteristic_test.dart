@@ -1008,6 +1008,68 @@ void main() {
     });
 
     //  [-> MAP_LIST]
+    test('Parse optional MAP_LIST', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        '/begin',
+        'MAP_LIST',
+        'AAA',
+        'BBB',
+        'VVV',
+        '/end',
+        'MAP_LIST',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var chara = file.project.modules[0].characteristics;
+      expect(chara.length, 1);
+      expect(chara[0].name, 'TEST.CHAR');
+      expect(chara[0].description, 'This is a test char');
+      expect(chara[0].type, CharacteristicType.ASCII);
+      expect(chara[0].address, 0xDEADBEEF);
+      expect(chara[0].recordLayout, 'RL.MOO');
+      expect(chara[0].maxDiff, 110.25);
+      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].lowerLimit, -42.5);
+      expect(chara[0].upperLimit, 54.5);
+
+      expect(chara[0].addressExtension, null);
+      expect(chara[0].bitMask, null);
+      expect(chara[0].displayIdentifier, null);
+      expect(chara[0].endianess, null);
+      expect(chara[0].format, null);
+      expect(chara[0].memorySegment, null);
+      expect(chara[0].discrete, false);
+      expect(chara[0].readWrite, true);
+      expect(chara[0].unit, null);
+      expect(chara[0].matrixDim, null);
+      expect(chara[0].maxRefresh, null);
+      expect(chara[0].symbolLink, null);
+
+      expect(chara[0].calibrationAccess, null);
+      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].dependentCharacteristics, null);
+      expect(chara[0].extendedLimits, null);
+      expect(chara[0].guardRails, false);
+      expect(chara[0].mapList.length, 3);
+      expect(chara[0].mapList[0], 'AAA');
+      expect(chara[0].mapList[1], 'BBB');
+      expect(chara[0].mapList[2], 'VVV');
+      expect(chara[0].number, null);
+      expect(chara[0].virtualCharacteristics, null);
+    });
 
     test('Parse optional VIRTUAL_CHARACTERISTIC', () {
       prepareTestData(parser, [
