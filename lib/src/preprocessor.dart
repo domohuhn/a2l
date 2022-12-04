@@ -1,3 +1,4 @@
+import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
 
 /// Error during preprocessing
@@ -22,6 +23,12 @@ List<Token> convertFileContentsToTokens(String text) {
   return splitter.tokens;
 }
 
+class UnprocessedSection {
+  RegExp begin;
+  RegExp end;
+  UnprocessedSection(this.begin, this.end);
+}
+
 /// This class performs the preprocessing of the inputs.
 class _Preprocessor {
   _Preprocessor(this.content) : tokens = [];
@@ -31,14 +38,69 @@ class _Preprocessor {
   int column = 1;
   List<Token> tokens;
 
+  /// This a a list of start and stop tokens for a passthrough block (e.g. A2ML). Anything between the begin and end match will be but in a single token and not processed.
+  List<UnprocessedSection> unprocessedSections = [
+    UnprocessedSection(RegExp(r'/begin\s*IF_DATA'), RegExp(r'/end\s*IF_DATA')),
+    UnprocessedSection(RegExp(r'/begin\s*A2ML'), RegExp(r'/end\s*A2ML'))
+  ];
+
+  UnprocessedSection? _currentUnprocessedSection;
+
+  /// Finds the begin of a section that should not be processed by the preprocessor.
+  int _findBeginOfNextUnprocessedSection(int start) {
+    final searchstring = content.substring(start);
+    int matchStart = -1;
+    _currentUnprocessedSection = null;
+    for (final secs in unprocessedSections) {
+      RegExpMatch? match = secs.begin.firstMatch(searchstring);
+      if(match!=null && (match.start < matchStart || matchStart==-1)) {
+        matchStart = match.end;
+        _currentUnprocessedSection = secs;
+      }
+    }
+    return start + matchStart;
+  }
+  
+  /// Finds the end of the section that is currently not processed by the preprocessor.
+  int _findEndOfCurrentUnprocessedSection(int start, int line, int column) {
+    if(_currentUnprocessedSection==null){
+      throw ValidationError('Internal logic error: current section was not set!');
+    }
+    final searchstring = content.substring(start);
+    RegExpMatch? match = _currentUnprocessedSection!.end.firstMatch(searchstring);
+    if(match==null) {
+      throw PreprocessingError('Unterminated section started via "${_currentUnprocessedSection!.begin.toString()}"', line, column);
+    }
+    return start + match.start;
+  }
+
   /// Parses the given string.
   /// Removes all single line comments and splits the string into tokens.
   void parse() {
     var whiteSpace = RegExp('\\s+');
     var token = Token('', line, column, 0);
     var isStr = false;
+    var startPassThrough = _findBeginOfNextUnprocessedSection(0);
 
     for (var i = 0; i < content.length; i++) {
+      if (startPassThrough == i) {
+        final endPassThrough = _findEndOfCurrentUnprocessedSection(i, line, column);
+        if(startPassThrough<endPassThrough && endPassThrough<content.length) {
+          if(token.text.isNotEmpty) {
+            tokens.add(token);
+            token = Token('', line, column, i);
+          }
+          tokens.add(Token(content.substring(startPassThrough,endPassThrough), line, column, i));
+          for (var k = i; k < endPassThrough; k++) {
+            _incrementCounters(content[k]);
+          }
+          i = endPassThrough - 1;
+          startPassThrough = _findBeginOfNextUnprocessedSection(i);
+          continue;
+        } else {
+          throw PreprocessingError('Size of unprocessed block is negative! Invariant start<end ($startPassThrough < $endPassThrough) or end<filesize ($endPassThrough < ${content.length}) does not hold!', line, column);
+        }
+      }
       if (singleLineCommentStarts(i)) {
         i = skipRestOfLine(i);
       }

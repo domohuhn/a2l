@@ -35,6 +35,15 @@ void main() {
       }
     });
 
+    test('Passthrough blocks', () {
+      var tokens = convertFileContentsToTokens(textPassthrough);
+      expect(tokens.length, expectedSplitPassThrough.length);
+      for (var i = 0; i < tokens.length; ++i) {
+        print('$i : "${tokens[i].text}"');
+        expect(tokens[i].text, expectedSplitPassThrough[i]);
+      }
+    });
+
     test('Exception1', () {
       expect(() => convertFileContentsToTokens(textEx1), throwsException);
     });
@@ -66,6 +75,35 @@ List<String> expectedSplit = [
   '/end'
 ];
 
+
+List<String> expectedSplitPassThrough = [
+  'THIS',
+  'IS',
+  'A',
+  'LONG',
+  'TEXT',
+  'IT',
+  'HAS',
+  'NO',
+  'COMMENTS',
+  'but',
+  '123',
+  'numbers',
+  '23.345',
+  'Text.Joined',
+  '/begin', 'IF_DATA',
+  ''' "some strings"
+   This text should be 
+      unmodified\n''',
+  '/end', 'IF_DATA',
+  '/begin', 'A2ML',
+  ''' "some strings"
+   This text should be 
+      unmodified\n''',
+  '/end', 'A2ML'
+];
+
+
 var textNoComments = '''
 THIS IS A LONG TEXT
 IT
@@ -77,6 +115,25 @@ numbers 23.345
 Text.Joined
 /begin DATA "some strings"
 /end
+''';
+
+var textPassthrough = '''
+THIS IS A LONG TEXT
+IT
+HAS
+NO
+COMMENTS
+but 123
+numbers 23.345
+Text.Joined
+/begin IF_DATA "some strings"
+   This text should be 
+      unmodified
+/end IF_DATA
+/begin A2ML "some strings"
+   This text should be 
+      unmodified
+/end A2ML
 ''';
 
 var textEx1 = '''
