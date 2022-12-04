@@ -1,4 +1,5 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Describes a group of measurements and characteristics.
@@ -6,6 +7,11 @@ import 'package:a2l/src/utility.dart';
 /// find certain objects.
 class Group extends DataContainer {
   bool root = false;
+
+  Group() : interfaceData=[];
+
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
 
   /// Converts the group to an a2l file with the given indentation [depth].
   String toFileContents(int depth) {
@@ -44,6 +50,7 @@ class Group extends DataContainer {
     if (root) {
       rv += indent('ROOT', depth + 1);
     }
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end GROUP\n\n', depth);
     return rv;

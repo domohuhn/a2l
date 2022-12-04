@@ -6,6 +6,7 @@ import 'package:a2l/src/a2l_tree/frame.dart';
 import 'package:a2l/src/a2l_tree/function.dart';
 import 'package:a2l/src/a2l_tree/group.dart';
 import 'package:a2l/src/a2l_tree/measurement.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/a2l_tree/unit.dart';
 import 'package:a2l/src/a2l_tree/module_common.dart';
 import 'package:a2l/src/a2l_tree/module_parameters.dart';
@@ -69,8 +70,11 @@ class Module {
   /// Describes axis data of curves if they are stored at different locations. (a2l key: AXIS_PTS)
   List<AxisPoints> axisPoints;
 
-  // TODO A2ML
-  // TODO IF_DATA
+  /// The A2ML description (if present). The library will not process these strings in any way. (a2l key: A2ML)
+  List<String> a2ml;
+
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
 
   Module()
       : measurements = [],
@@ -83,7 +87,9 @@ class Module {
         frames = [],
         userRights = [],
         functions = [],
-        axisPoints = [];
+        axisPoints = [],
+        a2ml = [],
+        interfaceData = [];
 
   @override
   String toString() {
@@ -105,6 +111,10 @@ class Module {
   String toFileContents(int depth) {
     var rv = indent('/begin MODULE $name', depth);
     rv += indent('"$description"\n\n', depth + 1);
+
+    rv += writeListOfBlocks( depth + 1, 'A2ML', a2ml);
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+
     if (common != null) {
       rv += common!.toFileContents(depth + 1);
     }

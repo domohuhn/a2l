@@ -1,5 +1,6 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
@@ -7,6 +8,7 @@ import 'package:a2l/src/utility.dart';
 /// Represents the description for an axis stored at another memory location compared to its characteristic.
 /// (a2l key: AXIS_PTS)
 class AxisPoints extends DataContainer {
+  AxisPoints() : interfaceData = [];
   // mandatory values
   /// memory address of the first axis value
   int address = 0;
@@ -57,7 +59,9 @@ class AxisPoints extends DataContainer {
   // functions are in base
   /// if the first and last point of the axis can be modified
   bool guardRails = false;
-  // TODO IF_DATA
+
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
 
   /// Can be used to override the unit at the conversion method
   String? unit;
@@ -134,6 +138,7 @@ class AxisPoints extends DataContainer {
     if (symbolLink != null) {
       rv += symbolLink!.toFileContents(depth + 1);
     }
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end AXIS_PTS\n\n', depth);
 

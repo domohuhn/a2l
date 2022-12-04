@@ -1,5 +1,6 @@
 import 'package:a2l/src/a2l_tree/axis_descr.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
@@ -202,7 +203,8 @@ class Characteristic extends MeasurementCharacteristicBase {
   /// If the object uses guard rails (if first and last value can be modified)
   bool guardRails = false;
 
-  // TODO IF_DATA
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
 
   List<String> mapList;
   // matrixDim is in base
@@ -218,7 +220,8 @@ class Characteristic extends MeasurementCharacteristicBase {
 
   Characteristic()
       : mapList = [],
-        axisDescription = [] {
+        axisDescription = [],
+        interfaceData = [] {
     readWrite = true;
   }
 
@@ -250,10 +253,10 @@ class Characteristic extends MeasurementCharacteristicBase {
       rv += indent('/end MAP_LIST', depth + 1);
     }
     if (type == CharacteristicType.ASCII || type == CharacteristicType.VAL_BLK) {
-      if (number != null || number! <= 0) {
+      if (number != null && number! > 0) {
         rv += indent('NUMBER $number', depth + 1);
       } else {
-        throw ValidationError('Charactristic $name of $type needs a number > 0! got $number');
+        throw ValidationError('A charactristic of type: "$type" needs the property number set to > 0! "$name" has $number');
       }
     }
     if (stepSize != null) {
@@ -271,6 +274,7 @@ class Characteristic extends MeasurementCharacteristicBase {
     for (final a in axisDescription) {
       rv += a.toFileContents(depth + 1);
     }
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end CHARACTERISTIC\n\n', depth);
     return rv;

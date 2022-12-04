@@ -1,4 +1,5 @@
 import 'package:a2l/src/a2l_tree/memory_layout.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
@@ -183,12 +184,18 @@ class MemorySegment extends SegmentData {
   /// Attribues of the segment.
   SegmentAttribute attribute = SegmentAttribute.INTERN;
 
+    /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
+
+  MemorySegment() : interfaceData = [], super();
+
   /// Converts the object to a part of an a2l file with indentation [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin MEMORY_SEGMENT $name', depth);
     rv += indent('"$description"', depth + 1);
     rv += indent('${segmentTypeToString(type)} ${memoryTypeToString(memoryType)} ${segmentAttributeToString(attribute)}', depth + 1);
     rv += sharedDataToFileContents(depth + 1);
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
     rv += indent('/end MEMORY_SEGMENT\n\n', depth);
     return rv;
   }

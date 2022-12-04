@@ -1,4 +1,5 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Holds data that can be used to structure large projects from a functional point of view.
@@ -10,7 +11,8 @@ class CFunction extends DataContainer {
   CFunction()
       : definedCharacteristics = [],
         inputMeasurements = [],
-        outputMeasurements = [];
+        outputMeasurements = [],
+        interfaceData = [];
 
   // optional
   // annotations are in base.
@@ -25,6 +27,9 @@ class CFunction extends DataContainer {
 
   /// version of the function object
   String? version;
+
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
 
   /// Converts the object to an a2l string with the given indentation [depth].
   String toFileContents(int depth) {
@@ -76,6 +81,7 @@ class CFunction extends DataContainer {
       }
       rv += indent('/end SUB_FUNCTION', depth + 1);
     }
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
 
     rv += indent('/end FUNCTION\n\n', depth);
     return rv;

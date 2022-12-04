@@ -50,13 +50,19 @@ class Value extends A2LElement {
   List<String> stopAt;
 
   /// how many String tokens are needed to initialize this value.
-  int requiredTokens;
+  /// Set to negative value to read all remaining tokens.
+  final int _requiredTokens;
 
   final void Function(ValueType, List<Token>) _callback;
 
-  Value(String name, this.type, this._callback, {this.multiplicity = 1, this.requiredTokens = 1, this.stopAt = const []})
+  Value(String name, this.type, this._callback, {this.multiplicity = 1, int requiredTokens = 1, this.stopAt = const []})
       : _value = [],
-        super(name, false);
+        _requiredTokens = requiredTokens,
+        super(name, false) {
+    if (_requiredTokens==0) {
+      throw ValidationError('A value must read at least one token! "$name" was constructed with $_requiredTokens required tokens!');
+    }
+  }
 
   set value(List<Token> values) {
     for (final val in values) {
@@ -64,8 +70,8 @@ class Value extends A2LElement {
         throw ParsingException('Syntax error: a value cannot be a reserved keyword.', val);
       }
     }
-    if (values.length != requiredTokens) {
-      throw ParsingException('A value of type "$name" requires exactly $requiredTokens, but received ${values.length}', values[0]);
+    if (_requiredTokens> 0 && values.length != _requiredTokens) {
+      throw ParsingException('A value of type "$name" requires exactly $_requiredTokens, but received ${values.length}', values[0]);
     }
     _valueSet = true;
     _value = values;
@@ -75,6 +81,15 @@ class Value extends A2LElement {
   bool get valueSet => _valueSet;
 
   List<Token> get value => _value;
+
+  /// Gets the required token stride for this value.
+  /// [maxCount] is the max count of tokens that can be read.
+  int stride(int maxCount) {
+    if (_requiredTokens<0) {
+      return maxCount;
+    }
+    return _requiredTokens;
+  }
 
   @override
   String toString() {
@@ -246,34 +261,40 @@ class TokenParser {
           tokens[currentIndex]);
     }
 
+    var remaining = max - currentIndex;
+    var stride = values[k].stride(remaining);
     try {
-      while (currentIndex + values[k].requiredTokens <= max) {
-        values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
-        currentIndex += values[k].requiredTokens;
+      while (currentIndex + stride <= max) {
+        values[k].value = tokens.sublist(currentIndex, currentIndex + stride);
+        currentIndex += stride;
+        remaining = max - currentIndex;
+        stride = values[k].stride(remaining);
       }
     } catch (ex) {
       throw ParsingException('${tokens[currentIndex]} could not be converted to ${values[k]}', tokens[currentIndex]);
     }
 
     if (currentIndex != max) {
-      throw ParsingException('Not all tokens could be processed! Target $max, stride ${values[k].requiredTokens}, ended at $currentIndex',
+      throw ParsingException('Not all tokens could be processed! Target $max, stride $stride, ended at $currentIndex',
           tokens[currentIndex]);
     }
   }
 
   void _parseSingleValue(List<Value> values, int max, int k) {
     for (var i = 0; i < values[k].multiplicity; ++i) {
-      if (currentIndex + values[k].requiredTokens > max) {
+      final remaining = max - currentIndex;
+      final stride = values[k].stride(remaining);
+      if (currentIndex + stride > max) {
         throw ParsingException(
-            'Not enough tokens! Target $max, stride ${values[k].requiredTokens}, multiplicity ${values[k].multiplicity}, ended at iteration $i, token $currentIndex',
+            'Not enough tokens! Target $max, stride $stride, multiplicity ${values[k].multiplicity}, ended at iteration $i, token $currentIndex',
             tokens[currentIndex]);
       }
       try {
-        values[k].value = tokens.sublist(currentIndex, currentIndex + values[k].requiredTokens);
+        values[k].value = tokens.sublist(currentIndex, currentIndex + stride);
       } catch (ex) {
         throw ParsingException('${tokens[currentIndex]} could not be converted to ${values[k]}:\n$ex', tokens[currentIndex]);
       }
-      currentIndex += values[k].requiredTokens;
+      currentIndex += stride;
     }
   }
 
@@ -394,6 +415,8 @@ class TokenParser {
 
   List<BlockElement> createModuleChildren() {
     return [
+      _createA2MLParser(),
+      _createInterfaceDataParser(),
       _createUnit(),
       _createMeasurement(),
       _createCharacteristic(),
@@ -411,6 +434,35 @@ class TokenParser {
       _createFunction(),
       _createAxisPoints()
     ];
+  }
+  
+  BlockElement _createA2MLParser() {
+    return BlockElement('A2ML', (s, p) {
+      if (p is Module) {
+        return A2LElementParsingOptions(p, [Value('A2ML', ValueType.text, (type, tokens) {
+          String txt = '';
+          for(final t in tokens) {
+            txt += t.text;
+          }
+          p.a2ml.add(txt);
+        }, requiredTokens: -1)], []);
+      } else {
+        throw ValidationError('Parse tree built wrong, parent of AXIS_PTS must be a module!');
+      }
+
+    }, optional: true, unique: false);
+  }
+
+  BlockElement _createInterfaceDataParser() {
+    return BlockElement('IF_DATA', (s, p) {
+      return A2LElementParsingOptions(p, [Value('IF_DATA', ValueType.text, (type, tokens) {
+        String txt = '';
+        for(final t in tokens) {
+          txt += t.text;
+        }
+        p.interfaceData.add(txt);
+      }, requiredTokens: -1)], []);
+    }, optional: true, unique: false);
   }
 
   BlockElement _createAxisPoints() {
@@ -455,6 +507,7 @@ class TokenParser {
         var optional = <A2LElement>[
           _createAnnotation(),
           _createFunctionList(),
+          _createInterfaceDataParser(),
           NamedValue('READ_ONLY', [], callback: () {
             axis.readWrite = false;
           }, optional: true),
@@ -751,6 +804,7 @@ class TokenParser {
               ],
               optional: true),
           _createAnnotation(),
+          _createInterfaceDataParser(),
           _createCharacteristicsList(),
           _createCharacteristicsList(key: 'DEF_CHARACTERISTIC', cb: (a) => a.definedCharacteristics),
           _createFunctionList(key: 'SUB_FUNCTION'),
@@ -945,9 +999,10 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer, (ValueType t, List<Token> s) {
                   frame.measurements.add(s[0].text);
-                }, multiplicity: -1)
+                }, multiplicity: -1, stopAt: ['/begin'])
               ],
               optional: true),
+          _createInterfaceDataParser()
         ];
         return A2LElementParsingOptions(frame, values, optional);
       } else {
@@ -955,7 +1010,7 @@ class TokenParser {
       }
     },
         optional: true,
-        // TODO maybe this should be unique?
+        // maybe this should be unique? - standard is not clear.
         unique: false);
   }
 
@@ -1230,7 +1285,7 @@ class TokenParser {
         ];
         values.addAll(_createSharedSegmentData(seg));
 
-        return A2LElementParsingOptions(seg, values, []);
+        return A2LElementParsingOptions(seg, values, [_createInterfaceDataParser()]);
       } else {
         throw ValidationError('Parse tree built wrong, parent of MEMORY_LAYOUT must be a ModuleParameters!');
       }
@@ -1248,8 +1303,7 @@ class TokenParser {
           }),
         ];
         values.addAll(_createSharedSegmentData(lay));
-
-        return A2LElementParsingOptions(lay, values, []);
+        return A2LElementParsingOptions(lay, values, [_createInterfaceDataParser()]);
       } else {
         throw ValidationError('Parse tree built wrong, parent of MEMORY_LAYOUT must be a ModuleParameters!');
       }
@@ -1867,6 +1921,7 @@ class TokenParser {
             }),
           ],
           optional: true),
+      _createInterfaceDataParser()
     ];
     return values;
   }
@@ -2466,6 +2521,7 @@ class TokenParser {
           _createCharacteristicsList(),
           _createMeasurementsList(),
           _createGroupList(),
+          _createInterfaceDataParser(),
           NamedValue('ROOT', [], optional: true, unique: true, callback: () {
             grp.root = true;
           })

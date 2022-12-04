@@ -1500,5 +1500,36 @@ void main() {
       expect(chara[0].virtualCharacteristics, null);
       expect(chara[0].functions.length, 0);
     });
+
+    test('IF_DATA', () {
+      prepareTestData(parser, [
+        '/begin',
+        'CHARACTERISTIC',
+        'TEST.CHAR',
+        '"This is a test char"',
+        'ASCII',
+        '0xDEADBEEF',
+        'RL.MOO',
+        '110.25',
+        'CM_moo',
+        '-42.5',
+        '54.5',
+        'NUMBER', '12',
+        '/begin', 'IF_DATA',
+        'somestring',
+        '/end', 'IF_DATA',
+        '/end',
+        'CHARACTERISTIC'
+      ]);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var chara = file.project.modules[0].characteristics;
+      expect(chara.length, 1);
+      expect(chara[0].interfaceData.length, 1);
+      expect(chara[0].interfaceData[0], 'somestring');
+      expect(chara[0].toFileContents(0).contains('/begin IF_DATA'),true);
+    });
   });
+
+  
 }

@@ -73,5 +73,26 @@ void main() {
       expect(frames[0].measurements[1], 'BBB');
       expect(frames[0].measurements[2], 'CCC');
     });
+
+    
+    test('IF_DATA', () {
+      prepareTestData(parser,
+          ['/begin', 'FRAME', 'TEST.FRAME', '"This is a test frame"', '3', '2', 'FRAME_MEASUREMENT', 'AAA', 'BBB', 'CCC', '/begin', 'IF_DATA', 'somestring', '/end', 'IF_DATA', '/end', 'FRAME']);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var frames = file.project.modules[0].frames;
+      expect(frames.length, 1);
+      expect(frames[0].name, 'TEST.FRAME');
+      expect(frames[0].description, 'This is a test frame');
+      expect(frames[0].scalingUnit, MaxRefreshUnit.time_1msec);
+      expect(frames[0].rate, 2);
+      expect(frames[0].measurements.length, 3);
+      expect(frames[0].measurements[0], 'AAA');
+      expect(frames[0].measurements[1], 'BBB');
+      expect(frames[0].measurements[2], 'CCC');
+      expect(frames[0].interfaceData.length, 1);
+      expect(frames[0].interfaceData[0], 'somestring');
+      expect(frames[0].toFileContents(0).contains('/begin IF_DATA'), true);
+    });
   });
 }

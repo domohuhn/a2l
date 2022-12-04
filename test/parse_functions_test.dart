@@ -115,6 +115,29 @@ void main() {
       expect(annotations[0].text[2], 'CC\\n');
     });
 
+    test('IF_DATA', () {
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/begin',
+        'IF_DATA',
+        'somestring',
+        '/end',
+        'IF_DATA',
+        '/end',
+        'FUNCTION'
+      ]);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var funs = file.project.modules[0].functions;
+      expect(funs.length, 1);
+      expect(funs[0].interfaceData.length, 1);
+      expect(funs[0].interfaceData[0], 'somestring');
+      expect(funs[0].toFileContents(0).contains('/begin IF_DATA'), true);
+    });
+
     test('DEF_CHARACTERISTIC', () {
       prepareTestData(parser, [
         '/begin',

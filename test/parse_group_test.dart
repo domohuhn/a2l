@@ -215,5 +215,28 @@ void main() {
       expect(grps[0].characteristics.length, 0);
       expect(grps[0].measurements.length, 0);
     });
+
+    test('Parse optional IF_DATA', () {
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/begin',
+        'IF_DATA',
+        'AAA',
+        '/end',
+        'IF_DATA',
+        '/end',
+        'GROUP'
+      ]);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var grps = file.project.modules[0].groups;
+      expect(grps.length, 1);
+      expect(grps[0].interfaceData.length, 1);
+      expect(grps[0].interfaceData[0], 'AAA');
+      expect(grps[0].toFileContents(0).contains('/begin IF_DATA'), true);
+    });
   });
 }

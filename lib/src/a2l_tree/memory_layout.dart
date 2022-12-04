@@ -1,3 +1,4 @@
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
@@ -87,13 +88,17 @@ class MemoryLayout extends SegmentData {
   MemoryLayoutType type = MemoryLayoutType.PRG_CODE;
 
   // optional
-  // TODO IF_DATA
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
+
+  MemoryLayout() : interfaceData = [], super();
 
   /// Converts the object to a part of an a2l file with indentation [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin MEMORY_LAYOUT', depth);
     rv += indent(memoryLayoutTypeToString(type), depth + 1);
     rv += sharedDataToFileContents(depth + 1);
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
     rv += indent('/end MEMORY_LAYOUT\n\n', depth);
     return rv;
   }

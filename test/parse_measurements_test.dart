@@ -1203,5 +1203,57 @@ void main() {
       expect(meas[0].symbolLink!.name, '_SYMBOL');
       expect(meas[0].symbolLink!.offset, 42);
     });
+
+    test('Parse optional IF_DATA', () {
+      prepareTestData(parser, [
+        '/begin',
+        'MEASUREMENT',
+        'test_measure',
+        '"This is a test measurement"',
+        'SWORD',
+        'CM_moo',
+        '12',
+        '1',
+        '-32768',
+        '32767',
+        '/begin', 'IF_DATA',
+        'taggedstruct',
+        '/end', 'IF_DATA',
+        '/end',
+        'MEASUREMENT'
+      ]);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var meas = file.project.modules[0].measurements;
+      expect(meas.length, 1);
+      expect(meas[0].name, 'test_measure');
+      expect(meas[0].description, 'This is a test measurement');
+      expect(meas[0].datatype, Datatype.int16);
+      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].resolution, 12);
+      expect(meas[0].accuracy, 1.0);
+      expect(meas[0].lowerLimit, -32768);
+      expect(meas[0].upperLimit, 32767);
+      expect(meas[0].address, null);
+      expect(meas[0].addressExtension, null);
+      expect(meas[0].arraySize, null);
+      expect(meas[0].bitMask, null);
+      expect(meas[0].bitOperation, null);
+      expect(meas[0].displayIdentifier, null);
+      expect(meas[0].endianess, null);
+      expect(meas[0].errorMask, null);
+      expect(meas[0].format, null);
+      expect(meas[0].layout, null);
+      expect(meas[0].memorySegment, null);
+      expect(meas[0].discrete, false);
+      expect(meas[0].readWrite, false);
+      expect(meas[0].unit, null);
+      expect(meas[0].matrixDim, null);
+      expect(meas[0].maxRefresh, null);
+      expect(meas[0].symbolLink, null);
+      expect(meas[0].interfaceData.length, 1);
+      expect(meas[0].interfaceData[0], 'taggedstruct');
+      expect(meas[0].toFileContents(0).contains('/begin IF_DATA'), true);
+    });
   });
 }

@@ -601,5 +601,34 @@ void main() {
       expect(axis[0].symbolLink!.name, '_SYMBOL');
       expect(axis[0].symbolLink!.offset, 42);
     });
+
+    test('IF_DATA', () {
+      prepareTestData(parser, [
+        '/begin',
+        'AXIS_PTS',
+        'TEST.AXISPTS',
+        '"This is a test AXISPTS"',
+        '0x42',
+        'InputQty',
+        'RL.axis',
+        '99.0',
+        'CM.axis',
+        '25',
+        '-110.0',
+        '200.0',
+        '/begin', 'IF_DATA',
+        'somestring',
+        '/end', 'IF_DATA',
+        '/end',
+        'AXIS_PTS'
+      ]);
+      var file = parser.parse();
+      expect(file.project.modules.length, 1);
+      var axis = file.project.modules[0].axisPoints;
+      expect(axis.length, 1);
+      expect(axis[0].interfaceData.length, 1);
+      expect(axis[0].interfaceData[0], 'somestring');
+      expect(axis[0].toFileContents(0).contains('/begin IF_DATA'),true);
+    });
   });
 }

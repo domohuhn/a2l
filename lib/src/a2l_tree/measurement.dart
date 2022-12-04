@@ -1,4 +1,5 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Describes a measurement from the ECU memory (a2l key: MEASUREMENT).
@@ -31,7 +32,10 @@ class Measurement extends MeasurementCharacteristicBase {
   int? errorMask;
   // format is in base
   // Function list is in base (DataContainer)
-  // TODO IF_DATA
+
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
+
   IndexMode? layout;
   // matrixDim is in base
   // maxRefresh is in base
@@ -41,7 +45,7 @@ class Measurement extends MeasurementCharacteristicBase {
   // symbolLink is in base
   // VIRTUAL is in measurements in base (DataContainer)
 
-  Measurement() {
+  Measurement() : interfaceData = [] {
     readWrite = false;
   }
 
@@ -77,6 +81,7 @@ class Measurement extends MeasurementCharacteristicBase {
       }
       rv += indent('/end VIRTUAL', depth + 1);
     }
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end MEASUREMENT\n\n', depth);
     return rv;

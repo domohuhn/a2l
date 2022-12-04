@@ -1,10 +1,11 @@
 import 'package:a2l/src/a2l_tree/base_types.dart';
+import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Represents a list of measurements with a timing.
 /// This allows selecting similiar measurements from a selection of lists in the calibration system.
 class Frame {
-  Frame() : measurements = [];
+  Frame() : measurements = [], interfaceData = [];
 
   /// name of the Frame object
   String name = '';
@@ -19,9 +20,11 @@ class Frame {
   int rate = 0;
 
   // optional
-  /// references to other measuremnt objects
+  /// references to other measurement objects
   List<String> measurements;
-  // TODO IF_DATA
+
+  /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
+  List<String> interfaceData;
 
   /// Converts the compute method to an a2l file with the given indentation [depth].
   String toFileContents(int depth) {
@@ -34,6 +37,7 @@ class Frame {
       }
       rv += indent('FRAME_MEASUREMENT$tmpStr', depth + 1);
     }
+    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
     rv += indent('/end FRAME\n\n', depth);
     return rv;
   }

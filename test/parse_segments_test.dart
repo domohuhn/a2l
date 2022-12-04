@@ -22,10 +22,9 @@ void main() {
         '3',
         '4',
         '0x100',
-        '/end',
-        'MEMORY_LAYOUT',
-        '/end',
-        'MOD_PAR'
+        '/begin', 'IF_DATA', 'somedata', '/end', 'IF_DATA',
+        '/end', 'MEMORY_LAYOUT',
+        '/end', 'MOD_PAR'
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
@@ -42,6 +41,9 @@ void main() {
       expect(data[0].offsets[2], 3);
       expect(data[0].offsets[3], 4);
       expect(data[0].offsets[4], 0x100);
+      expect(data[0].interfaceData.length, 1);
+      expect(data[0].interfaceData[0], 'somedata');
+      expect(data[0].toFileContents(0).contains('/begin IF_DATA'), true);
     });
 
     test('Parse multiple', () {
@@ -91,6 +93,7 @@ void main() {
       expect(data[0].offsets[2], -1);
       expect(data[0].offsets[3], -1);
       expect(data[0].offsets[4], -1);
+      expect(data[0].toFileContents(0).contains('/begin IF_DATA'), false);
 
       expect(data[1].type, MemoryLayoutType.PRG_RESERVED);
       expect(data[1].address, 0x84);
@@ -125,6 +128,7 @@ void main() {
         '3',
         '4',
         '0x100',
+        '/begin', 'IF_DATA', 'somedata', '/end', 'IF_DATA',
         '/end',
         'MEMORY_SEGMENT',
         '/end',
@@ -149,6 +153,9 @@ void main() {
       expect(data[0].offsets[2], 3);
       expect(data[0].offsets[3], 4);
       expect(data[0].offsets[4], 0x100);
+      expect(data[0].interfaceData.length, 1);
+      expect(data[0].interfaceData[0], 'somedata');
+      expect(data[0].toFileContents(0).contains('/begin IF_DATA'), true);
     });
 
     test('Parse multiple', () {
@@ -210,6 +217,7 @@ void main() {
       expect(data[0].offsets[2], -1);
       expect(data[0].offsets[3], -1);
       expect(data[0].offsets[4], -1);
+      expect(data[0].toFileContents(0).contains('/begin IF_DATA'), false);
 
       expect(data[1].name, 'SEG2');
       expect(data[1].description, 'This is a description2');
