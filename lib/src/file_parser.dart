@@ -1,9 +1,9 @@
 /// SPDX-License-Identifier: BSD-3-Clause
 /// See LICENSE for the full text of the license
 
-import 'dart:io';
 import 'package:a2l/src/a2l_parser.dart';
 import 'package:a2l/src/a2l_tree/a2l_file.dart';
+import 'package:a2l/src/file_loader.dart';
 import 'package:a2l/src/preprocessor.dart';
 
 /// Loads the file located in [path] and returns the
@@ -13,8 +13,9 @@ import 'package:a2l/src/preprocessor.dart';
 /// May throw exceptions on error.
 /// See also [parseA2L()],
 A2LFile parseA2LFileSync(String path) {
-  final source = File(path).readAsStringSync();
-  // Todo : load includes.
+  final loader = FileLoader();
+  final mainFile = loader.read(path);
+  final source = processIncludes(mainFile,loader);
   return parseA2L(source);
 }
 

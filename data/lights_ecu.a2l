@@ -1,0 +1,20 @@
+  /begin MODULE DH.XCP.LIGHT
+    "XCP Simulation module2"
+
+    /begin RECORD_LAYOUT VALUE_UINT8
+      FNC_VALUES 1 UBYTE ROW_DIR DIRECT
+    /end RECORD_LAYOUT
+
+    /begin COMPU_METHOD CONVERSION_IDENTICAL
+      "Example for a conversion method"
+      IDENTICAL "%9.5" "no unit"
+    /end COMPU_METHOD
+
+    /begin CHARACTERISTIC CHAR_UINT8
+      "characteristic uint8."
+      VALUE 0x00000029 VALUE_UINT8 100.0 CONVERSION_IDENTICAL 0.0 100.0
+    /end CHARACTERISTIC
+
+  /end MODULE
+
+

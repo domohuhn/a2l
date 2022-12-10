@@ -12,6 +12,7 @@ void main(List<String> arguments) {
   if(arguments.length != 1) {
     print('Usage: a2l_linter <path>');
     print('You must pass the <path> to the A2L file to check as first and only argument!');
+    exit(-1);
   }
   try {
     var file = parseA2LFileSync(arguments[0]);

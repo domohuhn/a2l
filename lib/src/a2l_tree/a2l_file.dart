@@ -16,7 +16,7 @@ class A2LFile {
   /// Minor A2ML version. Optional.
   int? a2mlMinorVersion;
 
-  /// The prject element inside the file.
+  /// The project element inside the file.
   Project project = Project();
 
   /// Gets a simple string representation of the a2l file.

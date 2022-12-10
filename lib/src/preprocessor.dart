@@ -1,3 +1,4 @@
+import 'package:a2l/src/file_loader.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/token.dart';
 
@@ -12,6 +13,59 @@ class PreprocessingError implements Exception {
   String toString() {
     return '$cause in line $line at character $column';
   }
+}
+
+String processIncludes(String text, FileLoader loader, {int recursion = 0}) {
+  if(recursion>loader.maxRecursion) {
+    throw ValidationError('Maximum file inclusion depth exceeded (current: $recursion > max: ${loader.maxRecursion})');
+  }
+  if(!text.contains('/include')) {
+    return text;
+  }
+  final pattern = RegExp(r'/include\s*"?([^\n"]*)"?\s*$', multiLine: true);
+  var m = pattern.firstMatch(text);
+  while(m!=null) {
+    final file = m.group(1);
+    if(file==null) {
+      throw ValidationError('Internal logic error: the match should always have a group! "$m"');
+    }
+    try {
+      var replace = loader.read(file);
+      if(replace.contains('/include')) {
+        replace = processIncludes(replace,loader, recursion: recursion+1);
+      } else {
+        loader.pop();
+      }
+      text = text.replaceRange(m.start, m.end, replace);
+    }
+    catch(e) {
+      if(recursion == 0) {
+        throw PreprocessingError('${loader.stack()}\nFailed to open "${loader.last}" :\n\n$e',findLineOrColumn(text,m.start),findLineOrColumn(text,m.start, getColumn: true));
+      } else {
+        rethrow;
+      }
+    }
+    m = pattern.firstMatch(text);
+  }
+  if(recursion>0) {
+    loader.pop();
+  }
+  return text;
+}
+
+/// Counts the number of lines in [text] in the first [len] characters.
+int findLineOrColumn(String text, int len, {bool getColumn = false}) {
+  int lines = 0;
+  int col = 0;
+  int limit = text.length > len ? len : text.length;
+  for(int i=0;i<limit; ++i) {
+    col += 1;
+    if(text[i]=='\n') {
+      lines += 1;
+      col = 0;
+    }
+  }
+  return !getColumn ? lines : col;
 }
 
 /// Parses the given [text]. All multiline (/* */) and single line (//)

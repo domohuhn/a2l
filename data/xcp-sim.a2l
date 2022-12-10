@@ -9,9 +9,7 @@ ASAP2_VERSION 1 61
       PROJECT_NO DH20221
 	/end HEADER
 
-	/begin MODULE
-      DH.XCP.SIM
-      "XCP Simulation module"
-	/end MODULE
+	/include engine_ecu.a2l
+	/include lights_ecu.a2l
 
 /end PROJECT
