@@ -1,5 +1,6 @@
 # A2L file handling library
 [![Dart](https://github.com/domohuhn/a2l/actions/workflows/dart.yml/badge.svg)](https://github.com/domohuhn/a2l/actions/workflows/dart.yml)
+[![codecov](https://codecov.io/gh/domohuhn/a2l/branch/main/graph/badge.svg?token=YSTK1T7ZTQ)](https://codecov.io/gh/domohuhn/a2l)
 ## Introduction
 A library for Dart developers to handle [ASAM MCD-2MC](https://www.asam.net/standards/detail/mcd-2-mc/) (ASAP2 or A2L) files.
 The file format is mostly used in the automotive industry for the development of electronic control units.
