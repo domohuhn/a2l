@@ -13,8 +13,8 @@ String removeQuotes(String text) {
 
 /// Indents the [text] to [depth].
 /// Also adds a new line to the end if not present.
-String indent(String text, int depth) {
-  if (!text.endsWith('\n')) {
+String indent(String text, int depth, {bool addNewline=true}) {
+  if (!text.endsWith('\n') && addNewline) {
     text += '\n';
   }
   var len = text.length + depth * 2;

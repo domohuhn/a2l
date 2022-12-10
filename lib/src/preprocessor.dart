@@ -40,8 +40,8 @@ class _Preprocessor {
 
   /// This a a list of start and stop tokens for a passthrough block (e.g. A2ML). Anything between the begin and end match will be but in a single token and not processed.
   List<UnprocessedSection> unprocessedSections = [
-    UnprocessedSection(RegExp(r'/begin\s*IF_DATA'), RegExp(r'/end\s*IF_DATA')),
-    UnprocessedSection(RegExp(r'/begin\s*A2ML'), RegExp(r'/end\s*A2ML'))
+    UnprocessedSection(RegExp(r'/begin\s*IF_DATA'), RegExp(r'[\t\f\v ]*/end[\s]*IF_DATA',multiLine: true)),
+    UnprocessedSection(RegExp(r'/begin\s*A2ML'), RegExp(r'[\t\f\v ]*/end[\s]*A2ML',multiLine: true))
   ];
 
   UnprocessedSection? _currentUnprocessedSection;

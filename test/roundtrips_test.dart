@@ -62,6 +62,25 @@ A2ML_VERSION 1 60
   /begin MODULE DH.XCP.SIM
     "XCP Simulation module"
 
+    /begin A2ML
+      /* Some A2ML comment */
+      taggedstruct moo {
+        this
+        is
+        some
+        fake
+        a2ml text;
+      };
+    /end A2ML
+
+    /begin IF_DATA
+      moo {
+        0x01
+        0x02
+        aaaa
+      };
+    /end IF_DATA
+
     /begin MOD_COMMON
       "Common values"
       ALIGNMENT_BYTE 1
