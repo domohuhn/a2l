@@ -31,7 +31,7 @@ Module "DH.XCP.SIM"
 XCP Simulation module
 
 Measurements: 1
-Characteristics: 12
+Characteristics: 13
 Units: 1
 Compute Methods: 2
 Compute Tables: 3
@@ -280,6 +280,26 @@ A2ML_VERSION 1 60
       "characteristic ascii. serves as padding as well."
       ASCII 0x0000002b VALUE_UINT8 0.0 NO_COMPU_METHOD 0.0 255.0
       NUMBER 21
+    /end CHARACTERISTIC
+
+    /begin CHARACTERISTIC TEST_MAP
+      "Test characteristic map"
+      MAP 0x00001234 MAP_DEPOS 100.0 CONVERSION_IDENTICAL 0.0 7000.0
+      /begin FUNCTION_LIST
+        FNC1
+        FNC2
+      /end FUNCTION_LIST
+      /begin AXIS_DESCR
+        STD_AXIS N AXIS_CONV 12 0.0 1350.0
+        MONOTONY STRICT_INCREASE
+        MAX_GRAD 12.0
+        BYTE_ORDER MSB_LAST
+        FORMAT "%9.4"
+        PHYS_UNIT "V"
+        STEP_SIZE 1.0
+        DEPOSIT ABSOLUTE
+      /end AXIS_DESCR
+
     /end CHARACTERISTIC
 
     /begin MEASUREMENT MEAS_ONE
