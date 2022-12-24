@@ -14,7 +14,6 @@ String writeListOfBlocks(int depth, String key, List<String> contents) {
       continue;
     }
     rv += indent('/begin $key', depth, addNewline: false);
-    print('txt: "$txt" -> ${!txt.startsWith(RegExp(r'/s*?\n'))}');
     if (!txt.startsWith(RegExp(r'[\s]*?\n'))) {
       rv += '\n';
     }

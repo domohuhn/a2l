@@ -291,6 +291,9 @@ A2ML_VERSION 1 60
       /end FUNCTION_LIST
       /begin AXIS_DESCR
         STD_AXIS N AXIS_CONV 12 0.0 1350.0
+        AXIS_PTS_REF Axis.Pts
+        CURVE_AXIS_REF Axis.Ref
+        READ_ONLY
         MONOTONY STRICT_INCREASE
         MAX_GRAD 12.0
         BYTE_ORDER MSB_LAST
@@ -299,6 +302,11 @@ A2ML_VERSION 1 60
         STEP_SIZE 1.0
         DEPOSIT ABSOLUTE
       /end AXIS_DESCR
+
+      /begin IF_DATA
+        MOO 
+        /begin BLOB DATA /end BLOB /* some if data */
+      /end IF_DATA
 
     /end CHARACTERISTIC
 
