@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
+
 import 'package:a2l/src/a2l_tree/compute_method.dart';
 import 'package:a2l/src/parsing_exception.dart';
 import 'package:a2l/src/utility.dart';

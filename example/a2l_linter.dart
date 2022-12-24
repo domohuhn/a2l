@@ -1,5 +1,5 @@
-/// SPDX-License-Identifier: BSD-3-Clause
-/// See LICENSE for the full text of the license
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
 
 import 'dart:io';
 import 'package:a2l/a2l.dart';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
+
 /// Removes quotation marks " around [text] if present and returns a new string.
 String removeQuotes(String text) {
   var start = 0;

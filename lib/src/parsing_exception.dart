@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
+
 import 'package:a2l/src/token.dart';
 
 /// An exception during the conversion stage from tokens to the A2L file.

@@ -1,6 +1,6 @@
 name: a2l
 description: A library that can read and write ASAP2 (A2L) files. This an automotive standard for measurement and calibration data definitions (ASAM MCD-2MC).
-version: 1.0.0
+version: 0.5.0
 homepage: https://github.com/domohuhn/a2l
 repository: https://github.com/domohuhn/a2l
 

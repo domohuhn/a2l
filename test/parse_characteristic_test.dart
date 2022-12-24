@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
+
 import 'package:a2l/src/a2l_parser.dart';
 import 'package:a2l/src/a2l_tree/base_types.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';

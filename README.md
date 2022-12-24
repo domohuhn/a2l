@@ -7,7 +7,7 @@ The file format is mostly used in the automotive industry for the development of
 It defines the memory layout of an embedded system, so that internal variables can be read and modified via 
 a calibration and measurement system in-situ. For example, it can be used to change the engine response curve 
 when the accelerator pedal is pressed. The calibration can be done via different bus systems, e.g. CAN, Ethernet, USB... 
-because the definition of the files is agnostic of the actual transport mechanism or protocol used.
+because the calibration mechanism is agnostic of the actual transport protocol used.
 
 A common transport layer used for the calibrations is the [XCP protocol](https://en.wikipedia.org/wiki/XCP_(protocol)), which can be used
 with most bus system that are present on modern vehicles.
@@ -27,7 +27,7 @@ main() {
 
 ## File format
 
-The ASAP2 or A2L files are a similar file format as XML files, but the syntax is different. The file format was specified before XML was standardized and the standardization body never felt the need to update the specification.
+The ASAP2 or A2L files are similar to XML files, but the syntax is different. The file format was specified before XML was standardized and the standardization body never felt the need to update the ASAP2 specification.
 A very basic file looks like this:
 ```
 /* 
@@ -49,11 +49,11 @@ ASAP2_VERSION 1 61
 /end PROJECT
 ```
 
-The file format uses two different ways to express data:
+The file format uses different ways to define data:
  - named values followed by mandatory values (numbers, strings and identifiers)
  - named flags without arguments (e.g. READ_ONLY)
- - a block started via "/begin XXX" followed by mandatory values, followed by optional values identified via names
- - a blocks must be closed with a matching "/end XXX" statement
+ - blocks started via "/begin XXX" followed by mandatory values, followed by optional values identified via names
+ - a block must be closed with a matching "/end XXX" statement
 
 Named values are usually optional, while the unamed values are required. A valid file must contain one of "ASAP2_VERSION", a "PROJECT" block with at least one "MODULE". The module contains the relevant data for an ECU.
 The most important blocks inside the module are "CHARACTERISTIC", which describes calibration values/parameters, "MEASUREMENT", "RECORD_LAYOUT" and "COMPU_METHOD" describgin how to convert the internal ECU data to phsyical values.
@@ -63,13 +63,13 @@ See the contents of the data directory in this repository for more examples.
 ## Features and bugs
 
 The library can read ASAP2 files conforming to the standards 1.5 and 1.6, and can write files for standard 1.6.
-However, currently there are two keywords missing: A2ML and IF_DATA. Both use a the non standardized ASAM MCD-2MC metalanguage
-which descirbes the interface specific data. During parsing, these keywords are ignored and they are currently not represented in the
-resulting data structure.
+However, currently there are some keywords that are only partially supported: A2ML, IF_DATA and FORMULA. The first two use the standardized ASAM MCD-2MC metalanguage
+which descirbes the interface specific data. During parsing, these block are simple passed through into the
+resulting data structure as strings.
+Formulas are currently also not parsed and instead stay as string. See also [the supported keywords page.](SupportedKeywords.md)
 
-Please file feature requests and bugs at the [issue tracker][tracker].
+Please file feature requests and bugs at the [issue tracker](https://github.com/domohuhn/a2l/issues).
 
-[tracker]: http://example.com/issues/replaceme
 
 
 

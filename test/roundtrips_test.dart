@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
+
 import 'package:a2l/a2l.dart';
 import 'package:test/test.dart';
 
@@ -45,7 +48,7 @@ Functions: 1
 
 final simpleText = '''
 /* This a2l file was generated with the dart a2l package */
-/* Version 1.0.0 */
+/* Version 0.5.0 */
 
 ASAP2_VERSION 1 61
 A2ML_VERSION 1 60

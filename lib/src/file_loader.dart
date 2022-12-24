@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
 
 import 'dart:io';
 import 'package:path/path.dart' as p;

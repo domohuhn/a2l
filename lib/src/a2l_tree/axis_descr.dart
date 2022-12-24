@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
+
 import 'dart:math';
 import 'package:a2l/src/a2l_tree/annotation.dart';
 import 'package:a2l/src/a2l_tree/axis_pts.dart';

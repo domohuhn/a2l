@@ -1,4 +1,5 @@
-
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
 
 import 'package:a2l/src/utility.dart';
 

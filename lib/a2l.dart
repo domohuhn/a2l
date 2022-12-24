@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// See LICENSE for the full text of the license
+
 /// This library supports reading and writing ASAM MCD-2MC files (A2L files) in versions 1.5 and 1.6.
 /// The ASAM MCD-2MC standard is an automotive standard that is used to describe the memory layout
 /// of embedded systems. In combination with a calibration protocol (for example the Universal Measurement and Calibration Protocol XCP - Standard ASAM MCD-1 XCP)

@@ -4,7 +4,7 @@ The alphabetical list of keywords of the ASAM MCD-2MC Version 1.6 Standard and i
 
 | Keyword      | Supported | Type | Comment |
 | ----------- | ----------- | ----------- | ----------- |
-| A2ML        | yes          | Block | content is vendor specific and not processed. |
+| A2ML        | partial          | Block | content is vendor specific and not processed. |
 | A2ML_VERSION  | yes | Named value | |
 | ADDR_EPK | yes | Named value | |
 | ALIGNMENT_BYTE | yes | Named value | |
@@ -77,7 +77,7 @@ The alphabetical list of keywords of the ASAM MCD-2MC Version 1.6 Standard and i
 | GUARD_RAILS | yes | Named value | |
 | HEADER | yes | Block | |
 | IDENTIFICATION | yes | Named value | |
-| IF_DATA | yes | Block | content is vendor specific and not processed. |
+| IF_DATA | partial | Block | content is vendor specific and not processed. |
 | IN_MEASUREMENT | yes | Block | |
 | LAYOUT | yes | Named value | |
 | LEFT_SHIFT | yes | Named value | |
