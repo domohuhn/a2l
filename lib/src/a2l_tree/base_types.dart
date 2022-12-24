@@ -34,7 +34,18 @@ class DataContainer extends AnnotationContainer {
 }
 
 /// Fixed width data types
-enum Datatype { uint8, uint16, uint32, uint64, int8, int16, int32, int64, float32, float64 }
+enum Datatype {
+  uint8,
+  uint16,
+  uint32,
+  uint64,
+  int8,
+  int16,
+  int32,
+  int64,
+  float32,
+  float64
+}
 
 /// Converts the token [s] to the enum.
 Datatype dataTypeFromString(Token s) {
@@ -126,7 +137,13 @@ String byteOrderToString(ByteOrder b) {
 }
 
 /// Describes how arrays are indexed.
-enum IndexMode { ALTERNATE_CURVES, ALTERNATE_WITH_X, ALTERNATE_WITH_Y, COLUMN_DIR, ROW_DIR }
+enum IndexMode {
+  ALTERNATE_CURVES,
+  ALTERNATE_WITH_X,
+  ALTERNATE_WITH_Y,
+  COLUMN_DIR,
+  ROW_DIR
+}
 
 /// Converts the token [s] to the enum
 IndexMode indexModeFromString(Token s) {
@@ -331,7 +348,8 @@ class MaxRefresh {
 
   /// Converts this object to an a2l entry with indentation [depth].
   String toFileContents(int depth) {
-    return indent('MAX_REFRESH ${maxRefreshUnitToString(scalingUnit)} $rate', depth);
+    return indent(
+        'MAX_REFRESH ${maxRefreshUnitToString(scalingUnit)} $rate', depth);
   }
 }
 
@@ -402,7 +420,8 @@ class MeasurementCharacteristicBase extends DataContainer {
   String optionalsToFileContents(int depth) {
     var rv = '';
     if (bitMask != null) {
-      rv += indent('BIT_MASK 0x${bitMask!.toRadixString(16).padLeft(8, "0")}', depth);
+      rv += indent(
+          'BIT_MASK 0x${bitMask!.toRadixString(16).padLeft(8, "0")}', depth);
     }
     if (endianess != null) {
       rv += indent('BYTE_ORDER ${byteOrderToString(endianess!)}', depth);

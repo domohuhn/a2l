@@ -27,7 +27,12 @@ class ComputeTableEntry {
   /// Used for: VerbatimTable and VerbatimRangeTable.
   String outString = '';
 
-  ComputeTableEntry({this.x = 0.0, this.xUp = 0.0, this.isFloat = false, this.outNumeric = 0.0, this.outString = ''});
+  ComputeTableEntry(
+      {this.x = 0.0,
+      this.xUp = 0.0,
+      this.isFloat = false,
+      this.outNumeric = 0.0,
+      this.outString = ''});
 }
 
 /// Base class for computation tables.
@@ -117,12 +122,14 @@ class ComputeTable extends ComputeTableBase {
   String toFileContents(int depth) {
     var rv = indent('/begin COMPU_TAB $name', depth);
     rv += indent('"$description"', depth + 1);
-    rv += indent('${computeMethodTypeToSting(type)} ${table.length}', depth + 1);
+    rv +=
+        indent('${computeMethodTypeToSting(type)} ${table.length}', depth + 1);
     for (var val in table) {
       rv += indent('${val.x} ${val.outNumeric}', depth + 1);
     }
     if (fallbackValue != null && fallbackValueNumeric != null) {
-      throw ValidationError('Compute table "$name": DEFAULT_VALUE and DEFAULT_VALUE_NUMERIC cannot both be used!');
+      throw ValidationError(
+          'Compute table "$name": DEFAULT_VALUE and DEFAULT_VALUE_NUMERIC cannot both be used!');
     } else if (fallbackValue != null) {
       rv += indent('DEFAULT_VALUE "$fallbackValue"', depth + 1);
     } else if (fallbackValueNumeric != null) {
@@ -158,7 +165,8 @@ class VerbatimTable extends ComputeTableBase {
   String toFileContents(int depth) {
     var rv = indent('/begin COMPU_VTAB $name', depth);
     rv += indent('"$description"', depth + 1);
-    rv += indent('${computeMethodTypeToSting(type)} ${table.length}', depth + 1);
+    rv +=
+        indent('${computeMethodTypeToSting(type)} ${table.length}', depth + 1);
     for (var val in table) {
       rv += indent('${val.x} "${val.outString}"', depth + 1);
     }
@@ -180,7 +188,9 @@ class VerbatimRangeTable extends ComputeTableBase {
   @override
   String convertToPhysical(double input) {
     for (var i = 0; i < table.length; ++i) {
-      if (table[i].x <= input && ((table[i].isFloat && input < table[i].xUp) || (input <= table[i].xUp))) {
+      if (table[i].x <= input &&
+          ((table[i].isFloat && input < table[i].xUp) ||
+              (input <= table[i].xUp))) {
         return table[i].outString;
       }
     }
@@ -199,9 +209,9 @@ class VerbatimRangeTable extends ComputeTableBase {
     for (var val in table) {
       if (val.isFloat) {
         rv += indent('${val.x} ${val.xUp} "${val.outString}"', depth + 1);
-      }
-      else {
-        rv += indent('${val.x.round()} ${val.xUp.round()} "${val.outString}"', depth + 1);
+      } else {
+        rv += indent('${val.x.round()} ${val.xUp.round()} "${val.outString}"',
+            depth + 1);
       }
     }
     if (fallbackValue != null) {

@@ -62,7 +62,8 @@ class SIExponents {
   /// Converts the object to an a2l file entry.
   /// The token is indented up to [depth]
   String toFileContents(int depth) {
-    var rv = 'SI_EXPONENTS $length $mass $time $electricCurrent $temperature $amountOfSubstance $luminousIntensity\n';
+    var rv =
+        'SI_EXPONENTS $length $mass $time $electricCurrent $temperature $amountOfSubstance $luminousIntensity\n';
     return indent(rv, depth);
   }
 }
@@ -100,8 +101,9 @@ class Unit {
     if (referencedUnit != null) {
       rv = rv && referencedUnit!.isNotEmpty && !referencedUnit!.contains(' ');
     }
-    var conv = (conversionLinearSlope == null && conversionLinearOffset == null) ||
-        (conversionLinearSlope != null && conversionLinearOffset != null);
+    var conv =
+        (conversionLinearSlope == null && conversionLinearOffset == null) ||
+            (conversionLinearSlope != null && conversionLinearOffset != null);
     return rv && conv;
   }
 
@@ -118,7 +120,9 @@ class Unit {
       rv += exponents!.toFileContents(depth + 1);
     }
     if (conversionLinearSlope != null && conversionLinearOffset != null) {
-      rv += indent('UNIT_CONVERSION $conversionLinearSlope $conversionLinearOffset\n', depth + 1);
+      rv += indent(
+          'UNIT_CONVERSION $conversionLinearSlope $conversionLinearOffset\n',
+          depth + 1);
     }
 
     rv += indent('/end UNIT\n\n', depth);

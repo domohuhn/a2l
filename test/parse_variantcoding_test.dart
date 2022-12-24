@@ -10,7 +10,8 @@ void main() {
   var parser = TokenParser();
   group('Parse variant mandatory', () {
     test('one', () {
-      prepareTestData(parser, ['/begin', 'VARIANT_CODING', '/end', 'VARIANT_CODING']);
+      prepareTestData(
+          parser, ['/begin', 'VARIANT_CODING', '/end', 'VARIANT_CODING']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
@@ -23,14 +24,30 @@ void main() {
     });
 
     test('multiple', () {
-      prepareTestData(parser, ['/begin', 'VARIANT_CODING', '/end', 'VARIANT_CODING', '/begin', 'VARIANT_CODING', '/end', 'VARIANT_CODING']);
+      prepareTestData(parser, [
+        '/begin',
+        'VARIANT_CODING',
+        '/end',
+        'VARIANT_CODING',
+        '/begin',
+        'VARIANT_CODING',
+        '/end',
+        'VARIANT_CODING'
+      ]);
       expect(() => parser.parse(), throwsException);
     });
   });
 
   group('Parse variant optional', () {
     test('VAR_SEPARATOR', () {
-      prepareTestData(parser, ['/begin', 'VARIANT_CODING', 'VAR_SEPARATOR', '"_"', '/end', 'VARIANT_CODING']);
+      prepareTestData(parser, [
+        '/begin',
+        'VARIANT_CODING',
+        'VAR_SEPARATOR',
+        '"_"',
+        '/end',
+        'VARIANT_CODING'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];
@@ -39,7 +56,14 @@ void main() {
     });
 
     test('VAR_NAMING', () {
-      prepareTestData(parser, ['/begin', 'VARIANT_CODING', 'VAR_NAMING', 'ALPHA', '/end', 'VARIANT_CODING']);
+      prepareTestData(parser, [
+        '/begin',
+        'VARIANT_CODING',
+        'VAR_NAMING',
+        'ALPHA',
+        '/end',
+        'VARIANT_CODING'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var mod = file.project.modules[0];

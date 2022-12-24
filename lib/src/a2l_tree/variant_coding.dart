@@ -175,7 +175,8 @@ class VariantCoding {
   /// Converts the object to an a2l string with the given indentation [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin VARIANT_CODING', depth);
-    rv += indent('VAR_NAMING ${variantNamingToString(namingScheme)}', depth + 1);
+    rv +=
+        indent('VAR_NAMING ${variantNamingToString(namingScheme)}', depth + 1);
     rv += indent('VAR_SEPARATOR "$separator"', depth + 1);
     for (final e in enumerations) {
       rv += e.toFileContents(depth + 1);

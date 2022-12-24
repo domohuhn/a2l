@@ -9,7 +9,15 @@ import 'package:a2l/src/token.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Describes the type of compute method to use.
-enum ComputeMethodType { IDENTICAL, FORM, LINEAR, RAT_FUNC, TAB_INTP, TAB_NOINTP, TAB_VERB }
+enum ComputeMethodType {
+  IDENTICAL,
+  FORM,
+  LINEAR,
+  RAT_FUNC,
+  TAB_INTP,
+  TAB_NOINTP,
+  TAB_VERB
+}
 
 /// Converts the a2l Token [s] to the enum.
 ComputeMethodType computeMethodTypeFromSting(Token s) {
@@ -100,7 +108,8 @@ class ComputeMethod {
         throw ComputeException('$type is not imlemented for "$name"!');
       case ComputeMethodType.LINEAR:
         if (coefficientA == null || coefficientB == null) {
-          throw ComputeException('Coefficients for compute method "$name" LINEAR not defined!');
+          throw ComputeException(
+              'Coefficients for compute method "$name" LINEAR not defined!');
         }
         return coefficientA! * input.toDouble() + coefficientB!;
       case ComputeMethodType.RAT_FUNC:
@@ -110,7 +119,8 @@ class ComputeMethod {
             coefficientD == null ||
             coefficientE == null ||
             coefficientF == null) {
-          throw ComputeException('Coefficients for compute method "$name" RAT_FUNC not defined!');
+          throw ComputeException(
+              'Coefficients for compute method "$name" RAT_FUNC not defined!');
         }
         var x = input.toDouble();
         var A = (coefficientD! * x - coefficientA!);
@@ -140,7 +150,8 @@ class ComputeMethod {
         throw ComputeException('$type is not imlemented for "$name"!');
       case ComputeMethodType.LINEAR:
         if (coefficientA == null || coefficientB == null) {
-          throw ComputeException('Coefficients for compute method "$name" LINEAR not defined!');
+          throw ComputeException(
+              'Coefficients for compute method "$name" LINEAR not defined!');
         }
         return BigInt.from((input - coefficientB!) ~/ coefficientA!);
       case ComputeMethodType.RAT_FUNC:
@@ -150,10 +161,15 @@ class ComputeMethod {
             coefficientD == null ||
             coefficientE == null ||
             coefficientF == null) {
-          throw ComputeException('Coefficients for compute method "$name" RAT_FUNC not defined!');
+          throw ComputeException(
+              'Coefficients for compute method "$name" RAT_FUNC not defined!');
         }
-        return BigInt.from((coefficientA! * input * input + coefficientB! * input + coefficientC!) ~/
-            (coefficientD! * input * input + coefficientE! * input + coefficientF!));
+        return BigInt.from((coefficientA! * input * input +
+                coefficientB! * input +
+                coefficientC!) ~/
+            (coefficientD! * input * input +
+                coefficientE! * input +
+                coefficientF!));
       case ComputeMethodType.TAB_INTP:
         throw ComputeException('$type is not imlemented!');
       case ComputeMethodType.TAB_NOINTP:
@@ -167,7 +183,8 @@ class ComputeMethod {
   String toFileContents(int depth) {
     var rv = indent('/begin COMPU_METHOD $name', depth);
     rv += indent('"$description"', depth + 1);
-    rv += indent('${computeMethodTypeToSting(type)} "$format" "$unit"', depth + 1);
+    rv += indent(
+        '${computeMethodTypeToSting(type)} "$format" "$unit"', depth + 1);
     switch (type) {
       case ComputeMethodType.IDENTICAL:
         break;
@@ -175,14 +192,16 @@ class ComputeMethod {
         if (formula != null) {
           rv += formula!.toFileContents(depth + 1);
         } else {
-          throw ValidationError('Compute method "$name" has $type but no Formula');
+          throw ValidationError(
+              'Compute method "$name" has $type but no Formula');
         }
         break;
       case ComputeMethodType.LINEAR:
         if (coefficientA != null && coefficientB != null) {
           rv += indent('COEFFS_LINEAR $coefficientA $coefficientB', depth + 1);
         } else {
-          throw ValidationError('Compute method "$name" has $type but no coefficients a: $coefficientA and b: $coefficientB!');
+          throw ValidationError(
+              'Compute method "$name" has $type but no coefficients a: $coefficientA and b: $coefficientB!');
         }
         break;
       case ComputeMethodType.RAT_FUNC:
@@ -192,7 +211,9 @@ class ComputeMethod {
             coefficientD != null &&
             coefficientE != null &&
             coefficientF != null) {
-          rv += indent('COEFFS $coefficientA $coefficientB $coefficientC $coefficientD $coefficientE $coefficientF', depth + 1);
+          rv += indent(
+              'COEFFS $coefficientA $coefficientB $coefficientC $coefficientD $coefficientE $coefficientF',
+              depth + 1);
         } else {
           throw ValidationError(
               'Compute method "$name" has $type but no missing coefficients a: $coefficientA b: $coefficientB c: $coefficientC d: $coefficientD e: $coefficientE f: $coefficientF!');
@@ -204,7 +225,8 @@ class ComputeMethod {
         if (referencedTable != null && referencedTable!.isNotEmpty) {
           rv += indent('COMPU_TAB_REF $referencedTable', depth + 1);
         } else {
-          throw ValidationError('Compute method "$name" has $type but no referenced table!');
+          throw ValidationError(
+              'Compute method "$name" has $type but no referenced table!');
         }
         break;
     }

@@ -8,7 +8,9 @@ import 'package:a2l/src/utility.dart';
 /// Represents a list of measurements with a timing.
 /// This allows selecting similiar measurements from a selection of lists in the calibration system.
 class Frame {
-  Frame() : measurements = [], interfaceData = [];
+  Frame()
+      : measurements = [],
+        interfaceData = [];
 
   /// name of the Frame object
   String name = '';
@@ -32,7 +34,8 @@ class Frame {
   /// Converts the compute method to an a2l file with the given indentation [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin FRAME $name', depth);
-    rv += indent('"$description" ${maxRefreshUnitToString(scalingUnit)} $rate', depth + 1);
+    rv += indent('"$description" ${maxRefreshUnitToString(scalingUnit)} $rate',
+        depth + 1);
     if (measurements.isNotEmpty) {
       var tmpStr = '';
       for (final m in measurements) {
@@ -40,7 +43,7 @@ class Frame {
       }
       rv += indent('FRAME_MEASUREMENT$tmpStr', depth + 1);
     }
-    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+    rv += writeListOfBlocks(depth + 1, 'IF_DATA', interfaceData);
     rv += indent('/end FRAME\n\n', depth);
     return rv;
   }

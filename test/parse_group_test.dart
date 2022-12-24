@@ -9,7 +9,14 @@ void main() {
   var parser = TokenParser();
   group('Parse groups', () {
     test('Parse mandatory', () {
-      prepareTestData(parser, ['/begin', 'GROUP', 'TEST.GRP', '"This is a test group"', '/end', 'GROUP']);
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -63,7 +70,15 @@ void main() {
     });
 
     test('Parse optional ROOT', () {
-      prepareTestData(parser, ['/begin', 'GROUP', 'TEST.GRP', '"This is a test group"', 'ROOT', '/end', 'GROUP']);
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        'ROOT',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;
@@ -79,8 +94,18 @@ void main() {
     });
 
     test('Parse optional ANNOTATION', () {
-      prepareTestData(
-          parser, ['/begin', 'GROUP', 'TEST.GRP', '"This is a test group"', '/begin', 'ANNOTATION', '/end', 'ANNOTATION', '/end', 'GROUP']);
+      prepareTestData(parser, [
+        '/begin',
+        'GROUP',
+        'TEST.GRP',
+        '"This is a test group"',
+        '/begin',
+        'ANNOTATION',
+        '/end',
+        'ANNOTATION',
+        '/end',
+        'GROUP'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var grps = file.project.modules[0].groups;

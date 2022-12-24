@@ -90,7 +90,9 @@ class ModuleParameters {
       rv += indent('ECU "$controlUnit"', depth + 1);
     }
     if (calibrationOffset != null) {
-      rv += indent('ECU_CALIBRATION_OFFSET 0x${calibrationOffset!.toRadixString(16)}', depth + 1);
+      rv += indent(
+          'ECU_CALIBRATION_OFFSET 0x${calibrationOffset!.toRadixString(16)}',
+          depth + 1);
     }
     if (epromIdentifier != null) {
       rv += indent('EPK "$epromIdentifier"', depth + 1);

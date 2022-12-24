@@ -237,7 +237,9 @@ class Characteristic extends MeasurementCharacteristicBase {
         depth + 1);
     rv += optionalsToFileContents(depth + 1);
     if (calibrationAccess != null) {
-      rv += indent('CALIBRATION_ACCESS ${calibrationAccessToString(calibrationAccess!)}', depth + 1);
+      rv += indent(
+          'CALIBRATION_ACCESS ${calibrationAccessToString(calibrationAccess!)}',
+          depth + 1);
     }
     if (comparisionQuantity != null) {
       rv += indent('COMPARISON_QUANTITY $comparisionQuantity', depth + 1);
@@ -255,11 +257,13 @@ class Characteristic extends MeasurementCharacteristicBase {
       }
       rv += indent('/end MAP_LIST', depth + 1);
     }
-    if (type == CharacteristicType.ASCII || type == CharacteristicType.VAL_BLK) {
+    if (type == CharacteristicType.ASCII ||
+        type == CharacteristicType.VAL_BLK) {
       if (number != null && number! > 0) {
         rv += indent('NUMBER $number', depth + 1);
       } else {
-        throw ValidationError('A charactristic of type: "$type" needs the property number set to > 0! "$name" has $number');
+        throw ValidationError(
+            'A charactristic of type: "$type" needs the property number set to > 0! "$name" has $number');
       }
     }
     if (stepSize != null) {
@@ -269,15 +273,17 @@ class Characteristic extends MeasurementCharacteristicBase {
       rv += indent('READ_ONLY', depth + 1);
     }
     if (dependentCharacteristics != null) {
-      rv += dependentCharacteristics!.toFileContents('DEPENDENT_CHARACTERISTIC', depth + 1);
+      rv += dependentCharacteristics!
+          .toFileContents('DEPENDENT_CHARACTERISTIC', depth + 1);
     }
     if (virtualCharacteristics != null) {
-      rv += virtualCharacteristics!.toFileContents('VIRTUAL_CHARACTERISTIC', depth + 1);
+      rv += virtualCharacteristics!
+          .toFileContents('VIRTUAL_CHARACTERISTIC', depth + 1);
     }
     for (final a in axisDescription) {
       rv += a.toFileContents(depth + 1);
     }
-    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+    rv += writeListOfBlocks(depth + 1, 'IF_DATA', interfaceData);
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end CHARACTERISTIC\n\n', depth);
     return rv;

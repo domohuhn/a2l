@@ -25,7 +25,8 @@ void prepareTestData(TokenParser parser, List<String> data) {
     '"This is a test module"'
   ]);
   parser.tokens.addAll(convertStringsToTokens(data));
-  parser.tokens.addAll(convertStringsToTokens(['/end', 'MODULE', '/end', 'PROJECT']));
+  parser.tokens
+      .addAll(convertStringsToTokens(['/end', 'MODULE', '/end', 'PROJECT']));
 }
 
 /// Converts [data] to tokens.

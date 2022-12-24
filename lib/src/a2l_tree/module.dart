@@ -115,8 +115,8 @@ class Module {
     var rv = indent('/begin MODULE $name', depth);
     rv += indent('"$description"\n\n', depth + 1);
 
-    rv += writeListOfBlocks( depth + 1, 'A2ML', a2ml);
-    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+    rv += writeListOfBlocks(depth + 1, 'A2ML', a2ml);
+    rv += writeListOfBlocks(depth + 1, 'IF_DATA', interfaceData);
 
     if (common != null) {
       rv += common!.toFileContents(depth + 1);

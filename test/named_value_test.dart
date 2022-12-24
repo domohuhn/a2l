@@ -33,10 +33,12 @@ void main() {
     var major = 0;
     var minor = 0;
     var values = <Value>[
-      Value('Major a2l version', ValueType.integer, (ValueType t, List<Token> s) {
+      Value('Major a2l version', ValueType.integer,
+          (ValueType t, List<Token> s) {
         major = int.parse(s[0].text);
       }),
-      Value('Minor a2l version', ValueType.integer, (ValueType t, List<Token> s) {
+      Value('Minor a2l version', ValueType.integer,
+          (ValueType t, List<Token> s) {
         minor = int.parse(s[0].text);
       })
     ];
@@ -50,7 +52,10 @@ void main() {
 
     test('Parse two values exception on error', () {
       parser.currentIndex = 3;
-      expect(() => parser.parseRequiredOrderedElements(values, parser.currentIndex + 2), throwsException);
+      expect(
+          () => parser.parseRequiredOrderedElements(
+              values, parser.currentIndex + 2),
+          throwsException);
     });
 
     test('find matching end', () {

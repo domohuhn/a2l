@@ -243,19 +243,24 @@ class RecordLayout {
 
     // AXIS_RESCALE_X/Y/Z/4/5
     if (axisRescaleX != null) {
-      rv += indent('AXIS_RESCALE_X ${axisRescaleX!.toFileContents()}', depth + 1);
+      rv +=
+          indent('AXIS_RESCALE_X ${axisRescaleX!.toFileContents()}', depth + 1);
     }
     if (axisRescaleY != null) {
-      rv += indent('AXIS_RESCALE_Y ${axisRescaleY!.toFileContents()}', depth + 1);
+      rv +=
+          indent('AXIS_RESCALE_Y ${axisRescaleY!.toFileContents()}', depth + 1);
     }
     if (axisRescaleZ != null) {
-      rv += indent('AXIS_RESCALE_Z ${axisRescaleZ!.toFileContents()}', depth + 1);
+      rv +=
+          indent('AXIS_RESCALE_Z ${axisRescaleZ!.toFileContents()}', depth + 1);
     }
     if (axisRescale4 != null) {
-      rv += indent('AXIS_RESCALE_4 ${axisRescale4!.toFileContents()}', depth + 1);
+      rv +=
+          indent('AXIS_RESCALE_4 ${axisRescale4!.toFileContents()}', depth + 1);
     }
     if (axisRescale5 != null) {
-      rv += indent('AXIS_RESCALE_5 ${axisRescale5!.toFileContents()}', depth + 1);
+      rv +=
+          indent('AXIS_RESCALE_5 ${axisRescale5!.toFileContents()}', depth + 1);
     }
     // DIST_OP_X/Y/Z/4/5
     if (distanceX != null) {
@@ -291,41 +296,52 @@ class RecordLayout {
     }
     // IDENTIFICATION
     if (identification != null) {
-      rv += indent('IDENTIFICATION ${identification!.toFileContents()}', depth + 1);
+      rv += indent(
+          'IDENTIFICATION ${identification!.toFileContents()}', depth + 1);
     }
 
     // NO_AXIS_PTS_X/Y/Z/4/5
     if (numberOfAxisPointsX != null) {
-      rv += indent('NO_AXIS_PTS_X ${numberOfAxisPointsX!.toFileContents()}', depth + 1);
+      rv += indent(
+          'NO_AXIS_PTS_X ${numberOfAxisPointsX!.toFileContents()}', depth + 1);
     }
     if (numberOfAxisPointsY != null) {
-      rv += indent('NO_AXIS_PTS_Y ${numberOfAxisPointsY!.toFileContents()}', depth + 1);
+      rv += indent(
+          'NO_AXIS_PTS_Y ${numberOfAxisPointsY!.toFileContents()}', depth + 1);
     }
     if (numberOfAxisPointsZ != null) {
-      rv += indent('NO_AXIS_PTS_Z ${numberOfAxisPointsZ!.toFileContents()}', depth + 1);
+      rv += indent(
+          'NO_AXIS_PTS_Z ${numberOfAxisPointsZ!.toFileContents()}', depth + 1);
     }
     if (numberOfAxisPoints4 != null) {
-      rv += indent('NO_AXIS_PTS_4 ${numberOfAxisPoints4!.toFileContents()}', depth + 1);
+      rv += indent(
+          'NO_AXIS_PTS_4 ${numberOfAxisPoints4!.toFileContents()}', depth + 1);
     }
     if (numberOfAxisPoints5 != null) {
-      rv += indent('NO_AXIS_PTS_5 ${numberOfAxisPoints5!.toFileContents()}', depth + 1);
+      rv += indent(
+          'NO_AXIS_PTS_5 ${numberOfAxisPoints5!.toFileContents()}', depth + 1);
     }
 
     // NO_RESCALE_X/Y/Z/4/5
     if (numberOfRescalePointsX != null) {
-      rv += indent('NO_RESCALE_X ${numberOfRescalePointsX!.toFileContents()}', depth + 1);
+      rv += indent('NO_RESCALE_X ${numberOfRescalePointsX!.toFileContents()}',
+          depth + 1);
     }
     if (numberOfRescalePointsY != null) {
-      rv += indent('NO_RESCALE_Y ${numberOfRescalePointsY!.toFileContents()}', depth + 1);
+      rv += indent('NO_RESCALE_Y ${numberOfRescalePointsY!.toFileContents()}',
+          depth + 1);
     }
     if (numberOfRescalePointsZ != null) {
-      rv += indent('NO_RESCALE_Z ${numberOfRescalePointsZ!.toFileContents()}', depth + 1);
+      rv += indent('NO_RESCALE_Z ${numberOfRescalePointsZ!.toFileContents()}',
+          depth + 1);
     }
     if (numberOfRescalePoints4 != null) {
-      rv += indent('NO_RESCALE_4 ${numberOfRescalePoints4!.toFileContents()}', depth + 1);
+      rv += indent('NO_RESCALE_4 ${numberOfRescalePoints4!.toFileContents()}',
+          depth + 1);
     }
     if (numberOfRescalePoints5 != null) {
-      rv += indent('NO_RESCALE_5 ${numberOfRescalePoints5!.toFileContents()}', depth + 1);
+      rv += indent('NO_RESCALE_5 ${numberOfRescalePoints5!.toFileContents()}',
+          depth + 1);
     }
 
     // OFFSET_X/Y/Z/4/5

@@ -9,24 +9,20 @@ import 'package:a2l/src/utility.dart';
 /// [contents] is the list of string wrapped in the blocks
 String writeListOfBlocks(int depth, String key, List<String> contents) {
   var rv = '';
-  for(final txt in contents) {
-      if(txt.isEmpty) {
-        continue;
-      }
-      rv += indent('/begin $key', depth, addNewline: false);
-      print('txt: "$txt" -> ${!txt.startsWith(RegExp(r'/s*?\n'))}');
-      if (!txt.startsWith(RegExp(r'[\s]*?\n'))) {
-        rv += '\n';
-      }
-      rv += txt;
-      if(!rv.endsWith('\n')) {
-        rv += '\n';
-      }
-      rv += indent('/end $key\n\n', depth);
+  for (final txt in contents) {
+    if (txt.isEmpty) {
+      continue;
+    }
+    rv += indent('/begin $key', depth, addNewline: false);
+    print('txt: "$txt" -> ${!txt.startsWith(RegExp(r'/s*?\n'))}');
+    if (!txt.startsWith(RegExp(r'[\s]*?\n'))) {
+      rv += '\n';
+    }
+    rv += txt;
+    if (!rv.endsWith('\n')) {
+      rv += '\n';
+    }
+    rv += indent('/end $key\n\n', depth);
   }
   return rv;
 }
-
-
-
-

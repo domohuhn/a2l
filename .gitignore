@@ -9,6 +9,6 @@ build/
 # https://dart.dev/guides/libraries/private-files#pubspeclock.
 pubspec.lock
 
-test/.test_coverage.dart
 coverage/
 .vscode
+doc/

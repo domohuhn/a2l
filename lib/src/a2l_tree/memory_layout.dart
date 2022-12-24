@@ -67,9 +67,12 @@ class SegmentData {
   /// Converts the shared data to the a2l string representation with [depth].
   String sharedDataToFileContents(int depth) {
     if (!isValid) {
-      throw ValidationError('MemoryLayout at $address is not valid! It needs exactly 5 offsets!');
+      throw ValidationError(
+          'MemoryLayout at $address is not valid! It needs exactly 5 offsets!');
     }
-    var rv = indent('0x${address.toRadixString(16).padLeft(8, "0")} 0x${size.toRadixString(16).padLeft(8, "0")}', depth);
+    var rv = indent(
+        '0x${address.toRadixString(16).padLeft(8, "0")} 0x${size.toRadixString(16).padLeft(8, "0")}',
+        depth);
     for (final v in offsets) {
       if (v >= 0) {
         rv += indent('0x${v.toRadixString(16).padLeft(8, "0")}', depth);
@@ -94,14 +97,16 @@ class MemoryLayout extends SegmentData {
   /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
   List<String> interfaceData;
 
-  MemoryLayout() : interfaceData = [], super();
+  MemoryLayout()
+      : interfaceData = [],
+        super();
 
   /// Converts the object to a part of an a2l file with indentation [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin MEMORY_LAYOUT', depth);
     rv += indent(memoryLayoutTypeToString(type), depth + 1);
     rv += sharedDataToFileContents(depth + 1);
-    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+    rv += writeListOfBlocks(depth + 1, 'IF_DATA', interfaceData);
     rv += indent('/end MEMORY_LAYOUT\n\n', depth);
     return rv;
   }

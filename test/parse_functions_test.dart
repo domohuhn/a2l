@@ -9,7 +9,14 @@ void main() {
   var parser = TokenParser();
   group('Parse functions mandatory', () {
     test('Parse one', () {
-      prepareTestData(parser, ['/begin', 'FUNCTION', 'TEST.FUN', '"This is a test fun"', '/end', 'FUNCTION']);
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;
@@ -71,8 +78,16 @@ void main() {
 
   group('Parse functions optional', () {
     test('FUNCTION_VERSION', () {
-      prepareTestData(
-          parser, ['/begin', 'FUNCTION', 'TEST.FUN', '"This is a test fun"', 'FUNCTION_VERSION', '"v1.0.0"', '/end', 'FUNCTION']);
+      prepareTestData(parser, [
+        '/begin',
+        'FUNCTION',
+        'TEST.FUN',
+        '"This is a test fun"',
+        'FUNCTION_VERSION',
+        '"v1.0.0"',
+        '/end',
+        'FUNCTION'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var funs = file.project.modules[0].functions;

@@ -15,7 +15,7 @@ import 'package:a2l/src/preprocessor.dart';
 A2LFile parseA2LFileSync(String path) {
   final loader = FileLoader();
   final mainFile = loader.read(path);
-  final source = processIncludes(mainFile,loader);
+  final source = processIncludes(mainFile, loader);
   return parseA2L(source);
 }
 

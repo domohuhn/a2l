@@ -13,30 +13,29 @@ class CallSequence {
 }
 
 class TestLoader extends FileLoader {
-
-  TestLoader() :  calls = [];
+  TestLoader() : calls = [];
 
   List<CallSequence> calls;
 
   @override
   String read(String path) {
     calls.add(CallSequence(1, path));
-    if(calls.length > 25) {
+    if (calls.length > 25) {
       throw ValidationError('Too many calls "$path"');
     }
-    if(path=='file1.a2l') {
+    if (path == 'file1.a2l') {
       return file1;
     }
-    if(path=='other dir/file2.a2l') {
+    if (path == 'other dir/file2.a2l') {
       return file2;
     }
-    if(path=='other dir/file3.a2l') {
+    if (path == 'other dir/file3.a2l') {
       return file3;
     }
-    if(path=='other dir/file4.a2l'){
+    if (path == 'other dir/file4.a2l') {
       return file4;
     }
-    if(path=='file5.a2l'){
+    if (path == 'file5.a2l') {
       return file5;
     }
     throw ValidationError('Unknown path $path');
@@ -57,11 +56,10 @@ class TestLoader extends FileLoader {
 }
 
 void main() {
-
   group('Parse file includes', () {
     test('simple', () {
       TestLoader loader = TestLoader();
-      final text = processIncludes(file4,loader);
+      final text = processIncludes(file4, loader);
       expect(text, file5);
       expect(loader.calls.length, 2);
       expect(loader.calls[0].method, 1);
@@ -72,7 +70,7 @@ void main() {
 
     test('nested', () {
       TestLoader loader = TestLoader();
-      final text = processIncludes(file1,loader);
+      final text = processIncludes(file1, loader);
       expect(loader.calls.length, 4);
       expect(loader.calls[0].method, 1);
       expect(loader.calls[0].path, 'other dir/file4.a2l');
@@ -83,12 +81,11 @@ void main() {
       expect(loader.calls[3].method, 3);
       expect(loader.calls[3].path, '');
       expect(text, processedFile1);
-
     });
 
     test('multiple in one file', () {
       TestLoader loader = TestLoader();
-      final text = processIncludes(mainFile,loader);
+      final text = processIncludes(mainFile, loader);
       expect(loader.calls.length, 10);
       expect(loader.calls[0].method, 1);
       expect(loader.calls[0].path, 'file1.a2l');
@@ -107,7 +104,7 @@ void main() {
       expect(loader.calls[6].path, 'other dir/file2.a2l');
       expect(loader.calls[7].method, 3);
       expect(loader.calls[7].path, '');
-      
+
       expect(loader.calls[8].method, 1);
       expect(loader.calls[8].path, 'other dir/file3.a2l');
       expect(loader.calls[9].method, 3);
@@ -116,7 +113,6 @@ void main() {
       expect(text, processedMainFile);
     });
   });
-
 }
 
 final mainFile = '''
@@ -161,34 +157,32 @@ some random text
 /end CHARACTERISTIC
 ''';
 
-final processedFile1 = 
-  '/begin MODULE\n'
-  '/begin CHARACTERISTIC file5\n'
-  'some random text\n'
-  '/end CHARACTERISTIC\n'
-  '\n'
-  '/end MODULE\n';
+final processedFile1 = '/begin MODULE\n'
+    '/begin CHARACTERISTIC file5\n'
+    'some random text\n'
+    '/end CHARACTERISTIC\n'
+    '\n'
+    '/end MODULE\n';
 
-final processedMainFile =
-  'ASAP2_VERSION 1 61\n'
-  'A2ML_VERSION 1 60\n'
-  '\n'
-  '/begin PROJECT DH.XCP.SIMPLE\n'
-  '"text"\n'
-  '\n'
-  '/begin MODULE\n'
-  '/begin CHARACTERISTIC file5\n'
-  'some random text\n'
-  '/end CHARACTERISTIC\n'
-  '\n'
-  '/end MODULE\n'
-  '\n'
-  '/begin CHARACTERISTIC file2\n'
-  'some random text\n'
-  '/end CHARACTERISTIC\n'
-  '\n'
-  '/begin CHARACTERISTIC file3\n'
-  'some random text\n'
-  '/end CHARACTERISTIC\n'
-  '\n'
-  '/end PROJECT\n';
+final processedMainFile = 'ASAP2_VERSION 1 61\n'
+    'A2ML_VERSION 1 60\n'
+    '\n'
+    '/begin PROJECT DH.XCP.SIMPLE\n'
+    '"text"\n'
+    '\n'
+    '/begin MODULE\n'
+    '/begin CHARACTERISTIC file5\n'
+    'some random text\n'
+    '/end CHARACTERISTIC\n'
+    '\n'
+    '/end MODULE\n'
+    '\n'
+    '/begin CHARACTERISTIC file2\n'
+    'some random text\n'
+    '/end CHARACTERISTIC\n'
+    '\n'
+    '/begin CHARACTERISTIC file3\n'
+    'some random text\n'
+    '/end CHARACTERISTIC\n'
+    '\n'
+    '/end PROJECT\n';

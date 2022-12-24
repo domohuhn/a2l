@@ -1517,10 +1517,13 @@ void main() {
         'CM_moo',
         '-42.5',
         '54.5',
-        'NUMBER', '12',
-        '/begin', 'IF_DATA',
+        'NUMBER',
+        '12',
+        '/begin',
+        'IF_DATA',
         'somestring',
-        '/end', 'IF_DATA',
+        '/end',
+        'IF_DATA',
         '/end',
         'CHARACTERISTIC'
       ]);
@@ -1530,9 +1533,7 @@ void main() {
       expect(chara.length, 1);
       expect(chara[0].interfaceData.length, 1);
       expect(chara[0].interfaceData[0], 'somestring');
-      expect(chara[0].toFileContents(0).contains('/begin IF_DATA'),true);
+      expect(chara[0].toFileContents(0).contains('/begin IF_DATA'), true);
     });
   });
-
-  
 }

@@ -11,7 +11,7 @@ import 'package:a2l/src/utility.dart';
 class Group extends DataContainer {
   bool root = false;
 
-  Group() : interfaceData=[];
+  Group() : interfaceData = [];
 
   /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)
   List<String> interfaceData;
@@ -53,7 +53,7 @@ class Group extends DataContainer {
     if (root) {
       rv += indent('ROOT', depth + 1);
     }
-    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+    rv += writeListOfBlocks(depth + 1, 'IF_DATA', interfaceData);
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end GROUP\n\n', depth);
     return rv;

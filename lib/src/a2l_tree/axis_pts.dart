@@ -89,8 +89,12 @@ class AxisPoints extends DataContainer {
   String toFileContents(int depth) {
     var rv = indent('/begin AXIS_PTS $name', depth);
     rv += indent('"$description"', depth + 1);
-    rv += indent('0x${address.toRadixString(16).padLeft(8, "0")} $inputQuantity $recordLayout', depth + 1);
-    rv += indent('$maxDifferenceFromTable $conversionMethod $maxAxisPoints $lowerLimit $upperLimit', depth + 1);
+    rv += indent(
+        '0x${address.toRadixString(16).padLeft(8, "0")} $inputQuantity $recordLayout',
+        depth + 1);
+    rv += indent(
+        '$maxDifferenceFromTable $conversionMethod $maxAxisPoints $lowerLimit $upperLimit',
+        depth + 1);
 
     if (!readWrite) {
       rv += indent('READ_ONLY', depth + 1);
@@ -130,7 +134,9 @@ class AxisPoints extends DataContainer {
       rv += indent('STEP_SIZE $stepSize', depth + 1);
     }
     if (calibrationAccess != null) {
-      rv += indent('CALIBRATION_ACCESS ${calibrationAccessToString(calibrationAccess!)}', depth + 1);
+      rv += indent(
+          'CALIBRATION_ACCESS ${calibrationAccessToString(calibrationAccess!)}',
+          depth + 1);
     }
     if (depositMode != null) {
       rv += indent('DEPOSIT ${depositToString(depositMode!)}', depth + 1);
@@ -141,7 +147,7 @@ class AxisPoints extends DataContainer {
     if (symbolLink != null) {
       rv += symbolLink!.toFileContents(depth + 1);
     }
-    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+    rv += writeListOfBlocks(depth + 1, 'IF_DATA', interfaceData);
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end AXIS_PTS\n\n', depth);
 

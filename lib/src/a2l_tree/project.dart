@@ -71,7 +71,8 @@ class Header {
   String? number;
 
   bool get hasVersion => version != null;
-  bool get hasNumber => number != null && number!.isNotEmpty && !number!.contains(' ');
+  bool get hasNumber =>
+      number != null && number!.isNotEmpty && !number!.contains(' ');
 
   /// Converts the object to an a2l file.
   String toFileContents(int depth) {

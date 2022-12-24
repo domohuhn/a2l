@@ -1219,9 +1219,11 @@ void main() {
         '1',
         '-32768',
         '32767',
-        '/begin', 'IF_DATA',
+        '/begin',
+        'IF_DATA',
         'taggedstruct',
-        '/end', 'IF_DATA',
+        '/end',
+        'IF_DATA',
         '/end',
         'MEASUREMENT'
       ]);

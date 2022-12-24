@@ -8,13 +8,61 @@ import 'package:test/test.dart';
 void main() {
   var parser = TokenParser();
   parser.currentIndex = 0;
-  final startList =
-      convertStringsToTokens(['ASAP2_VERSION', '1', '63', 'A2ML_VERSION', '2', '20', '/begin', 'PROJECT', 'Moo', '"MooProject"']);
-  final module1 = convertStringsToTokens(['/begin', 'MODULE', 'Test.Module', '"This is a test module"', '/end', 'MODULE']);
-  final module2 = convertStringsToTokens(['/begin', 'MODULE', 'Test.Module2', '"This is a test module2"', '/end', 'MODULE']);
-  final module3 = convertStringsToTokens(['/begin', 'MODULE', 'Test.Module3', '"This is a test module3"', '/begin', 'A2ML', 'block "XY_BLOB" struct { };', '/end', 'A2ML', '/end', 'MODULE']);
-  final module4 = convertStringsToTokens(['/begin', 'MODULE', 'Test.Module4', '"This is a test module4"', '/begin', 'IF_DATA', 'block "XY_BLOB" struct { };', '/end', 'IF_DATA', '/end', 'MODULE']);
- 
+  final startList = convertStringsToTokens([
+    'ASAP2_VERSION',
+    '1',
+    '63',
+    'A2ML_VERSION',
+    '2',
+    '20',
+    '/begin',
+    'PROJECT',
+    'Moo',
+    '"MooProject"'
+  ]);
+  final module1 = convertStringsToTokens([
+    '/begin',
+    'MODULE',
+    'Test.Module',
+    '"This is a test module"',
+    '/end',
+    'MODULE'
+  ]);
+  final module2 = convertStringsToTokens([
+    '/begin',
+    'MODULE',
+    'Test.Module2',
+    '"This is a test module2"',
+    '/end',
+    'MODULE'
+  ]);
+  final module3 = convertStringsToTokens([
+    '/begin',
+    'MODULE',
+    'Test.Module3',
+    '"This is a test module3"',
+    '/begin',
+    'A2ML',
+    'block "XY_BLOB" struct { };',
+    '/end',
+    'A2ML',
+    '/end',
+    'MODULE'
+  ]);
+  final module4 = convertStringsToTokens([
+    '/begin',
+    'MODULE',
+    'Test.Module4',
+    '"This is a test module4"',
+    '/begin',
+    'IF_DATA',
+    'block "XY_BLOB" struct { };',
+    '/end',
+    'IF_DATA',
+    '/end',
+    'MODULE'
+  ]);
+
   final endList = convertStringsToTokens(['/end', 'PROJECT']);
   group('Parse project', () {
     test('Parse Versions', () {
@@ -176,8 +224,8 @@ void main() {
       expect(file.project.modules[0].a2ml.length, 1);
       expect(file.project.modules[0].interfaceData.length, 0);
       expect(file.project.modules[0].a2ml, ['block "XY_BLOB" struct { };']);
-      expect(file.project.modules[0].toFileContents(0), 
-'''/begin MODULE Test.Module3
+      expect(file.project.modules[0].toFileContents(0),
+          '''/begin MODULE Test.Module3
   "This is a test module3"
 
   /begin A2ML
@@ -200,9 +248,10 @@ block "XY_BLOB" struct { };
       expect(file.project.modules[0].name, 'Test.Module4');
       expect(file.project.modules[0].description, 'This is a test module4');
       expect(file.project.modules[0].interfaceData.length, 1);
-      expect(file.project.modules[0].interfaceData, ['block "XY_BLOB" struct { };']);
-      expect(file.project.modules[0].toFileContents(0), 
-'''/begin MODULE Test.Module4
+      expect(file.project.modules[0].interfaceData,
+          ['block "XY_BLOB" struct { };']);
+      expect(file.project.modules[0].toFileContents(0),
+          '''/begin MODULE Test.Module4
   "This is a test module4"
 
   /begin IF_DATA

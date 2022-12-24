@@ -23,7 +23,8 @@ class UserRights {
   /// Converts the compute method to an a2l file with the given indentation [depth].
   String toFileContents(int depth) {
     if (userId.isEmpty || userId.contains(' ')) {
-      throw ValidationError('UserRights: Identifiers must not be empty and cannot contain spaces! Got "$userId"');
+      throw ValidationError(
+          'UserRights: Identifiers must not be empty and cannot contain spaces! Got "$userId"');
     }
     var rv = indent('/begin USER_RIGHTS $userId', depth);
     if (readOnly) {

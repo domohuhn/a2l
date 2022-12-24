@@ -10,7 +10,16 @@ void main() {
   var parser = TokenParser();
   group('Parse frames mandatory', () {
     test('one', () {
-      prepareTestData(parser, ['/begin', 'FRAME', 'TEST.FRAME', '"This is a test frame"', '3', '2', '/end', 'FRAME']);
+      prepareTestData(parser, [
+        '/begin',
+        'FRAME',
+        'TEST.FRAME',
+        '"This is a test frame"',
+        '3',
+        '2',
+        '/end',
+        'FRAME'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var frames = file.project.modules[0].frames;
@@ -61,8 +70,20 @@ void main() {
 
   group('Parse frames optional', () {
     test('FRAME_MEASUREMENT', () {
-      prepareTestData(parser,
-          ['/begin', 'FRAME', 'TEST.FRAME', '"This is a test frame"', '3', '2', 'FRAME_MEASUREMENT', 'AAA', 'BBB', 'CCC', '/end', 'FRAME']);
+      prepareTestData(parser, [
+        '/begin',
+        'FRAME',
+        'TEST.FRAME',
+        '"This is a test frame"',
+        '3',
+        '2',
+        'FRAME_MEASUREMENT',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'FRAME'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var frames = file.project.modules[0].frames;
@@ -77,10 +98,26 @@ void main() {
       expect(frames[0].measurements[2], 'CCC');
     });
 
-    
     test('IF_DATA', () {
-      prepareTestData(parser,
-          ['/begin', 'FRAME', 'TEST.FRAME', '"This is a test frame"', '3', '2', 'FRAME_MEASUREMENT', 'AAA', 'BBB', 'CCC', '/begin', 'IF_DATA', 'somestring', '/end', 'IF_DATA', '/end', 'FRAME']);
+      prepareTestData(parser, [
+        '/begin',
+        'FRAME',
+        'TEST.FRAME',
+        '"This is a test frame"',
+        '3',
+        '2',
+        'FRAME_MEASUREMENT',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/begin',
+        'IF_DATA',
+        'somestring',
+        '/end',
+        'IF_DATA',
+        '/end',
+        'FRAME'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var frames = file.project.modules[0].frames;

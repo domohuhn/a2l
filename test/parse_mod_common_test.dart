@@ -10,7 +10,13 @@ void main() {
   var parser = TokenParser();
   group('Parse mandatory', () {
     test('Parse one', () {
-      prepareTestData(parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -46,8 +52,15 @@ void main() {
 
   group('Parse optional', () {
     test('ALIGNMENT_BYTE', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'ALIGNMENT_BYTE', '11', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'ALIGNMENT_BYTE',
+        '11',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -60,8 +73,15 @@ void main() {
     });
 
     test('ALIGNMENT_LONG', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'ALIGNMENT_LONG', '11', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'ALIGNMENT_LONG',
+        '11',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -74,8 +94,15 @@ void main() {
     });
 
     test('ALIGNMENT_WORD', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'ALIGNMENT_WORD', '11', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'ALIGNMENT_WORD',
+        '11',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -88,8 +115,15 @@ void main() {
     });
 
     test('ALIGNMENT_INT64', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'ALIGNMENT_INT64', '13', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'ALIGNMENT_INT64',
+        '13',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -102,8 +136,15 @@ void main() {
     });
 
     test('ALIGNMENT_FLOAT32_IEEE', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'ALIGNMENT_FLOAT32_IEEE', '5', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'ALIGNMENT_FLOAT32_IEEE',
+        '5',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -116,8 +157,15 @@ void main() {
     });
 
     test('ALIGNMENT_FLOAT64_IEEE', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'ALIGNMENT_FLOAT64_IEEE', '8', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'ALIGNMENT_FLOAT64_IEEE',
+        '8',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -130,8 +178,15 @@ void main() {
     });
 
     test('ALIGNMENT_INT64', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'ALIGNMENT_FLOAT64_IEEE', '7', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'ALIGNMENT_FLOAT64_IEEE',
+        '7',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -145,8 +200,15 @@ void main() {
     });
 
     test('BYTE_ORDER', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'BYTE_ORDER', 'MSB_FIRST', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'BYTE_ORDER',
+        'MSB_FIRST',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -154,7 +216,15 @@ void main() {
     });
 
     test('DATA_SIZE', () {
-      prepareTestData(parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'DATA_SIZE', '42', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'DATA_SIZE',
+        '42',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -162,8 +232,15 @@ void main() {
     });
 
     test('DEPOSIT', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'DEPOSIT', 'DIFFERENCE', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'DEPOSIT',
+        'DIFFERENCE',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
@@ -171,8 +248,15 @@ void main() {
     });
 
     test('S_REC_LAYOUT', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_COMMON', '"Description of common module data"', 'S_REC_LAYOUT', 'S.Lay', '/end', 'MOD_COMMON']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_COMMON',
+        '"Description of common module data"',
+        'S_REC_LAYOUT',
+        'S.Lay',
+        '/end',
+        'MOD_COMMON'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;

@@ -9,7 +9,13 @@ void main() {
   var parser = TokenParser();
   group('Parse mandatory', () {
     test('Parse one', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module pars"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module pars"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -48,7 +54,15 @@ void main() {
 
   group('Parse optional', () {
     test('ADDR_EPK', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'ADDR_EPK', '0x12345', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'ADDR_EPK',
+        '0x12345',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -57,7 +71,15 @@ void main() {
     });
 
     test('CPU_TYPE', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'CPU_TYPE', '"ARMv8"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'CPU_TYPE',
+        '"ARMv8"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -65,7 +87,15 @@ void main() {
     });
 
     test('CUSTOMER', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'CUSTOMER', '"Moo"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'CUSTOMER',
+        '"Moo"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -73,7 +103,15 @@ void main() {
     });
 
     test('CUSTOMER_NO', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'CUSTOMER_NO', '"123456"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'CUSTOMER_NO',
+        '"123456"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -81,7 +119,15 @@ void main() {
     });
 
     test('ECU', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'ECU', '"ECUNAME"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'ECU',
+        '"ECUNAME"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -89,8 +135,15 @@ void main() {
     });
 
     test('ECU_CALIBRATION_OFFSET', () {
-      prepareTestData(
-          parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'ECU_CALIBRATION_OFFSET', '0x1000', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'ECU_CALIBRATION_OFFSET',
+        '0x1000',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -98,7 +151,15 @@ void main() {
     });
 
     test('EPK', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'EPK', '"Some ID"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'EPK',
+        '"Some ID"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -106,7 +167,15 @@ void main() {
     });
 
     test('NO_OF_INTERFACES', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'NO_OF_INTERFACES', '5', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'NO_OF_INTERFACES',
+        '5',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -114,7 +183,15 @@ void main() {
     });
 
     test('PHONE_NO', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'PHONE_NO', '"555-12345"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'PHONE_NO',
+        '"555-12345"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -122,7 +199,15 @@ void main() {
     });
 
     test('SUPPLIER', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'SUPPLIER', '"XCP Ltd"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'SUPPLIER',
+        '"XCP Ltd"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -154,7 +239,15 @@ void main() {
     });
 
     test('USER', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'USER', '"Person"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'USER',
+        '"Person"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
@@ -162,7 +255,15 @@ void main() {
     });
 
     test('VERSION', () {
-      prepareTestData(parser, ['/begin', 'MOD_PAR', '"Description of pars module data"', 'VERSION', '"v1.0.0"', '/end', 'MOD_PAR']);
+      prepareTestData(parser, [
+        '/begin',
+        'MOD_PAR',
+        '"Description of pars module data"',
+        'VERSION',
+        '"v1.0.0"',
+        '/end',
+        'MOD_PAR'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;

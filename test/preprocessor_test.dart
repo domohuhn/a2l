@@ -78,7 +78,6 @@ List<String> expectedSplit = [
   '/end'
 ];
 
-
 List<String> expectedSplitPassThrough = [
   'THIS',
   'IS',
@@ -94,18 +93,21 @@ List<String> expectedSplitPassThrough = [
   'numbers',
   '23.345',
   'Text.Joined',
-  '/begin', 'IF_DATA',
+  '/begin',
+  'IF_DATA',
   ''' "some strings"
    This text should be 
       unmodified\n''',
-  '/end', 'IF_DATA',
-  '/begin', 'A2ML',
+  '/end',
+  'IF_DATA',
+  '/begin',
+  'A2ML',
   ''' "some strings"
    This text should be 
       unmodified\n''',
-  '/end', 'A2ML'
+  '/end',
+  'A2ML'
 ];
-
 
 var textNoComments = '''
 THIS IS A LONG TEXT

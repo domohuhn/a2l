@@ -619,9 +619,11 @@ void main() {
         '25',
         '-110.0',
         '200.0',
-        '/begin', 'IF_DATA',
+        '/begin',
+        'IF_DATA',
         'somestring',
-        '/end', 'IF_DATA',
+        '/end',
+        'IF_DATA',
         '/end',
         'AXIS_PTS'
       ]);
@@ -631,7 +633,7 @@ void main() {
       expect(axis.length, 1);
       expect(axis[0].interfaceData.length, 1);
       expect(axis[0].interfaceData[0], 'somestring');
-      expect(axis[0].toFileContents(0).contains('/begin IF_DATA'),true);
+      expect(axis[0].toFileContents(0).contains('/begin IF_DATA'), true);
     });
   });
 }

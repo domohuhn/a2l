@@ -172,7 +172,8 @@ void main() {
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       final annotations = desc.annotations;
       expect(annotations.length, 1);
       expect(annotations[0].label, 'some label');
@@ -213,7 +214,8 @@ void main() {
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.axisPoints, 'CR_REF');
     });
 
@@ -247,7 +249,8 @@ void main() {
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.endianess, ByteOrder.MSB_LAST);
     });
 
@@ -281,7 +284,8 @@ void main() {
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.rescaleAxisPoints, 'CR_REF');
     });
 
@@ -315,7 +319,8 @@ void main() {
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.depositMode, Deposit.ABSOLUTE);
     });
 
@@ -350,7 +355,8 @@ void main() {
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.extendedLimits!.lowerLimit, -500.0);
       expect(desc.extendedLimits!.upperLimit, 500.0);
     });
@@ -386,7 +392,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.fixedAxisPoints1!.p0, 8.0);
       expect(desc.fixedAxisPoints1!.p1, 16.0);
       expect(desc.fixedAxisPoints1!.max, 7);
@@ -423,7 +430,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.fixedAxisPoints2!.p0, 8.0);
       expect(desc.fixedAxisPoints2!.p1, 16.0);
       expect(desc.fixedAxisPoints2!.max, 7);
@@ -463,7 +471,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.ecuAxisPoints.length, 3);
       expect(desc.ecuAxisPoints[0], 5.0);
       expect(desc.ecuAxisPoints[1], 225.0);
@@ -499,7 +508,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.format, '%9.7');
     });
 
@@ -532,7 +542,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.maxGradient, 15.5);
     });
 
@@ -565,7 +576,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.monotony, Monotony.strictly_decreasing);
     });
 
@@ -598,7 +610,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.unit, '[m]');
     });
 
@@ -630,7 +643,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.readWrite, false);
     });
 
@@ -663,7 +677,8 @@ void main() {
         'CHARACTERISTIC'
       ]);
       var file = parser.parse();
-      final desc = file.project.modules[0].characteristics[0].axisDescription[0];
+      final desc =
+          file.project.modules[0].characteristics[0].axisDescription[0];
       expect(desc.stepSize, 0.5);
     });
   });

@@ -81,7 +81,9 @@ class AxisDescription extends AnnotationContainer {
   /// Entries are indented to [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin AXIS_DESCR', depth);
-    rv += indent('${axisTypeToString(type)} $inputQuantity $conversionMethod $maxAxisPoints $lowerLimit $upperLimit', depth + 1);
+    rv += indent(
+        '${axisTypeToString(type)} $inputQuantity $conversionMethod $maxAxisPoints $lowerLimit $upperLimit',
+        depth + 1);
     if (axisPoints != null) {
       rv += indent('AXIS_PTS_REF $axisPoints', depth + 1);
     }

@@ -25,9 +25,15 @@ void main() {
         '3',
         '4',
         '0x100',
-        '/begin', 'IF_DATA', 'somedata', '/end', 'IF_DATA',
-        '/end', 'MEMORY_LAYOUT',
-        '/end', 'MOD_PAR'
+        '/begin',
+        'IF_DATA',
+        'somedata',
+        '/end',
+        'IF_DATA',
+        '/end',
+        'MEMORY_LAYOUT',
+        '/end',
+        'MOD_PAR'
       ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
@@ -131,7 +137,11 @@ void main() {
         '3',
         '4',
         '0x100',
-        '/begin', 'IF_DATA', 'somedata', '/end', 'IF_DATA',
+        '/begin',
+        'IF_DATA',
+        'somedata',
+        '/end',
+        'IF_DATA',
         '/end',
         'MEMORY_SEGMENT',
         '/end',

@@ -11,7 +11,8 @@ void main() {
   var parser = TokenParser();
   group('Parse record layouts mandatory', () {
     test('Parse mandatory', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser,
+          ['/begin', 'RECORD_LAYOUT', 'TEST.RL', '/end', 'RECORD_LAYOUT']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -29,8 +30,18 @@ void main() {
     });
 
     test('Parse mandatory multiple', () {
-      prepareTestData(parser,
-          ['/begin', 'RECORD_LAYOUT', 'TEST.RL', '/end', 'RECORD_LAYOUT', '/begin', 'RECORD_LAYOUT', 'TEST.RL2', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        '/end',
+        'RECORD_LAYOUT',
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL2',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -57,8 +68,18 @@ void main() {
 
   group('Parse record layouts optional', () {
     test('Parse optional FNC_VALUES', () {
-      prepareTestData(
-          parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'FNC_VALUES', '1', 'SWORD', 'ROW_DIR', 'DIRECT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'FNC_VALUES',
+        '1',
+        'SWORD',
+        'ROW_DIR',
+        'DIRECT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -78,7 +99,15 @@ void main() {
     });
 
     test('Parse optional ALIGNMENT_BYTE', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'ALIGNMENT_BYTE', '11', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'ALIGNMENT_BYTE',
+        '11',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -94,7 +123,15 @@ void main() {
     });
 
     test('Parse optional ALIGNMENT_LONG', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'ALIGNMENT_LONG', '11', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'ALIGNMENT_LONG',
+        '11',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -110,7 +147,15 @@ void main() {
     });
 
     test('Parse optional ALIGNMENT_WORD', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'ALIGNMENT_WORD', '11', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'ALIGNMENT_WORD',
+        '11',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -126,7 +171,15 @@ void main() {
     });
 
     test('Parse optional ALIGNMENT_INT64', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'ALIGNMENT_INT64', '13', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'ALIGNMENT_INT64',
+        '13',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -142,7 +195,15 @@ void main() {
     });
 
     test('Parse optional ALIGNMENT_FLOAT32_IEEE', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'ALIGNMENT_FLOAT32_IEEE', '5', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'ALIGNMENT_FLOAT32_IEEE',
+        '5',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -158,7 +219,15 @@ void main() {
     });
 
     test('Parse optional ALIGNMENT_FLOAT64_IEEE', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'ALIGNMENT_FLOAT64_IEEE', '17', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'ALIGNMENT_FLOAT64_IEEE',
+        '17',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -174,7 +243,15 @@ void main() {
     });
 
     test('Parse optional ALIGNMENT_INT64', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'ALIGNMENT_FLOAT64_IEEE', '7', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'ALIGNMENT_FLOAT64_IEEE',
+        '7',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -190,8 +267,18 @@ void main() {
     });
 
     test('Parse optional AXIS_PTS_X', () {
-      prepareTestData(
-          parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_PTS_X', '7', 'SWORD', 'INDEX_INCR', 'DIRECT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_PTS_X',
+        '7',
+        'SWORD',
+        'INDEX_INCR',
+        'DIRECT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -204,8 +291,18 @@ void main() {
     });
 
     test('Parse optional AXIS_PTS_Y', () {
-      prepareTestData(
-          parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_PTS_Y', '2', 'SLONG', 'INDEX_DECR', 'PLONG', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_PTS_Y',
+        '2',
+        'SLONG',
+        'INDEX_DECR',
+        'PLONG',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -218,8 +315,18 @@ void main() {
     });
 
     test('Parse optional AXIS_PTS_Z', () {
-      prepareTestData(
-          parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_PTS_Z', '2', 'SLONG', 'INDEX_DECR', 'PWORD', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_PTS_Z',
+        '2',
+        'SLONG',
+        'INDEX_DECR',
+        'PWORD',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -232,8 +339,18 @@ void main() {
     });
 
     test('Parse optional AXIS_PTS_4', () {
-      prepareTestData(
-          parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_PTS_4', '2', 'SBYTE', 'INDEX_DECR', 'PBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_PTS_4',
+        '2',
+        'SBYTE',
+        'INDEX_DECR',
+        'PBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -246,8 +363,18 @@ void main() {
     });
 
     test('Parse optional AXIS_PTS_5', () {
-      prepareTestData(
-          parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_PTS_5', '2', 'A_INT64', 'INDEX_DECR', 'PLONG', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_PTS_5',
+        '2',
+        'A_INT64',
+        'INDEX_DECR',
+        'PLONG',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -260,8 +387,19 @@ void main() {
     });
 
     test('Parse optional AXIS_RESCALE_X', () {
-      prepareTestData(parser,
-          ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_RESCALE_X', '3', 'UBYTE', '5', 'INDEX_INCR', 'DIRECT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_RESCALE_X',
+        '3',
+        'UBYTE',
+        '5',
+        'INDEX_INCR',
+        'DIRECT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -275,8 +413,19 @@ void main() {
     });
 
     test('Parse optional AXIS_RESCALE_Y', () {
-      prepareTestData(parser,
-          ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_RESCALE_Y', '3', 'UWORD', '5', 'INDEX_INCR', 'DIRECT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_RESCALE_Y',
+        '3',
+        'UWORD',
+        '5',
+        'INDEX_INCR',
+        'DIRECT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -290,8 +439,19 @@ void main() {
     });
 
     test('Parse optional AXIS_RESCALE_Z', () {
-      prepareTestData(parser,
-          ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_RESCALE_Z', '3', 'ULONG', '5', 'INDEX_INCR', 'DIRECT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_RESCALE_Z',
+        '3',
+        'ULONG',
+        '5',
+        'INDEX_INCR',
+        'DIRECT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -305,8 +465,19 @@ void main() {
     });
 
     test('Parse optional AXIS_RESCALE_4', () {
-      prepareTestData(parser,
-          ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_RESCALE_4', '3', 'A_UINT64', '5', 'INDEX_INCR', 'DIRECT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_RESCALE_4',
+        '3',
+        'A_UINT64',
+        '5',
+        'INDEX_INCR',
+        'DIRECT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -320,8 +491,19 @@ void main() {
     });
 
     test('Parse optional AXIS_RESCALE_5', () {
-      prepareTestData(parser,
-          ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'AXIS_RESCALE_5', '3', 'A_UINT64', '5', 'INDEX_INCR', 'DIRECT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'AXIS_RESCALE_5',
+        '3',
+        'A_UINT64',
+        '5',
+        'INDEX_INCR',
+        'DIRECT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -335,7 +517,16 @@ void main() {
     });
 
     test('Parse optional DIST_OP_X', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'DIST_OP_X', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'DIST_OP_X',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -346,7 +537,16 @@ void main() {
     });
 
     test('Parse optional DIST_OP_Y', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'DIST_OP_Y', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'DIST_OP_Y',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -357,7 +557,16 @@ void main() {
     });
 
     test('Parse optional DIST_OP_Z', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'DIST_OP_Z', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'DIST_OP_Z',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -368,7 +577,16 @@ void main() {
     });
 
     test('Parse optional DIST_OP_4', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'DIST_OP_4', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'DIST_OP_4',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -379,7 +597,16 @@ void main() {
     });
 
     test('Parse optional DIST_OP_5', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'DIST_OP_5', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'DIST_OP_5',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -390,7 +617,15 @@ void main() {
     });
 
     test('Parse optional FIX_NO_AXIS_PTS_X', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'FIX_NO_AXIS_PTS_X', '3', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'FIX_NO_AXIS_PTS_X',
+        '3',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -400,7 +635,15 @@ void main() {
     });
 
     test('Parse optional FIX_NO_AXIS_PTS_Y', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'FIX_NO_AXIS_PTS_Y', '3', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'FIX_NO_AXIS_PTS_Y',
+        '3',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -410,7 +653,15 @@ void main() {
     });
 
     test('Parse optional FIX_NO_AXIS_PTS_Z', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'FIX_NO_AXIS_PTS_Z', '3', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'FIX_NO_AXIS_PTS_Z',
+        '3',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -420,7 +671,15 @@ void main() {
     });
 
     test('Parse optional FIX_NO_AXIS_PTS_4', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'FIX_NO_AXIS_PTS_4', '3', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'FIX_NO_AXIS_PTS_4',
+        '3',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -430,7 +689,15 @@ void main() {
     });
 
     test('Parse optional FIX_NO_AXIS_PTS_5', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'FIX_NO_AXIS_PTS_5', '3', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'FIX_NO_AXIS_PTS_5',
+        '3',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -440,7 +707,16 @@ void main() {
     });
 
     test('Parse optional IDENTIFICATION', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'IDENTIFICATION', '2', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'IDENTIFICATION',
+        '2',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -451,7 +727,16 @@ void main() {
     });
 
     test('Parse optional NO_RESCALE_X', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'NO_RESCALE_X', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'NO_RESCALE_X',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -462,7 +747,16 @@ void main() {
     });
 
     test('Parse optional NO_RESCALE_Y', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'NO_RESCALE_Y', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'NO_RESCALE_Y',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -473,7 +767,16 @@ void main() {
     });
 
     test('Parse optional NO_RESCALE_Z', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'NO_RESCALE_Z', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'NO_RESCALE_Z',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -484,7 +787,16 @@ void main() {
     });
 
     test('Parse optional NO_RESCALE_4', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'NO_RESCALE_4', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'NO_RESCALE_4',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -495,7 +807,16 @@ void main() {
     });
 
     test('Parse optional NO_RESCALE_5', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'NO_RESCALE_5', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'NO_RESCALE_5',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -506,7 +827,16 @@ void main() {
     });
 
     test('Parse optional OFFSET_X', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'OFFSET_X', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'OFFSET_X',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -517,7 +847,16 @@ void main() {
     });
 
     test('Parse optional OFFSET_Y', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'OFFSET_Y', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'OFFSET_Y',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -528,7 +867,16 @@ void main() {
     });
 
     test('Parse optional OFFSET_Z', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'OFFSET_Z', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'OFFSET_Z',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -539,7 +887,16 @@ void main() {
     });
 
     test('Parse optional OFFSET_4', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'OFFSET_4', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'OFFSET_4',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -550,7 +907,16 @@ void main() {
     });
 
     test('Parse optional OFFSET_5', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'OFFSET_5', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'OFFSET_5',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -561,7 +927,16 @@ void main() {
     });
 
     test('Parse optional RIP_ADDR_W', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'RIP_ADDR_W', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'RIP_ADDR_W',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -572,7 +947,16 @@ void main() {
     });
 
     test('Parse optional RIP_ADDR_X', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'RIP_ADDR_X', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'RIP_ADDR_X',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -583,7 +967,16 @@ void main() {
     });
 
     test('Parse optional RIP_ADDR_Y', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'RIP_ADDR_Y', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'RIP_ADDR_Y',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -594,7 +987,16 @@ void main() {
     });
 
     test('Parse optional RIP_ADDR_Z', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'RIP_ADDR_Z', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'RIP_ADDR_Z',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -605,7 +1007,16 @@ void main() {
     });
 
     test('Parse optional RIP_ADDR_4', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'RIP_ADDR_4', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'RIP_ADDR_4',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -616,7 +1027,16 @@ void main() {
     });
 
     test('Parse optional RIP_ADDR_5', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'RIP_ADDR_5', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'RIP_ADDR_5',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -627,7 +1047,16 @@ void main() {
     });
 
     test('Parse optional SRC_ADDR_X', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SRC_ADDR_X', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SRC_ADDR_X',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -638,7 +1067,16 @@ void main() {
     });
 
     test('Parse optional SRC_ADDR_Y', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SRC_ADDR_Y', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SRC_ADDR_Y',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -649,7 +1087,16 @@ void main() {
     });
 
     test('Parse optional SRC_ADDR_Z', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SRC_ADDR_Z', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SRC_ADDR_Z',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -660,7 +1107,16 @@ void main() {
     });
 
     test('Parse optional SRC_ADDR_4', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SRC_ADDR_4', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SRC_ADDR_4',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -671,7 +1127,16 @@ void main() {
     });
 
     test('Parse optional SRC_ADDR_5', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SRC_ADDR_5', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SRC_ADDR_5',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -682,7 +1147,16 @@ void main() {
     });
 
     test('Parse optional SHIFT_OP_X', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SHIFT_OP_X', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SHIFT_OP_X',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -693,7 +1167,16 @@ void main() {
     });
 
     test('Parse optional SHIFT_OP_Y', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SHIFT_OP_Y', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SHIFT_OP_Y',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -704,7 +1187,16 @@ void main() {
     });
 
     test('Parse optional SHIFT_OP_Z', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SHIFT_OP_Z', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SHIFT_OP_Z',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -715,7 +1207,16 @@ void main() {
     });
 
     test('Parse optional SHIFT_OP_4', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SHIFT_OP_4', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SHIFT_OP_4',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -726,7 +1227,16 @@ void main() {
     });
 
     test('Parse optional SHIFT_OP_5', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'SHIFT_OP_5', '3', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'SHIFT_OP_5',
+        '3',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -737,7 +1247,14 @@ void main() {
     });
 
     test('Parse optional STATIC_RECORD_LAYOUT', () {
-      prepareTestData(parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'STATIC_RECORD_LAYOUT', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'STATIC_RECORD_LAYOUT',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;
@@ -747,8 +1264,19 @@ void main() {
     });
 
     test('Parse optional RESERVED', () {
-      prepareTestData(
-          parser, ['/begin', 'RECORD_LAYOUT', 'TEST.RL', 'RESERVED', '1', 'UBYTE', 'RESERVED', '2', 'UBYTE', '/end', 'RECORD_LAYOUT']);
+      prepareTestData(parser, [
+        '/begin',
+        'RECORD_LAYOUT',
+        'TEST.RL',
+        'RESERVED',
+        '1',
+        'UBYTE',
+        'RESERVED',
+        '2',
+        'UBYTE',
+        '/end',
+        'RECORD_LAYOUT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var rls = file.project.modules[0].recordLayouts;

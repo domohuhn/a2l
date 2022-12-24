@@ -84,7 +84,7 @@ class CFunction extends DataContainer {
       }
       rv += indent('/end SUB_FUNCTION', depth + 1);
     }
-    rv += writeListOfBlocks( depth + 1, 'IF_DATA', interfaceData);
+    rv += writeListOfBlocks(depth + 1, 'IF_DATA', interfaceData);
 
     rv += indent('/end FUNCTION\n\n', depth);
     return rv;

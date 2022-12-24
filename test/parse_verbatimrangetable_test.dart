@@ -32,9 +32,11 @@ void main() {
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].computeTables.length, 1);
       expect(file.project.modules[0].computeTables[0].name, 'test_ct');
-      expect(file.project.modules[0].computeTables[0].description, 'This is a test ct');
+      expect(file.project.modules[0].computeTables[0].description,
+          'This is a test ct');
       expect(file.project.modules[0].computeTables[0].table.length, 3);
-      expect(file.project.modules[0].computeTables[0].type, ComputeMethodType.TAB_VERB);
+      expect(file.project.modules[0].computeTables[0].type,
+          ComputeMethodType.TAB_VERB);
       expect(file.project.modules[0].computeTables[0].table[0].x, 1.0);
       expect(file.project.modules[0].computeTables[0].table[1].x, 2.0);
       expect(file.project.modules[0].computeTables[0].table[2].x, 5.0);
@@ -46,9 +48,11 @@ void main() {
       expect(file.project.modules[0].computeTables[0].table[2].isFloat, false);
       expect(file.project.modules[0].computeTables[0].table[0].outString, 'A');
       expect(file.project.modules[0].computeTables[0].table[1].outString, 'BB');
-      expect(file.project.modules[0].computeTables[0].table[2].outString, 'CCC');
+      expect(
+          file.project.modules[0].computeTables[0].table[2].outString, 'CCC');
       expect(file.project.modules[0].computeTables[0].fallbackValue, null);
-      expect(file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
+      expect(
+          file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
     });
 
     test('Parse mandatory mutiple', () {
@@ -86,9 +90,11 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].computeTables[0].name, 'test_ct');
-      expect(file.project.modules[0].computeTables[0].description, 'This is a test ct');
+      expect(file.project.modules[0].computeTables[0].description,
+          'This is a test ct');
       expect(file.project.modules[0].computeTables[0].table.length, 3);
-      expect(file.project.modules[0].computeTables[0].type, ComputeMethodType.TAB_VERB);
+      expect(file.project.modules[0].computeTables[0].type,
+          ComputeMethodType.TAB_VERB);
       expect(file.project.modules[0].computeTables[0].table[0].x, 1.0);
       expect(file.project.modules[0].computeTables[0].table[1].x, 2.0);
       expect(file.project.modules[0].computeTables[0].table[2].x, 5.0);
@@ -100,14 +106,18 @@ void main() {
       expect(file.project.modules[0].computeTables[0].table[2].isFloat, false);
       expect(file.project.modules[0].computeTables[0].table[0].outString, 'A');
       expect(file.project.modules[0].computeTables[0].table[1].outString, 'BB');
-      expect(file.project.modules[0].computeTables[0].table[2].outString, 'CCC');
+      expect(
+          file.project.modules[0].computeTables[0].table[2].outString, 'CCC');
       expect(file.project.modules[0].computeTables[0].fallbackValue, null);
-      expect(file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
+      expect(
+          file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
 
       expect(file.project.modules[0].computeTables[1].name, 'test_ct2');
-      expect(file.project.modules[0].computeTables[1].description, 'This is a test ct2');
+      expect(file.project.modules[0].computeTables[1].description,
+          'This is a test ct2');
       expect(file.project.modules[0].computeTables[1].table.length, 2);
-      expect(file.project.modules[0].computeTables[1].type, ComputeMethodType.TAB_VERB);
+      expect(file.project.modules[0].computeTables[1].type,
+          ComputeMethodType.TAB_VERB);
       expect(file.project.modules[0].computeTables[1].table[0].x, 1.0);
       expect(file.project.modules[0].computeTables[1].table[0].xUp, 5.0);
       expect(file.project.modules[0].computeTables[1].table[0].isFloat, true);
@@ -117,7 +127,8 @@ void main() {
       expect(file.project.modules[0].computeTables[1].table[1].isFloat, true);
       expect(file.project.modules[0].computeTables[1].table[1].outString, 'YY');
       expect(file.project.modules[0].computeTables[1].fallbackValue, null);
-      expect(file.project.modules[0].computeTables[1].fallbackValueNumeric, null);
+      expect(
+          file.project.modules[0].computeTables[1].fallbackValueNumeric, null);
     });
 
     test('Parse optional DEFAULT_VALUE', () {
@@ -145,9 +156,11 @@ void main() {
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].computeTables.length, 1);
       expect(file.project.modules[0].computeTables[0].name, 'test_ct');
-      expect(file.project.modules[0].computeTables[0].description, 'This is a test ct');
+      expect(file.project.modules[0].computeTables[0].description,
+          'This is a test ct');
       expect(file.project.modules[0].computeTables[0].table.length, 3);
-      expect(file.project.modules[0].computeTables[0].type, ComputeMethodType.TAB_VERB);
+      expect(file.project.modules[0].computeTables[0].type,
+          ComputeMethodType.TAB_VERB);
       expect(file.project.modules[0].computeTables[0].table[0].x, 1.0);
       expect(file.project.modules[0].computeTables[0].table[1].x, 2.0);
       expect(file.project.modules[0].computeTables[0].table[2].x, 5.0);
@@ -159,9 +172,11 @@ void main() {
       expect(file.project.modules[0].computeTables[0].table[2].isFloat, false);
       expect(file.project.modules[0].computeTables[0].table[0].outString, 'A');
       expect(file.project.modules[0].computeTables[0].table[1].outString, 'BB');
-      expect(file.project.modules[0].computeTables[0].table[2].outString, 'CCC');
+      expect(
+          file.project.modules[0].computeTables[0].table[2].outString, 'CCC');
       expect(file.project.modules[0].computeTables[0].fallbackValue, 'N/A');
-      expect(file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
+      expect(
+          file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
     });
   });
 }

@@ -10,12 +10,22 @@ void main() {
   var parser = TokenParser();
   group('Parse units', () {
     test('Parse mandatory', () {
-      prepareTestData(parser, ['/begin', 'UNIT', 'test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', '/end', 'UNIT']);
+      prepareTestData(parser, [
+        '/begin',
+        'UNIT',
+        'test_unit',
+        '"This is a test unit"',
+        '"[m]"',
+        'EXTENDED_SI',
+        '/end',
+        'UNIT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
       expect(file.project.modules[0].units[0].name, 'test_unit');
-      expect(file.project.modules[0].units[0].description, 'This is a test unit');
+      expect(
+          file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[0].referencedUnit, null);
@@ -48,23 +58,36 @@ void main() {
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 2);
       expect(file.project.modules[0].units[0].name, 'test_unit');
-      expect(file.project.modules[0].units[0].description, 'This is a test unit');
+      expect(
+          file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[1].name, 'test_unit2');
-      expect(file.project.modules[0].units[1].description, 'This is a test unit2');
+      expect(
+          file.project.modules[0].units[1].description, 'This is a test unit2');
       expect(file.project.modules[0].units[1].display, '[m]2');
       expect(file.project.modules[0].units[1].type, UnitType.DERIVED);
     });
 
     test('Parse optional REF_UNIT', () {
-      prepareTestData(
-          parser, ['/begin', 'UNIT', 'test_unit', '"This is a test unit"', '"[m]"', 'EXTENDED_SI', 'REF_UNIT', 'otherU', '/end', 'UNIT']);
+      prepareTestData(parser, [
+        '/begin',
+        'UNIT',
+        'test_unit',
+        '"This is a test unit"',
+        '"[m]"',
+        'EXTENDED_SI',
+        'REF_UNIT',
+        'otherU',
+        '/end',
+        'UNIT'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
       expect(file.project.modules[0].units[0].name, 'test_unit');
-      expect(file.project.modules[0].units[0].description, 'This is a test unit');
+      expect(
+          file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[0].referencedUnit, 'otherU');
@@ -88,7 +111,8 @@ void main() {
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
       expect(file.project.modules[0].units[0].name, 'test_unit');
-      expect(file.project.modules[0].units[0].description, 'This is a test unit');
+      expect(
+          file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[0].conversionLinearOffset, 2.0);
@@ -118,7 +142,8 @@ void main() {
       expect(file.project.modules.length, 1);
       expect(file.project.modules[0].units.length, 1);
       expect(file.project.modules[0].units[0].name, 'test_unit');
-      expect(file.project.modules[0].units[0].description, 'This is a test unit');
+      expect(
+          file.project.modules[0].units[0].description, 'This is a test unit');
       expect(file.project.modules[0].units[0].display, '[m]');
       expect(file.project.modules[0].units[0].type, UnitType.EXTENDED_SI);
       expect(file.project.modules[0].units[0].exponents!.length, 1);

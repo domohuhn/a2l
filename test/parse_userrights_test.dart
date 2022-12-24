@@ -9,7 +9,8 @@ void main() {
   var parser = TokenParser();
   group('Parse user rights mandatory', () {
     test('one', () {
-      prepareTestData(parser, ['/begin', 'USER_RIGHTS', 'TEST.UR', '/end', 'USER_RIGHTS']);
+      prepareTestData(
+          parser, ['/begin', 'USER_RIGHTS', 'TEST.UR', '/end', 'USER_RIGHTS']);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var ur = file.project.modules[0].userRights;
@@ -20,8 +21,18 @@ void main() {
     });
 
     test('multiple', () {
-      prepareTestData(
-          parser, ['/begin', 'USER_RIGHTS', 'TEST.UR', '/end', 'USER_RIGHTS', '/begin', 'USER_RIGHTS', 'TEST.UR2', '/end', 'USER_RIGHTS']);
+      prepareTestData(parser, [
+        '/begin',
+        'USER_RIGHTS',
+        'TEST.UR',
+        '/end',
+        'USER_RIGHTS',
+        '/begin',
+        'USER_RIGHTS',
+        'TEST.UR2',
+        '/end',
+        'USER_RIGHTS'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var ur = file.project.modules[0].userRights;
@@ -38,7 +49,14 @@ void main() {
 
   group('Parse user rights optional', () {
     test('READ_ONLY', () {
-      prepareTestData(parser, ['/begin', 'USER_RIGHTS', 'TEST.UR', 'READ_ONLY', '/end', 'USER_RIGHTS']);
+      prepareTestData(parser, [
+        '/begin',
+        'USER_RIGHTS',
+        'TEST.UR',
+        'READ_ONLY',
+        '/end',
+        'USER_RIGHTS'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var ur = file.project.modules[0].userRights;
@@ -49,8 +67,20 @@ void main() {
     });
 
     test('REF_GROUP', () {
-      prepareTestData(parser,
-          ['/begin', 'USER_RIGHTS', 'TEST.UR', '/begin', 'REF_GROUP', 'AAA', 'BBB', 'CCC', '/end', 'REF_GROUP', '/end', 'USER_RIGHTS']);
+      prepareTestData(parser, [
+        '/begin',
+        'USER_RIGHTS',
+        'TEST.UR',
+        '/begin',
+        'REF_GROUP',
+        'AAA',
+        'BBB',
+        'CCC',
+        '/end',
+        'REF_GROUP',
+        '/end',
+        'USER_RIGHTS'
+      ]);
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var ur = file.project.modules[0].userRights;

@@ -9,9 +9,10 @@ import 'package:a2l/a2l.dart';
 /// In case no exception occurs, it is a valid a2l file.
 
 void main(List<String> arguments) {
-  if(arguments.length != 1) {
+  if (arguments.length != 1) {
     print('Usage: a2l_linter <path>');
-    print('You must pass the <path> to the A2L file to check as first and only argument!');
+    print(
+        'You must pass the <path> to the A2L file to check as first and only argument!');
     exit(-1);
   }
   try {
@@ -20,8 +21,7 @@ void main(List<String> arguments) {
     print(file.toFileContents());
     print('\n\n=================================\nValid A2L');
     exit(0);
-  }
-  catch (ex) {
+  } catch (ex) {
     print('Error while processing the file "${arguments[0]}"\n\n$ex');
     exit(-1);
   }
