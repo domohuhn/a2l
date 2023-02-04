@@ -28,7 +28,7 @@ class FileLoader {
     } else {
       var prepended = path.trim();
       if (_basePaths.isNotEmpty && _basePaths.last != '.') {
-        prepended = _basePaths.last + '/' + prepended;
+        prepended = '${_basePaths.last}/$prepended';
         _basePaths.add(p.dirname(prepended));
       } else {
         _basePaths.add(p.dirname(prepended));
