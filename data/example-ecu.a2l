@@ -1,0 +1,308 @@
+
+/*********************************************************************************/
+/* This is a simple a2l file to test the parser.                                 */
+/* It describes the data structure in example_header.hpp                         */
+/*********************************************************************************/
+
+ASAP2_VERSION 1 61
+
+/begin PROJECT DH.XCP.SIMPLE
+  "Simple Project to test the parser"
+  /begin HEADER
+    "Project header"
+    VERSION "DH 1.0.0"
+    PROJECT_NO DH2022S
+  /end HEADER
+
+  /begin MODULE DH.XCP.SIM
+    "XCP Simulation module"
+    /begin MOD_COMMON "Common values"
+	  BYTE_ORDER MSB_LAST
+	  ALIGNMENT_INT64 8
+	  ALIGNMENT_FLOAT64_IEEE 8
+	  ALIGNMENT_LONG 4
+	  ALIGNMENT_FLOAT32_IEEE 4
+	  ALIGNMENT_WORD 2
+	  ALIGNMENT_BYTE 1
+	  DEPOSIT ABSOLUTE
+    /end MOD_COMMON
+
+	/begin MOD_PAR "Parameter values"
+	  VERSION "v1.0.0"
+	  CPU_TYPE "AMD Ryzen"
+	  CUSTOMER "No one"
+	  CUSTOMER_NO "12345"
+	  ECU "No ecu"
+	  ECU_CALIBRATION_OFFSET 0
+	  NO_OF_INTERFACES 1
+    /end MOD_PAR
+
+/********************************************************************************************/
+/*  Record layouts                                                                          */
+/********************************************************************************************/
+
+	/begin RECORD_LAYOUT VALUE_UINT8
+	  FNC_VALUES 1 UBYTE ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+
+	/begin RECORD_LAYOUT VALUE_UINT16
+	  FNC_VALUES 1 UWORD ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+	
+	/begin RECORD_LAYOUT VALUE_UINT32
+	  FNC_VALUES 1 ULONG ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+	
+	/begin RECORD_LAYOUT VALUE_UINT64
+	  FNC_VALUES 1 A_UINT64 ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+
+	/begin RECORD_LAYOUT VALUE_INT8
+	  FNC_VALUES 1 SBYTE ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+
+	/begin RECORD_LAYOUT VALUE_INT16
+	  FNC_VALUES 1 SWORD ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+	
+	/begin RECORD_LAYOUT VALUE_INT32
+	  FNC_VALUES 1 SLONG ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+	
+	/begin RECORD_LAYOUT VALUE_INT64
+	  FNC_VALUES 1 A_INT64 ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+	
+	/begin RECORD_LAYOUT VALUE_FLOAT
+	  FNC_VALUES 1 FLOAT32_IEEE ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+	
+	/begin RECORD_LAYOUT VALUE_DOUBLE
+	  FNC_VALUES 1 FLOAT64_IEEE ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+    
+	/begin RECORD_LAYOUT CURVE_FLOAT
+      AXIS_PTS_X 1 FLOAT32_IEEE INDEX_INCR DIRECT
+	  FNC_VALUES 2 FLOAT32_IEEE ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+
+	/begin RECORD_LAYOUT MAP_FLOAT
+      AXIS_PTS_X 1 FLOAT32_IEEE INDEX_INCR DIRECT
+      AXIS_PTS_Y 2 FLOAT32_IEEE INDEX_INCR DIRECT
+	  FNC_VALUES 3 FLOAT32_IEEE ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+    
+	/begin RECORD_LAYOUT CUBOID_FLOAT
+      AXIS_PTS_X 1 FLOAT32_IEEE INDEX_INCR DIRECT
+      AXIS_PTS_Y 2 FLOAT32_IEEE INDEX_INCR DIRECT
+      AXIS_PTS_Z 3 FLOAT32_IEEE INDEX_INCR DIRECT
+	  FNC_VALUES 4 FLOAT32_IEEE ROW_DIR DIRECT
+	/end RECORD_LAYOUT
+
+
+/********************************************************************************************/
+/*  Compute methods                                                                         */
+/********************************************************************************************/
+
+    /begin COMPU_METHOD CONVERSION_IDENTICAL
+	  "Example for a conversion method"
+      IDENTICAL "%9.5" "km/h"
+	/end COMPU_METHOD
+
+    /begin COMPU_METHOD CONVERSION_IDENTICAL2
+	  "Example for a conversion method"
+      IDENTICAL "%9.5" "m/s"
+	/end COMPU_METHOD
+
+    /begin COMPU_METHOD CONVERSION_IDENTICAL3
+	  "Example for a conversion method"
+      IDENTICAL "%9.5" "V"
+	/end COMPU_METHOD
+    
+    /begin COMPU_METHOD CONVERSION_IDENTICAL4
+	  "Example for a conversion method"
+      IDENTICAL "%9.5" "degree"
+	/end COMPU_METHOD
+
+	/begin COMPU_VTAB TABLE_COND
+	  "Example for a conversion table"
+	  TAB_VERB 2
+	  1 "TRUE"
+	  0 "FALSE"
+	/end COMPU_VTAB
+
+	/begin COMPU_METHOD CONVERSION_TABLE
+	  "Example for a conversion method using a table"
+      TAB_VERB "%9.5" "no unit"
+	  COMPU_TAB_REF TABLE_COND
+	/end COMPU_METHOD
+
+/********************************************************************************************/
+/*  Characteristics                                                                         */
+/********************************************************************************************/
+
+    /begin CHARACTERISTIC DataArray
+      "Array of data"
+	  VAL_BLK 0x00000000 VALUE_FLOAT 1000.0 CONVERSION_IDENTICAL 0 200.0
+      NUMBER 5
+	/end CHARACTERISTIC
+
+    /begin CHARACTERISTIC DataCurve
+      "Array of data"
+	  CURVE 0x00000014 CURVE_FLOAT 1000.0 CONVERSION_IDENTICAL3 0 200.0
+      MATRIX_DIM 5 1 1
+      /begin AXIS_DESCR 
+        STD_AXIS MeasureKMH CONVERSION_IDENTICAL 5 0.0 400.0
+      /end AXIS_DESCR
+	/end CHARACTERISTIC
+
+    /begin CHARACTERISTIC DataMap
+      "Map of data"
+	  MAP 0x0000003C MAP_FLOAT 1000.0 CONVERSION_IDENTICAL3 0 200.0
+      MATRIX_DIM 5 5 1
+      /begin AXIS_DESCR
+        STD_AXIS MeasureKMH CONVERSION_IDENTICAL 5 0.0 400.0
+      /end AXIS_DESCR
+      /begin AXIS_DESCR
+        STD_AXIS MeasureMS CONVERSION_IDENTICAL2 5 0.0 400.0
+      /end AXIS_DESCR
+	/end CHARACTERISTIC
+
+    /begin CHARACTERISTIC DataCuboid
+      "Cuboid of data"
+	  CUBOID 0x000000C8 CUBOID_FLOAT 1000.0 CONVERSION_IDENTICAL3 0 200.0
+      MATRIX_DIM 5 5 5
+      /begin AXIS_DESCR
+        STD_AXIS MeasureKMH CONVERSION_IDENTICAL 5 0.0 400.0
+      /end AXIS_DESCR
+      /begin AXIS_DESCR
+        STD_AXIS MeasureAngle CONVERSION_IDENTICAL4 5 0.0 10.0
+      /end AXIS_DESCR
+      /begin AXIS_DESCR
+        STD_AXIS MeasureMS CONVERSION_IDENTICAL2 5 0.0 400.0
+      /end AXIS_DESCR
+	/end CHARACTERISTIC
+
+    /begin MEASUREMENT MeasureKMH
+	  "measurement float in kmh."
+      FLOAT32_IEEE CONVERSION_IDENTICAL 1 1.0 0.0 400.0
+	  ECU_ADDRESS 0x000002F8
+    /end MEASUREMENT
+    
+    /begin MEASUREMENT MeasureAngle
+	  "measurement float in degree."
+      FLOAT32_IEEE CONVERSION_IDENTICAL4 1 1.0 0.0 10.0
+	  ECU_ADDRESS 0x000002FC
+    /end MEASUREMENT
+
+    /begin MEASUREMENT MeasureMS
+	  "measurement float in m/s."
+      FLOAT32_IEEE CONVERSION_IDENTICAL2 1 1.0 0.0 400.0
+	  ECU_ADDRESS 0x00000300
+    /end MEASUREMENT
+
+    /begin CHARACTERISTIC Bitfield1
+	  "Bit 0"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0001
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield2
+	  "Bit 1"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0002
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield3
+	  "Bit 2"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0004
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield4
+	  "Bit 3"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0008
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield5
+	  "Bit 4"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0010
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield6
+	  "Bit 5"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0020
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield7
+	  "Bit 6"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0040
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield8
+	  "Bit 7"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0080
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield9
+	  "Bit 8"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0100
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield10
+	  "Bit 9"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0200
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield11
+	  "Bit 10"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0400
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield12
+	  "Bit 11"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x0800
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield13
+	  "Bit 12"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x1000
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield14
+	  "Bit 13"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x2000
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield15
+	  "Bit 14"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x4000
+	/end CHARACTERISTIC
+
+	/begin CHARACTERISTIC Bitfield16
+	  "Bit 15"
+	  VALUE 0x00000304 VALUE_UINT16 100 CONVERSION_TABLE 0 1
+      BIT_MASK 0x8000
+	/end CHARACTERISTIC
+
+/********************************************************************************************/
+/*  Groups                                                                                  */
+/********************************************************************************************/
+
+
+
+  /end MODULE
+
+/end PROJECT

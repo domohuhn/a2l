@@ -228,7 +228,7 @@ class TokenParser {
           token.keyFound();
           parseRequiredOrderedElements(token.values, end);
           token.count += 1;
-          i += token.values.length;
+          i = i + token.values.length;
           continue;
         }
       }

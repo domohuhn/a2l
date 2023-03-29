@@ -261,9 +261,15 @@ class Characteristic extends MeasurementCharacteristicBase {
         type == CharacteristicType.VAL_BLK) {
       if (number != null && number! > 0) {
         rv += indent('NUMBER $number', depth + 1);
-      } else {
+        if (matrixDim != null) {
+          if ((matrixDim!.x * matrixDim!.y * matrixDim!.z) != number) {
+            throw ValidationError(
+                'A charactristic of type: "$type" must fullfill the invariant: MATRIX_DIM x*y*z = NUMBER! ${matrixDim!.x} * ${matrixDim!.y} * ${matrixDim!.z} != $number');
+          }
+        }
+      } else if (matrixDim == null) {
         throw ValidationError(
-            'A charactristic of type: "$type" needs the property number set to > 0! "$name" has $number');
+            'A charactristic of type: "$type" needs the property NUMBER or MATRIX_DIM set to > 0! "$name" has $number');
       }
     }
     if (stepSize != null) {
