@@ -31,7 +31,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -89,7 +89,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -110,7 +110,7 @@ void main() {
       expect(meas[1].name, 'test_measure2');
       expect(meas[1].description, 'This is a test measurement2');
       expect(meas[1].datatype, Datatype.uint16);
-      expect(meas[1].conversionMethod, 'CM_moo2');
+      expect(meas[1].computeMethod, 'CM_moo2');
       expect(meas[1].resolution, 13);
       expect(meas[1].accuracy, 2.0);
       expect(meas[1].lowerLimit, -32767);
@@ -152,7 +152,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -195,7 +195,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -238,7 +238,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -281,7 +281,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -323,7 +323,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -366,7 +366,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -409,7 +409,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -452,7 +452,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -495,7 +495,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -538,7 +538,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -583,7 +583,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -644,7 +644,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -722,7 +722,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -784,7 +784,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -836,7 +836,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -882,7 +882,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -927,7 +927,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -975,7 +975,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -1029,7 +1029,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -1078,7 +1078,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -1130,7 +1130,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -1181,7 +1181,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);
@@ -1234,7 +1234,7 @@ void main() {
       expect(meas[0].name, 'test_measure');
       expect(meas[0].description, 'This is a test measurement');
       expect(meas[0].datatype, Datatype.int16);
-      expect(meas[0].conversionMethod, 'CM_moo');
+      expect(meas[0].computeMethod, 'CM_moo');
       expect(meas[0].resolution, 12);
       expect(meas[0].accuracy, 1.0);
       expect(meas[0].lowerLimit, -32768);

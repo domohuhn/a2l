@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // See LICENSE for the full text of the license
 
+import 'dart:math';
+
 import 'package:a2l/a2l.dart';
 import 'package:test/test.dart';
 
@@ -8,6 +10,9 @@ void main() {
   group('Roundtrip tests', () {
     test('simple.a2l', () {
       var file = parseA2L(simpleText);
+      var problems = file.validate();
+      problems.forEach(print);
+      expect(problems.length, 0);
       var out = file.toFileContents();
       expect(out, simpleText);
     });
@@ -39,7 +44,7 @@ Groups: 3
 Record layouts: 10
 Frames: 1
 User rights: 1
-Functions: 1
+Functions: 2
 
 ''');
     });
@@ -286,8 +291,8 @@ A2ML_VERSION 1 60
       "Test characteristic map"
       MAP 0x00001234 MAP_DEPOS 100.0 CONVERSION_IDENTICAL 0.0 7000.0
       /begin FUNCTION_LIST
-        FNC1
-        FNC2
+        FUN.1
+        FUN.2
       /end FUNCTION_LIST
       /begin AXIS_DESCR
         STD_AXIS N AXIS_CONV 12 0.0 1350.0
@@ -367,24 +372,45 @@ A2ML_VERSION 1 60
       "text for fun1"
       FUNCTION_VERSION "v1"
       /begin DEF_CHARACTERISTIC
-        CH.1
-        CH.2
+        CHAR_INT8
+        CHAR_INT16
       /end DEF_CHARACTERISTIC
       /begin IN_MEASUREMENT
-        M.1
+        MEAS_ONE
       /end IN_MEASUREMENT
       /begin LOC_MEASUREMENT
-        M.2
+        MEAS_ONE
       /end LOC_MEASUREMENT
       /begin OUT_MEASUREMENT
-        M.3
+        MEAS_ONE
       /end OUT_MEASUREMENT
       /begin REF_CHARACTERISTIC
-        CH.3
+        CHAR_INT32
       /end REF_CHARACTERISTIC
       /begin SUB_FUNCTION
         FUN.2
       /end SUB_FUNCTION
+    /end FUNCTION
+
+    /begin FUNCTION FUN.2
+      "text for fun2"
+      FUNCTION_VERSION "v1"
+      /begin DEF_CHARACTERISTIC
+        CHAR_INT8
+        CHAR_INT16
+      /end DEF_CHARACTERISTIC
+      /begin IN_MEASUREMENT
+        MEAS_ONE
+      /end IN_MEASUREMENT
+      /begin LOC_MEASUREMENT
+        MEAS_ONE
+      /end LOC_MEASUREMENT
+      /begin OUT_MEASUREMENT
+        MEAS_ONE
+      /end OUT_MEASUREMENT
+      /begin REF_CHARACTERISTIC
+        CHAR_INT32
+      /end REF_CHARACTERISTIC
     /end FUNCTION
 
     /begin FRAME frame.1

@@ -196,6 +196,7 @@ class Characteristic extends MeasurementCharacteristicBase {
   // endianess is in base
   CalibrationAccess? calibrationAccess;
   String? comparisionQuantity;
+  // describes the formula and characteristics upon which this characteristic depends on.
   DependentCharacteristics? dependentCharacteristics;
   // discrete is in base
   // displayIdentifier is in base
@@ -233,7 +234,7 @@ class Characteristic extends MeasurementCharacteristicBase {
     var rv = indent('/begin CHARACTERISTIC $name', depth);
     rv += indent('"$description"', depth + 1);
     rv += indent(
-        '${characteristicTypeToString(type)} 0x${address.toRadixString(16).padLeft(8, "0")} $recordLayout $maxDiff $conversionMethod $lowerLimit $upperLimit',
+        '${characteristicTypeToString(type)} 0x${address.toRadixString(16).padLeft(8, "0")} $recordLayout $maxDiff $computeMethod $lowerLimit $upperLimit',
         depth + 1);
     rv += optionalsToFileContents(depth + 1);
     if (calibrationAccess != null) {
@@ -257,20 +258,8 @@ class Characteristic extends MeasurementCharacteristicBase {
       }
       rv += indent('/end MAP_LIST', depth + 1);
     }
-    if (type == CharacteristicType.ASCII ||
-        type == CharacteristicType.VAL_BLK) {
-      if (number != null && number! > 0) {
-        rv += indent('NUMBER $number', depth + 1);
-        if (matrixDim != null) {
-          if ((matrixDim!.x * matrixDim!.y * matrixDim!.z) != number) {
-            throw ValidationError(
-                'A charactristic of type: "$type" must fullfill the invariant: MATRIX_DIM x*y*z = NUMBER! ${matrixDim!.x} * ${matrixDim!.y} * ${matrixDim!.z} != $number');
-          }
-        }
-      } else if (matrixDim == null) {
-        throw ValidationError(
-            'A charactristic of type: "$type" needs the property NUMBER or MATRIX_DIM set to > 0! "$name" has $number');
-      }
+    if (number != null) {
+      rv += indent('NUMBER $number', depth + 1);
     }
     if (stepSize != null) {
       rv += indent('STEP_SIZE $stepSize', depth + 1);
@@ -293,5 +282,25 @@ class Characteristic extends MeasurementCharacteristicBase {
     rv += annotationsToFileContents(depth + 1);
     rv += indent('/end CHARACTERISTIC\n\n', depth);
     return rv;
+  }
+
+  String? validateDimensions() {
+    if (type != CharacteristicType.ASCII &&
+        type != CharacteristicType.VAL_BLK) {
+      return null;
+    }
+    if (validateMatrixDimensions() != null) {
+      return validateMatrixDimensions();
+    }
+    if (number != null) {
+      if (number! < 0) {
+        return 'NUMBER cannot be negative! Got: $number';
+      }
+      if (matrixDim != null &&
+          (matrixDim!.x * matrixDim!.y * matrixDim!.z) != number) {
+        return 'A charactristic of type: "$type" must fullfill the invariant: MATRIX_DIM x*y*z = NUMBER! Got: ${matrixDim!.x} * ${matrixDim!.y} * ${matrixDim!.z} != $number';
+      }
+    }
+    return null;
   }
 }

@@ -368,8 +368,8 @@ class MatrixDim {
 /// Base class for measurements and characteristics.
 class MeasurementCharacteristicBase extends DataContainer {
   // mandatory values
-  /// Reference to the converion method
-  String conversionMethod = '';
+  /// Reference to the conversion method
+  String computeMethod = '';
 
   /// Lower limit of the allowed values
   double lowerLimit = 1.0;
@@ -462,6 +462,21 @@ class MeasurementCharacteristicBase extends DataContainer {
     }
 
     return rv;
+  }
+
+  String? validateMatrixDimensions() {
+    if (matrixDim != null) {
+      if (matrixDim!.x < 0) {
+        return 'MATRIX Dimensions cannot be negative! Got: ${matrixDim!.x}';
+      }
+      if (matrixDim!.y < 0) {
+        return 'MATRIX Dimensions cannot be negative! Got: ${matrixDim!.y}';
+      }
+      if (matrixDim!.z < 0) {
+        return 'MATRIX Dimensions cannot be negative! Got: ${matrixDim!.z}';
+      }
+    }
+    return null;
   }
 }
 

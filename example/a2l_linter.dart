@@ -17,10 +17,16 @@ void main(List<String> arguments) {
   }
   try {
     var file = parseA2LFileSync(arguments[0]);
-    print(file.toString());
-    print(file.toFileContents());
-    print('\n\n=================================\nValid A2L');
-    exit(0);
+    var problems = file.validate();
+    if (problems.isEmpty) {
+      print(file.toString());
+      print(file.toFileContents());
+      print('\n\n=================================\nValid A2L');
+      exit(0);
+    } else {
+      problems.forEach(print);
+      exit(-1);
+    }
   } catch (ex) {
     print('Error while processing the file "${arguments[0]}"\n\n$ex');
     exit(-1);

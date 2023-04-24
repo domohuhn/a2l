@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // See LICENSE for the full text of the license
 
+import 'package:a2l/a2l.dart';
 import 'package:a2l/src/a2l_tree/axis_pts.dart';
 import 'package:a2l/src/a2l_tree/characteristic.dart';
 import 'package:a2l/src/a2l_tree/compute_method.dart';
@@ -163,4 +164,64 @@ class Module {
     rv += indent('/end MODULE\n\n', depth);
     return rv;
   }
+
+  /// Finds a compute method by key or returns null.
+  ComputeMethod? findComputeMethod(String key) {
+    return findByKey(computeMethods, key);
+  }
+
+  /// Finds a characteristic by key or returns null.
+  Characteristic? findCharacteristic(String key) {
+    return findByKey(characteristics, key);
+  }
+
+  /// Finds a measurement by key or returns null.
+  Measurement? findMeasurement(String key) {
+    return findByKey(measurements, key);
+  }
+
+  /// Finds aaxis points by key or returns null.
+  AxisPoints? findAxisPoints(String key) {
+    return findByKey(axisPoints, key);
+  }
+
+  /// Finds a record layout by key or returns null.
+  RecordLayout? findRecordLayout(String key) {
+    return findByKey(recordLayouts, key);
+  }
+
+  /// Finds a function by key or returns null.
+  CFunction? findFunction(String key) {
+    return findByKey(functions, key);
+  }
+
+  /// Finds a group by key or returns null.
+  CFunction? findGroup(String key) {
+    return findByKey(groups, key);
+  }
+
+  /// Finds a unit by key or returns null.
+  Unit? findUnit(String key) {
+    return findByKey(units, key);
+  }
+
+  /// Finds a table by key or returns null.
+  ComputeTableBase? findTable(String key) {
+    return findByKey(computeTables, key);
+  }
+
+  /// Finds a memory segment by key or returns null.
+  MemorySegment? findMemorySegment(String key) {
+    if (parameters != null) {
+      return findByKey(parameters!.memorySegments, key);
+    }
+    return null;
+  }
+}
+
+dynamic findByKey(List<dynamic> data, key) {
+  if (data.any((element) => element.name == key)) {
+    return data.firstWhere((element) => element.name == key);
+  }
+  return null;
 }

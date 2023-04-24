@@ -528,7 +528,7 @@ class TokenParser {
             axis.maxDifferenceFromTable = double.parse(s[0].text);
           }),
           Value('Conversion', ValueType.id, (ValueType t, List<Token> s) {
-            axis.conversionMethod = s[0].text;
+            axis.computeMethod = s[0].text;
           }),
           Value('MaxAxisPoints', ValueType.integer,
               (ValueType t, List<Token> s) {
@@ -2053,8 +2053,8 @@ class TokenParser {
           Value('Datatype', ValueType.text, (ValueType t, List<Token> s) {
             measurement.datatype = dataTypeFromString(s[0]);
           }),
-          Value('Conversion', ValueType.text, (ValueType t, List<Token> s) {
-            measurement.conversionMethod = s[0].text;
+          Value('ComputeMethod', ValueType.text, (ValueType t, List<Token> s) {
+            measurement.computeMethod = s[0].text;
           }),
           Value('Resolution', ValueType.integer, (ValueType t, List<Token> s) {
             measurement.resolution = int.parse(s[0].text);
@@ -2139,8 +2139,8 @@ class TokenParser {
           Value('MaxDiff', ValueType.floating, (ValueType t, List<Token> s) {
             char.maxDiff = double.parse(s[0].text);
           }),
-          Value('Conversion', ValueType.id, (ValueType t, List<Token> s) {
-            char.conversionMethod = s[0].text;
+          Value('ComputeMethod', ValueType.id, (ValueType t, List<Token> s) {
+            char.computeMethod = s[0].text;
           }),
         ]);
         values.addAll(_createSharedValuesMeasurementCharacteristicEnd(char));

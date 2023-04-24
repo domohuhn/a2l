@@ -36,7 +36,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -104,7 +104,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
       expect(chara[0].addressExtension, null);
@@ -134,7 +134,7 @@ void main() {
       expect(chara[1].address, 0xCAFEBABE);
       expect(chara[1].recordLayout, 'RL.MOO2');
       expect(chara[1].maxDiff, 100.25);
-      expect(chara[1].conversionMethod, 'CM_moo2');
+      expect(chara[1].computeMethod, 'CM_moo2');
       expect(chara[1].lowerLimit, -40.5);
       expect(chara[1].upperLimit, 66.5);
       expect(chara[1].addressExtension, null);
@@ -187,7 +187,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -242,7 +242,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -297,7 +297,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -352,7 +352,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -407,7 +407,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -462,7 +462,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -516,7 +516,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -570,7 +570,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -625,7 +625,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -693,7 +693,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -756,7 +756,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -812,7 +812,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -867,7 +867,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -923,7 +923,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -980,7 +980,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1044,7 +1044,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1108,7 +1108,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1174,7 +1174,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1239,7 +1239,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1297,7 +1297,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1355,7 +1355,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1415,7 +1415,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 
@@ -1474,7 +1474,7 @@ void main() {
       expect(chara[0].address, 0xDEADBEEF);
       expect(chara[0].recordLayout, 'RL.MOO');
       expect(chara[0].maxDiff, 110.25);
-      expect(chara[0].conversionMethod, 'CM_moo');
+      expect(chara[0].computeMethod, 'CM_moo');
       expect(chara[0].lowerLimit, -42.5);
       expect(chara[0].upperLimit, 54.5);
 

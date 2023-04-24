@@ -38,7 +38,7 @@ void main() {
       expect(axis[0].inputQuantity, 'InputQty');
       expect(axis[0].recordLayout, 'RL.axis');
       expect(axis[0].maxDifferenceFromTable, 99.0);
-      expect(axis[0].conversionMethod, 'CM.axis');
+      expect(axis[0].computeMethod, 'CM.axis');
       expect(axis[0].maxAxisPoints, 25);
       expect(axis[0].lowerLimit, -110.0);
       expect(axis[0].upperLimit, 200.0);
@@ -103,7 +103,7 @@ void main() {
       expect(axis[0].inputQuantity, 'InputQty');
       expect(axis[0].recordLayout, 'RL.axis');
       expect(axis[0].maxDifferenceFromTable, 99.0);
-      expect(axis[0].conversionMethod, 'CM.axis');
+      expect(axis[0].computeMethod, 'CM.axis');
       expect(axis[0].maxAxisPoints, 25);
       expect(axis[0].lowerLimit, -110.0);
       expect(axis[0].upperLimit, 200.0);
@@ -132,7 +132,7 @@ void main() {
       expect(axis[1].inputQuantity, 'InputQty2');
       expect(axis[1].recordLayout, 'RL.axis2');
       expect(axis[1].maxDifferenceFromTable, 100.0);
-      expect(axis[1].conversionMethod, 'CM.axis2');
+      expect(axis[1].computeMethod, 'CM.axis2');
       expect(axis[1].maxAxisPoints, 26);
       expect(axis[1].lowerLimit, -109.0);
       expect(axis[1].upperLimit, 201.0);

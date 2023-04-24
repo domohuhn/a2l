@@ -257,24 +257,21 @@
       "text for fun1"
       FUNCTION_VERSION "v1"
       /begin DEF_CHARACTERISTIC
-        CH.1
-        CH.2
+        CHAR_INT16
+        CHAR_UINT8
       /end DEF_CHARACTERISTIC
       /begin IN_MEASUREMENT
-        M.1
+        MEAS_ONE
       /end IN_MEASUREMENT
       /begin LOC_MEASUREMENT
-        M.2
+        MEAS_ONE
       /end LOC_MEASUREMENT
       /begin OUT_MEASUREMENT
-        M.3
+        MEAS_ONE
       /end OUT_MEASUREMENT
       /begin REF_CHARACTERISTIC
-        CH.3
+        CHAR_INT32
       /end REF_CHARACTERISTIC
-      /begin SUB_FUNCTION
-        FUN.2
-      /end SUB_FUNCTION
     /end FUNCTION
 
     /begin FRAME frame.1

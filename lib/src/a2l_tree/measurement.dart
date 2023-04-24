@@ -58,7 +58,7 @@ class Measurement extends MeasurementCharacteristicBase {
     var rv = indent('/begin MEASUREMENT $name', depth);
     rv += indent('"$description"', depth + 1);
     rv += indent(
-        '${dataTypeToString(datatype)} $conversionMethod $resolution $accuracy $lowerLimit $upperLimit',
+        '${dataTypeToString(datatype)} $computeMethod $resolution $accuracy $lowerLimit $upperLimit',
         depth + 1);
     rv += optionalsToFileContents(depth + 1);
     if (arraySize != null) {

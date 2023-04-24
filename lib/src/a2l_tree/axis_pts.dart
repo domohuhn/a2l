@@ -26,7 +26,7 @@ class AxisPoints extends DataContainer {
   double maxDifferenceFromTable = 0.0;
 
   /// reference to the conversion method (COMPU_METHOD id)
-  String conversionMethod = '';
+  String computeMethod = '';
 
   /// maximum number of axis points
   int maxAxisPoints = 1;
@@ -93,7 +93,7 @@ class AxisPoints extends DataContainer {
         '0x${address.toRadixString(16).padLeft(8, "0")} $inputQuantity $recordLayout',
         depth + 1);
     rv += indent(
-        '$maxDifferenceFromTable $conversionMethod $maxAxisPoints $lowerLimit $upperLimit',
+        '$maxDifferenceFromTable $computeMethod $maxAxisPoints $lowerLimit $upperLimit',
         depth + 1);
 
     if (!readWrite) {
