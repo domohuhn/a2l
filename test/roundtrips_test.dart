@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // See LICENSE for the full text of the license
 
-import 'dart:math';
-
 import 'package:a2l/a2l.dart';
 import 'package:test/test.dart';
 

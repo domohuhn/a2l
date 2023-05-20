@@ -12,3 +12,4 @@ pubspec.lock
 coverage/
 .vscode
 doc/
+mutation-test-report/

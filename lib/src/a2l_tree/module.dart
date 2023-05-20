@@ -2,21 +2,8 @@
 // See LICENSE for the full text of the license
 
 import 'package:a2l/a2l.dart';
-import 'package:a2l/src/a2l_tree/axis_pts.dart';
-import 'package:a2l/src/a2l_tree/characteristic.dart';
-import 'package:a2l/src/a2l_tree/compute_method.dart';
-import 'package:a2l/src/a2l_tree/compute_table.dart';
-import 'package:a2l/src/a2l_tree/frame.dart';
-import 'package:a2l/src/a2l_tree/function.dart';
-import 'package:a2l/src/a2l_tree/group.dart';
-import 'package:a2l/src/a2l_tree/measurement.dart';
 import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
-import 'package:a2l/src/a2l_tree/unit.dart';
-import 'package:a2l/src/a2l_tree/module_common.dart';
-import 'package:a2l/src/a2l_tree/module_parameters.dart';
-import 'package:a2l/src/a2l_tree/record_layout.dart';
 import 'package:a2l/src/a2l_tree/user_rights.dart';
-import 'package:a2l/src/a2l_tree/variant_coding.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Holds the top level module information.
