@@ -1292,7 +1292,7 @@ class TokenParser {
               [
                 Value('address', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  pars.eepromIdentifiers.add(int.parse(s[0].text));
+                  pars.eepromIdentifierAddress.add(int.parse(s[0].text));
                 })
               ],
               optional: true,

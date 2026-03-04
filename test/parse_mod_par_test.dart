@@ -25,7 +25,7 @@ void main() {
       expect(pars.cpuType, null);
       expect(pars.customer, null);
       expect(pars.customerNumber, null);
-      expect(pars.eepromIdentifiers.length, 0);
+      expect(pars.eepromIdentifierAddress.length, 0);
       expect(pars.epromIdentifier, null);
       expect(pars.numberOfInterfaces, null);
       expect(pars.phoneNumber, null);
@@ -66,8 +66,8 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var pars = file.project.modules[0].parameters!;
-      expect(pars.eepromIdentifiers.length, 1);
-      expect(pars.eepromIdentifiers[0], 0x12345);
+      expect(pars.eepromIdentifierAddress.length, 1);
+      expect(pars.eepromIdentifierAddress[0], 0x12345);
     });
 
     test('CPU_TYPE', () {

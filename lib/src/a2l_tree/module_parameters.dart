@@ -10,7 +10,7 @@ import 'package:a2l/src/utility.dart';
 class SystemConstant {
   String name = '';
 
-  /// value, must either be a number or furmula part
+  /// value, must either be a number or formula part
   String value = '';
 }
 
@@ -52,7 +52,7 @@ class ModuleParameters {
   int? numberOfInterfaces;
 
   String? epromIdentifier;
-  List<int> eepromIdentifiers;
+  List<int> eepromIdentifierAddress;
 
   /// Constants that are used in formulas
   List<SystemConstant> systemConstants;
@@ -67,7 +67,7 @@ class ModuleParameters {
   List<MemorySegment> memorySegments;
 
   ModuleParameters()
-      : eepromIdentifiers = [],
+      : eepromIdentifierAddress = [],
         systemConstants = [],
         calibrationMethods = [],
         memoryLayouts = [],
@@ -96,6 +96,9 @@ class ModuleParameters {
     }
     if (epromIdentifier != null) {
       rv += indent('EPK "$epromIdentifier"', depth + 1);
+    }
+    for (final addr in eepromIdentifierAddress) {
+      rv += indent('ADDR_EPK 0x${addr.toRadixString(16)}', depth + 1);
     }
     if (numberOfInterfaces != null) {
       rv += indent('NO_OF_INTERFACES $numberOfInterfaces', depth + 1);
