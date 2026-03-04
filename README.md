@@ -55,8 +55,8 @@ The file format uses different ways to define data:
  - blocks started via "/begin XXX" followed by mandatory values, followed by optional values identified via names
  - a block must be closed with a matching "/end XXX" statement
 
-Named values are usually optional, while the unamed values are required. A valid file must contain one of "ASAP2_VERSION", a "PROJECT" block with at least one "MODULE". The module contains the relevant data for an ECU.
-The most important blocks inside the module are "CHARACTERISTIC", which describes calibration values/parameters, "MEASUREMENT", "RECORD_LAYOUT" and "COMPU_METHOD" describgin how to convert the internal ECU data to phsyical values.
+Named values are usually optional, while the unnamed values are required. A valid file must contain one of "ASAP2_VERSION", a "PROJECT" block with at least one "MODULE". The module contains the relevant data for an ECU.
+The most important blocks inside the module are "CHARACTERISTIC", which describes calibration values/parameters, "MEASUREMENT", "RECORD_LAYOUT" and "COMPU_METHOD" describing how to convert the internal ECU data to physical values.
 
 See the contents of the data directory in this repository for more examples.
 
@@ -64,7 +64,7 @@ See the contents of the data directory in this repository for more examples.
 
 The library can read ASAP2 files conforming to the standards 1.5 and 1.6, and can write files for standard 1.6.
 However, currently there are some keywords that are only partially supported: A2ML, IF_DATA and FORMULA. The first two use the standardized ASAM MCD-2MC metalanguage
-which descirbes the interface specific data. During parsing, these block are simple passed through into the
+which describes the interface specific data. During parsing, these block are simple passed through into the
 resulting data structure as strings.
 Formulas are currently also not parsed and instead stay as string. See also [the supported keywords page.](SupportedKeywords.md)
 
