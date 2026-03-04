@@ -40,7 +40,7 @@ class AxisPoints extends DataContainer {
   // optional values
   // annotation is in base
   /// byte order of the values
-  ByteOrder? endianess;
+  ByteOrder? endianness;
 
   /// how the values can be accessed
   CalibrationAccess? calibrationAccess;
@@ -105,8 +105,8 @@ class AxisPoints extends DataContainer {
     if (monotony != null) {
       rv += indent('MONOTONY ${monotonyToString(monotony!)}', depth + 1);
     }
-    if (endianess != null) {
-      rv += indent('BYTE_ORDER ${byteOrderToString(endianess!)}', depth + 1);
+    if (endianness != null) {
+      rv += indent('BYTE_ORDER ${byteOrderToString(endianness!)}', depth + 1);
     }
     if (displayIdentifier != null) {
       rv += indent('DISPLAY_IDENTIFIER $displayIdentifier', depth + 1);
@@ -155,7 +155,7 @@ class AxisPoints extends DataContainer {
   }
 }
 
-/// Describes the monoty requirements for an axis.
+/// Describes the monotony requirements for an axis.
 enum Monotony {
   /// subsequent values are decreasing or equal to the previous one
   decreasing,
@@ -218,7 +218,5 @@ String monotonyToString(Monotony t) {
       return 'STRICT_MON';
     case Monotony.not_monotonous:
       return 'NOT_MON';
-    default:
-      throw ValidationError('Unknown monotony for axis $t');
   }
 }

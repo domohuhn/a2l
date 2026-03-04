@@ -21,13 +21,13 @@ void main() {
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
       expect(common.description, 'Description of common module data');
-      expect(common.aligmentFloat32, null);
-      expect(common.aligmentFloat64, null);
-      expect(common.aligmentInt8, null);
-      expect(common.aligmentInt16, null);
-      expect(common.aligmentInt32, null);
-      expect(common.aligmentInt64, null);
-      expect(common.endianess, null);
+      expect(common.alignmentFloat32, null);
+      expect(common.alignmentFloat64, null);
+      expect(common.alignmentInt8, null);
+      expect(common.alignmentInt16, null);
+      expect(common.alignmentInt32, null);
+      expect(common.alignmentInt64, null);
+      expect(common.endianness, null);
       expect(common.dataSize, null);
       expect(common.standardDeposit, null);
       expect(common.standardRecordLayout, null);
@@ -64,12 +64,12 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.aligmentFloat32, null);
-      expect(common.aligmentFloat64, null);
-      expect(common.aligmentInt8, 11);
-      expect(common.aligmentInt16, null);
-      expect(common.aligmentInt32, null);
-      expect(common.aligmentInt64, null);
+      expect(common.alignmentFloat32, null);
+      expect(common.alignmentFloat64, null);
+      expect(common.alignmentInt8, 11);
+      expect(common.alignmentInt16, null);
+      expect(common.alignmentInt32, null);
+      expect(common.alignmentInt64, null);
     });
 
     test('ALIGNMENT_LONG', () {
@@ -85,12 +85,12 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.aligmentFloat32, null);
-      expect(common.aligmentFloat64, null);
-      expect(common.aligmentInt8, null);
-      expect(common.aligmentInt16, null);
-      expect(common.aligmentInt32, 11);
-      expect(common.aligmentInt64, null);
+      expect(common.alignmentFloat32, null);
+      expect(common.alignmentFloat64, null);
+      expect(common.alignmentInt8, null);
+      expect(common.alignmentInt16, null);
+      expect(common.alignmentInt32, 11);
+      expect(common.alignmentInt64, null);
     });
 
     test('ALIGNMENT_WORD', () {
@@ -106,12 +106,12 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.aligmentFloat32, null);
-      expect(common.aligmentFloat64, null);
-      expect(common.aligmentInt8, null);
-      expect(common.aligmentInt16, 11);
-      expect(common.aligmentInt32, null);
-      expect(common.aligmentInt64, null);
+      expect(common.alignmentFloat32, null);
+      expect(common.alignmentFloat64, null);
+      expect(common.alignmentInt8, null);
+      expect(common.alignmentInt16, 11);
+      expect(common.alignmentInt32, null);
+      expect(common.alignmentInt64, null);
     });
 
     test('ALIGNMENT_INT64', () {
@@ -127,12 +127,12 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.aligmentFloat32, null);
-      expect(common.aligmentFloat64, null);
-      expect(common.aligmentInt8, null);
-      expect(common.aligmentInt16, null);
-      expect(common.aligmentInt32, null);
-      expect(common.aligmentInt64, 13);
+      expect(common.alignmentFloat32, null);
+      expect(common.alignmentFloat64, null);
+      expect(common.alignmentInt8, null);
+      expect(common.alignmentInt16, null);
+      expect(common.alignmentInt32, null);
+      expect(common.alignmentInt64, 13);
     });
 
     test('ALIGNMENT_FLOAT32_IEEE', () {
@@ -148,12 +148,12 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.aligmentFloat32, 5);
-      expect(common.aligmentFloat64, null);
-      expect(common.aligmentInt8, null);
-      expect(common.aligmentInt16, null);
-      expect(common.aligmentInt32, null);
-      expect(common.aligmentInt64, null);
+      expect(common.alignmentFloat32, 5);
+      expect(common.alignmentFloat64, null);
+      expect(common.alignmentInt8, null);
+      expect(common.alignmentInt16, null);
+      expect(common.alignmentInt32, null);
+      expect(common.alignmentInt64, null);
     });
 
     test('ALIGNMENT_FLOAT64_IEEE', () {
@@ -169,12 +169,12 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.aligmentFloat32, null);
-      expect(common.aligmentFloat64, 8);
-      expect(common.aligmentInt8, null);
-      expect(common.aligmentInt16, null);
-      expect(common.aligmentInt32, null);
-      expect(common.aligmentInt64, null);
+      expect(common.alignmentFloat32, null);
+      expect(common.alignmentFloat64, 8);
+      expect(common.alignmentInt8, null);
+      expect(common.alignmentInt16, null);
+      expect(common.alignmentInt32, null);
+      expect(common.alignmentInt64, null);
     });
 
     test('ALIGNMENT_INT64', () {
@@ -190,13 +190,13 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.aligmentFloat32, null);
-      expect(common.aligmentFloat64, 7);
-      expect(common.aligmentInt8, null);
-      expect(common.aligmentInt16, null);
-      expect(common.aligmentInt32, null);
-      expect(common.aligmentInt64, null);
-      expect(common.endianess, null);
+      expect(common.alignmentFloat32, null);
+      expect(common.alignmentFloat64, 7);
+      expect(common.alignmentInt8, null);
+      expect(common.alignmentInt16, null);
+      expect(common.alignmentInt32, null);
+      expect(common.alignmentInt64, null);
+      expect(common.endianness, null);
     });
 
     test('BYTE_ORDER', () {
@@ -212,7 +212,7 @@ void main() {
       var file = parser.parse();
       expect(file.project.modules.length, 1);
       var common = file.project.modules[0].common!;
-      expect(common.endianess, ByteOrder.MSB_FIRST);
+      expect(common.endianness, ByteOrder.MSB_FIRST);
     });
 
     test('DATA_SIZE', () {

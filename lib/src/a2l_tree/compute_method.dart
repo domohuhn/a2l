@@ -58,12 +58,10 @@ String computeMethodTypeToSting(ComputeMethodType s) {
       return 'TAB_NOINTP';
     case ComputeMethodType.TAB_VERB:
       return 'TAB_VERB';
-    default:
-      throw ValidationError('Unknown Compute Method Type');
   }
 }
 
-/// The expection thrown when an error happens during the converions.
+/// The exception thrown when an error happens during the conversions.
 class ComputeException implements Exception {
   /// Cause of the error.
   String cause;
@@ -105,7 +103,7 @@ class ComputeMethod {
       case ComputeMethodType.IDENTICAL:
         return input.toDouble();
       case ComputeMethodType.FORM:
-        throw ComputeException('$type is not imlemented for "$name"!');
+        throw ComputeException('$type is not implemented for "$name"!');
       case ComputeMethodType.LINEAR:
         if (coefficientA == null || coefficientB == null) {
           throw ComputeException(
@@ -134,11 +132,11 @@ class ComputeMethod {
           return C;
         }
       case ComputeMethodType.TAB_INTP:
-        throw ComputeException('$type is not imlemented for "$name"!');
+        throw ComputeException('$type is not implemented for "$name"!');
       case ComputeMethodType.TAB_NOINTP:
-        throw ComputeException('$type is not imlemented for "$name"!');
+        throw ComputeException('$type is not implemented for "$name"!');
       case ComputeMethodType.TAB_VERB:
-        throw ComputeException('$type is not imlemented for "$name"!');
+        throw ComputeException('$type is not implemented for "$name"!');
     }
   }
 
@@ -147,7 +145,7 @@ class ComputeMethod {
       case ComputeMethodType.IDENTICAL:
         return BigInt.from(input.toInt());
       case ComputeMethodType.FORM:
-        throw ComputeException('$type is not imlemented for "$name"!');
+        throw ComputeException('$type is not implemented for "$name"!');
       case ComputeMethodType.LINEAR:
         if (coefficientA == null || coefficientB == null) {
           throw ComputeException(
@@ -171,11 +169,11 @@ class ComputeMethod {
                 coefficientE! * input +
                 coefficientF!));
       case ComputeMethodType.TAB_INTP:
-        throw ComputeException('$type is not imlemented!');
+        throw ComputeException('$type is not implemented!');
       case ComputeMethodType.TAB_NOINTP:
-        throw ComputeException('$type is not imlemented!');
+        throw ComputeException('$type is not implemented!');
       case ComputeMethodType.TAB_VERB:
-        throw ComputeException('$type is not imlemented!');
+        throw ComputeException('$type is not implemented!');
     }
   }
 

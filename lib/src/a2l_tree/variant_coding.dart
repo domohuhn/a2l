@@ -27,8 +27,6 @@ String variantNamingToString(VariantNaming s) {
       return 'ALPHA';
     case VariantNaming.NUMERIC:
       return 'NUMERIC';
-    default:
-      throw ValidationError('Unknown VariantNaming scheme $s');
   }
 }
 
@@ -45,15 +43,15 @@ class NameValuePair {
 
 /// Forbidden combination of variants
 class ForbiddenCombination {
-  ForbiddenCombination() : comibination = [];
+  ForbiddenCombination() : combination = [];
 
   /// the list of forbidden combinations
-  List<NameValuePair> comibination;
+  List<NameValuePair> combination;
 
   /// Converts the object to an a2l string with the given indentation [depth].
   String toFileContents(int depth) {
     var rv = indent('/begin VAR_FORBIDDEN_COMB', depth);
-    for (final comb in comibination) {
+    for (final comb in combination) {
       rv += indent('${comb.name} ${comb.value}', depth + 1);
     }
     rv += indent('/end VAR_FORBIDDEN_COMB', depth);
@@ -91,14 +89,14 @@ class VariantEnumeration {
     if (measurement != null) {
       if (measurement!.isEmpty || measurement!.contains(' ')) {
         throw ValidationError(
-            'Identifiers must not be empty or conatin spaces! VAR_MEASUREMENT "$measurement" in VariantEnumeration $name');
+            'Identifiers must not be empty or contain spaces! VAR_MEASUREMENT "$measurement" in VariantEnumeration $name');
       }
       rv += indent('VAR_MEASUREMENT $measurement', depth + 1);
     }
     if (characteristic != null) {
       if (characteristic!.isEmpty || characteristic!.contains(' ')) {
         throw ValidationError(
-            'Identifiers must not be empty or conatin spaces! VAR_SELECTION_CHARACTERISTIC "$measurement" in VariantEnumeration $name');
+            'Identifiers must not be empty or contain spaces! VAR_SELECTION_CHARACTERISTIC "$measurement" in VariantEnumeration $name');
       }
       rv += indent('VAR_SELECTION_CHARACTERISTIC $characteristic', depth + 1);
     }
@@ -115,7 +113,7 @@ class VariantCharacteristic {
       : enumerations = [],
         address = [];
 
-  /// name of the caracteristic
+  /// name of the characteristic
   String name = '';
 
   /// the relevant enumerations and the index order.
@@ -146,7 +144,7 @@ class VariantCharacteristic {
 /// Represents adjustable objects that change their addresses depending on the coded variant.
 /// The class also describes how the addresses of the objects change depending on the variants.
 ///
-/// Variant combinations are counted by incrementing the enum mentionted last in the characteristic first.
+/// Variant combinations are counted by incrementing the enum mentioned last in the characteristic first.
 /// E.g. Enums A, B, C. Characteristic uses C B A in document order. Then var address will be indexed via:
 /// final index = index(A) + count(A)*index(B) + count(A)*count(B)*index(C)
 /// However, forbidden combinations are omitted in the address list.
@@ -157,7 +155,7 @@ class VariantCoding {
         characteristics = [];
 
   // optional
-  /// if variants are referenced numcerically or alphabetically
+  /// if variants are referenced numerically or alphabetically
   VariantNaming namingScheme = VariantNaming.NUMERIC;
 
   /// separator between characteristics and the variant index

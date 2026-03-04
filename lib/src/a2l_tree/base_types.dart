@@ -98,8 +98,6 @@ String dataTypeToString(Datatype s) {
       return 'FLOAT32_IEEE';
     case Datatype.float64:
       return 'FLOAT64_IEEE';
-    default:
-      throw ValidationError('Unknown data type');
   }
 }
 
@@ -131,8 +129,6 @@ String byteOrderToString(ByteOrder b) {
       return 'MSB_LAST';
     case ByteOrder.MSB_FIRST:
       return 'MSB_FIRST';
-    default:
-      throw ValidationError('Unknown byte order');
   }
 }
 
@@ -176,8 +172,6 @@ String indexModeToString(IndexMode s) {
       return 'COLUMN_DIR';
     case IndexMode.ROW_DIR:
       return 'ROW_DIR';
-    default:
-      throw ValidationError('Unknown index mode');
   }
 }
 
@@ -246,7 +240,7 @@ enum MaxRefreshUnit {
   event_frame,
 
   /// complex trigger condition
-  event_newvalue,
+  event_newValue,
   non_deterministic
 }
 
@@ -286,7 +280,7 @@ MaxRefreshUnit maxRefreshUnitFromString(Token s) {
     case '998':
       return MaxRefreshUnit.event_frame;
     case '999':
-      return MaxRefreshUnit.event_newvalue;
+      return MaxRefreshUnit.event_newValue;
     case '1000':
       return MaxRefreshUnit.non_deterministic;
     default:
@@ -329,12 +323,10 @@ String maxRefreshUnitToString(MaxRefreshUnit s) {
       return '103';
     case MaxRefreshUnit.event_frame:
       return '998';
-    case MaxRefreshUnit.event_newvalue:
+    case MaxRefreshUnit.event_newValue:
       return '999';
     case MaxRefreshUnit.non_deterministic:
       return '1000';
-    default:
-      throw ValidationError('Unknown ScalingUnit $s');
   }
 }
 
@@ -380,7 +372,7 @@ class MeasurementCharacteristicBase extends DataContainer {
   // optional values
 
   int? bitMask;
-  ByteOrder? endianess;
+  ByteOrder? endianness;
   bool discrete = false;
 
   /// How the value is displayed. Must not be unique.
@@ -423,8 +415,8 @@ class MeasurementCharacteristicBase extends DataContainer {
       rv += indent(
           'BIT_MASK 0x${bitMask!.toRadixString(16).padLeft(8, "0")}', depth);
     }
-    if (endianess != null) {
-      rv += indent('BYTE_ORDER ${byteOrderToString(endianess!)}', depth);
+    if (endianness != null) {
+      rv += indent('BYTE_ORDER ${byteOrderToString(endianness!)}', depth);
     }
     if (discrete) {
       rv += indent('DISCRETE', depth);
@@ -522,12 +514,10 @@ String addressTypeToString(AddressType s) {
       return 'PLONG';
     case AddressType.DIRECT:
       return 'DIRECT';
-    default:
-      throw ValidationError('Unknown address type $s');
   }
 }
 
-/// Deposite mode for axis
+/// Deposit mode for axis
 enum Deposit {
   /// absolute value is stored
   ABSOLUTE,
@@ -555,7 +545,5 @@ String depositToString(Deposit s) {
       return 'ABSOLUTE';
     case Deposit.DIFFERENCE:
       return 'DIFFERENCE';
-    default:
-      throw ValidationError('Unknown deposit type');
   }
 }

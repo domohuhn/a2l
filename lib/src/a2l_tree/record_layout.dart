@@ -63,8 +63,6 @@ String indexOrderToString(IndexOrder s) {
       return 'INDEX_INCR';
     case IndexOrder.INDEX_DECR:
       return 'INDEX_DECR';
-    default:
-      throw ValidationError('Unknown IndexOrder');
   }
 }
 
@@ -111,12 +109,12 @@ class RecordLayout {
   String name = '';
 
   // optional
-  int? aligmentInt8;
-  int? aligmentInt16;
-  int? aligmentInt32;
-  int? aligmentInt64;
-  int? aligmentFloat32;
-  int? aligmentFloat64;
+  int? alignmentInt8;
+  int? alignmentInt16;
+  int? alignmentInt32;
+  int? alignmentInt64;
+  int? alignmentFloat32;
+  int? alignmentFloat64;
   LayoutData? values;
 
   // AXIS_PTS_X/Y/Z/4/5
@@ -203,23 +201,23 @@ class RecordLayout {
 
   String toFileContents(int depth) {
     var rv = indent('/begin RECORD_LAYOUT $name', depth);
-    if (aligmentInt8 != null) {
-      rv += indent('ALIGNMENT_BYTE $aligmentInt8', depth + 1);
+    if (alignmentInt8 != null) {
+      rv += indent('ALIGNMENT_BYTE $alignmentInt8', depth + 1);
     }
-    if (aligmentInt16 != null) {
-      rv += indent('ALIGNMENT_WORD $aligmentInt16', depth + 1);
+    if (alignmentInt16 != null) {
+      rv += indent('ALIGNMENT_WORD $alignmentInt16', depth + 1);
     }
-    if (aligmentInt32 != null) {
-      rv += indent('ALIGNMENT_LONG $aligmentInt32', depth + 1);
+    if (alignmentInt32 != null) {
+      rv += indent('ALIGNMENT_LONG $alignmentInt32', depth + 1);
     }
-    if (aligmentInt64 != null) {
-      rv += indent('ALIGNMENT_INT64 $aligmentInt64', depth + 1);
+    if (alignmentInt64 != null) {
+      rv += indent('ALIGNMENT_INT64 $alignmentInt64', depth + 1);
     }
-    if (aligmentFloat32 != null) {
-      rv += indent('ALIGNMENT_FLOAT32_IEEE $aligmentFloat32', depth + 1);
+    if (alignmentFloat32 != null) {
+      rv += indent('ALIGNMENT_FLOAT32_IEEE $alignmentFloat32', depth + 1);
     }
-    if (aligmentFloat64 != null) {
-      rv += indent('ALIGNMENT_FLOAT64_IEEE $aligmentFloat64', depth + 1);
+    if (alignmentFloat64 != null) {
+      rv += indent('ALIGNMENT_FLOAT64_IEEE $alignmentFloat64', depth + 1);
     }
     if (values != null) {
       rv += indent('FNC_VALUES ${values!.toFileContents()}', depth + 1);

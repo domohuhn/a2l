@@ -11,25 +11,25 @@ class ModuleCommon {
 
   // optional
   /// alignment for 8 bit wide values (int and uint)
-  int? aligmentInt8;
+  int? alignmentInt8;
 
   /// alignment for 16 bit wide values (int and uint)
-  int? aligmentInt16;
+  int? alignmentInt16;
 
   /// alignment for 32 bit wide values (int and uint)
-  int? aligmentInt32;
+  int? alignmentInt32;
 
   /// alignment for 64 bit wide values (int and uint)
-  int? aligmentInt64;
+  int? alignmentInt64;
 
   /// alignment for 32 bit wide floats
-  int? aligmentFloat32;
+  int? alignmentFloat32;
 
   /// alignment for 64 bit wide floats
-  int? aligmentFloat64;
+  int? alignmentFloat64;
 
-  /// endianess of the ecu
-  ByteOrder? endianess;
+  /// endianness of the ecu
+  ByteOrder? endianness;
   int? dataSize;
 
   Deposit? standardDeposit;
@@ -39,26 +39,26 @@ class ModuleCommon {
   String toFileContents(int depth) {
     var rv = indent('/begin MOD_COMMON', depth);
     rv += indent('"$description"', depth + 1);
-    if (aligmentInt8 != null) {
-      rv += indent('ALIGNMENT_BYTE $aligmentInt8', depth + 1);
+    if (alignmentInt8 != null) {
+      rv += indent('ALIGNMENT_BYTE $alignmentInt8', depth + 1);
     }
-    if (aligmentInt16 != null) {
-      rv += indent('ALIGNMENT_WORD $aligmentInt16', depth + 1);
+    if (alignmentInt16 != null) {
+      rv += indent('ALIGNMENT_WORD $alignmentInt16', depth + 1);
     }
-    if (aligmentInt32 != null) {
-      rv += indent('ALIGNMENT_LONG $aligmentInt32', depth + 1);
+    if (alignmentInt32 != null) {
+      rv += indent('ALIGNMENT_LONG $alignmentInt32', depth + 1);
     }
-    if (aligmentInt64 != null) {
-      rv += indent('ALIGNMENT_INT64 $aligmentInt64', depth + 1);
+    if (alignmentInt64 != null) {
+      rv += indent('ALIGNMENT_INT64 $alignmentInt64', depth + 1);
     }
-    if (aligmentFloat32 != null) {
-      rv += indent('ALIGNMENT_FLOAT32_IEEE $aligmentFloat32', depth + 1);
+    if (alignmentFloat32 != null) {
+      rv += indent('ALIGNMENT_FLOAT32_IEEE $alignmentFloat32', depth + 1);
     }
-    if (aligmentFloat64 != null) {
-      rv += indent('ALIGNMENT_FLOAT64_IEEE $aligmentFloat64', depth + 1);
+    if (alignmentFloat64 != null) {
+      rv += indent('ALIGNMENT_FLOAT64_IEEE $alignmentFloat64', depth + 1);
     }
-    if (endianess != null) {
-      rv += indent('BYTE_ORDER ${byteOrderToString(endianess!)}', depth + 1);
+    if (endianness != null) {
+      rv += indent('BYTE_ORDER ${byteOrderToString(endianness!)}', depth + 1);
     }
     if (dataSize != null) {
       rv += indent('DATA_SIZE $dataSize', depth + 1);

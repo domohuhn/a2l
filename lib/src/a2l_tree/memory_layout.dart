@@ -11,7 +11,7 @@ enum MemoryLayoutType {
   /// Program code
   PRG_CODE,
 
-  /// data segement
+  /// data segment
   PRG_DATA,
 
   /// something else
@@ -41,8 +41,6 @@ String memoryLayoutTypeToString(MemoryLayoutType e) {
       return 'PRG_DATA';
     case MemoryLayoutType.PRG_RESERVED:
       return 'PRG_RESERVED';
-    default:
-      throw ValidationError('Unknown program type $e');
   }
 }
 

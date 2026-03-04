@@ -39,7 +39,7 @@ class AxisDescription extends AnnotationContainer {
   String? axisPoints;
 
   /// byte order of the values (a2l key: BYTE_ORDER)
-  ByteOrder? endianess;
+  ByteOrder? endianness;
 
   /// reference to an AXIS_PTS description if type is CURVE_AXIS. (a2l key: CURVE_AXIS_REF)
   String? rescaleAxisPoints;
@@ -99,8 +99,8 @@ class AxisDescription extends AnnotationContainer {
     if (maxGradient != null) {
       rv += indent('MAX_GRAD $maxGradient', depth + 1);
     }
-    if (endianess != null) {
-      rv += indent('BYTE_ORDER ${byteOrderToString(endianess!)}', depth + 1);
+    if (endianness != null) {
+      rv += indent('BYTE_ORDER ${byteOrderToString(endianness!)}', depth + 1);
     }
     if (format != null && format!.isNotEmpty) {
       rv += indent('FORMAT "$format"', depth + 1);
@@ -156,7 +156,7 @@ class FixedAxisPoints {
   /// Serves as offset in the linear function.
   int p0 = 0;
 
-  /// Serves as distance between points. De-/Serialiazed differently for the different keys.
+  /// Serves as distance between points. De-/Serialized differently for the different keys.
   int p1 = 0;
 
   /// The number of points on the axis.
@@ -231,7 +231,5 @@ String axisTypeToString(AxisType t) {
       return 'RES_AXIS';
     case AxisType.standard:
       return 'STD_AXIS';
-    default:
-      throw ValidationError('Unknown axis type $t');
   }
 }

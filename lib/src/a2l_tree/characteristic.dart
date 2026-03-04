@@ -78,8 +78,6 @@ String characteristicTypeToString(CharacteristicType s) {
       return 'VAL_BLK';
     case CharacteristicType.VALUE:
       return 'VALUE';
-    default:
-      throw ValidationError('Unknown Characteristic Type $s');
   }
 }
 
@@ -125,8 +123,6 @@ String calibrationAccessToString(CalibrationAccess s) {
       return 'NOT_IN_MCD_SYSTEM';
     case CalibrationAccess.OFFLINE_CALIBRATION:
       return 'OFFLINE_CALIBRATION';
-    default:
-      throw ValidationError('Unknown Calibration Access $s');
   }
 }
 
@@ -179,7 +175,7 @@ class DependentCharacteristics {
 ///   - VALUE: a single value located at the [address].
 class Characteristic extends MeasurementCharacteristicBase {
   // name is in base
-  // desciption is in base
+  // description is in base
   CharacteristicType type = CharacteristicType.VALUE;
   int address = 0;
   String recordLayout = '';
@@ -193,9 +189,9 @@ class Characteristic extends MeasurementCharacteristicBase {
   // Description of the axis in order x,y,z,4,5 (a2l key: AXIS_DESCR)
   List<AxisDescription> axisDescription;
   // bitMask  is in base
-  // endianess is in base
+  // endianness is in base
   CalibrationAccess? calibrationAccess;
-  String? comparisionQuantity;
+  String? comparisonQuantity;
   // describes the formula and characteristics upon which this characteristic depends on.
   DependentCharacteristics? dependentCharacteristics;
   // discrete is in base
@@ -242,8 +238,8 @@ class Characteristic extends MeasurementCharacteristicBase {
           'CALIBRATION_ACCESS ${calibrationAccessToString(calibrationAccess!)}',
           depth + 1);
     }
-    if (comparisionQuantity != null) {
-      rv += indent('COMPARISON_QUANTITY $comparisionQuantity', depth + 1);
+    if (comparisonQuantity != null) {
+      rv += indent('COMPARISON_QUANTITY $comparisonQuantity', depth + 1);
     }
     if (extendedLimits != null) {
       rv += extendedLimits!.toFileContents(depth + 1);
@@ -298,7 +294,7 @@ class Characteristic extends MeasurementCharacteristicBase {
       }
       if (matrixDim != null &&
           (matrixDim!.x * matrixDim!.y * matrixDim!.z) != number) {
-        return 'A charactristic of type: "$type" must fullfill the invariant: MATRIX_DIM x*y*z = NUMBER! Got: ${matrixDim!.x} * ${matrixDim!.y} * ${matrixDim!.z} != $number';
+        return 'A characteristic of type: "$type" must fulfill the invariant: MATRIX_DIM x*y*z = NUMBER! Got: ${matrixDim!.x} * ${matrixDim!.y} * ${matrixDim!.z} != $number';
       }
     }
     return null;

@@ -18,7 +18,7 @@
 /// Both of these methods may throw exceptions if errors occur. This may happen during parsing
 /// for a wrong syntax in the file. Another possibility is that while creating the output some
 /// requirements to create a correct A2L file were not met (e.g. illegal combinations of options).
-library a2l;
+library;
 
 export 'package:a2l/src/a2l_parser.dart';
 export 'package:a2l/src/preprocessor.dart';

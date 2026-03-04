@@ -42,7 +42,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -100,7 +100,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -120,7 +120,7 @@ void main() {
       expect(meas[1].arraySize, null);
       expect(meas[1].bitMask, null);
       expect(meas[1].displayIdentifier, null);
-      expect(meas[1].endianess, null);
+      expect(meas[1].endianness, null);
       expect(meas[1].errorMask, null);
       expect(meas[1].format, null);
       expect(meas[1].layout, null);
@@ -163,7 +163,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -206,7 +206,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -249,7 +249,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -291,7 +291,7 @@ void main() {
       expect(meas[0].arraySize, null);
       expect(meas[0].bitMask, 0xFFFFFFFF);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -334,7 +334,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, ByteOrder.MSB_LAST);
+      expect(meas[0].endianness, ByteOrder.MSB_LAST);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -377,7 +377,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, 0xFFFFFFFF);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -420,7 +420,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, '%9.4');
       expect(meas[0].layout, null);
@@ -463,7 +463,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, IndexMode.COLUMN_DIR);
@@ -506,7 +506,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -549,7 +549,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -594,7 +594,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -655,7 +655,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -733,7 +733,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -795,7 +795,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -847,7 +847,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -893,7 +893,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -938,7 +938,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -989,7 +989,7 @@ void main() {
       expect(meas[0].bitOperation!.rightShift, null);
       expect(meas[0].bitOperation!.signExtend, false);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -1043,7 +1043,7 @@ void main() {
       expect(meas[0].bitOperation!.rightShift, 9);
       expect(meas[0].bitOperation!.signExtend, true);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -1089,7 +1089,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -1141,7 +1141,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -1192,7 +1192,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);
@@ -1245,7 +1245,7 @@ void main() {
       expect(meas[0].bitMask, null);
       expect(meas[0].bitOperation, null);
       expect(meas[0].displayIdentifier, null);
-      expect(meas[0].endianess, null);
+      expect(meas[0].endianness, null);
       expect(meas[0].errorMask, null);
       expect(meas[0].format, null);
       expect(meas[0].layout, null);

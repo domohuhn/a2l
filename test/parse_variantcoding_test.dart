@@ -126,10 +126,10 @@ void main() {
       expect(mod.coding!.separator, '.');
       expect(mod.coding!.namingScheme, VariantNaming.NUMERIC);
       expect(mod.coding!.forbidden.length, 1);
-      expect(mod.coding!.forbidden[0].comibination[0].name, 'Gear');
-      expect(mod.coding!.forbidden[0].comibination[1].name, 'Engine');
-      expect(mod.coding!.forbidden[0].comibination[0].value, 'stick');
-      expect(mod.coding!.forbidden[0].comibination[1].value, 'electric');
+      expect(mod.coding!.forbidden[0].combination[0].name, 'Gear');
+      expect(mod.coding!.forbidden[0].combination[1].name, 'Engine');
+      expect(mod.coding!.forbidden[0].combination[0].value, 'stick');
+      expect(mod.coding!.forbidden[0].combination[1].value, 'electric');
     });
 
     test('VAR_CHARACTERISTIC', () {

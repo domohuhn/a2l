@@ -47,7 +47,7 @@ class A2LFile {
   }
 
   /// Validates the file.
-  /// Checks that all referenced axis, compute methods, measurments etc exist.
+  /// Checks that all referenced axis, compute methods, measurements etc exist.
   /// Also verifies that required invariants of elements hold true.
   ///
   /// Returns a list of found problems. If the list is empty, everything is ok.
@@ -74,7 +74,7 @@ class A2LFile {
   }
 
   /// Verifies that all compute methods, record layouts,
-  /// axis descriptions, comparision quantities,
+  /// axis descriptions, comparison quantities,
   /// (virtual) dependent characteristics and memory segments exist
   /// and that the identifiers are unique.
   List<Problem> _validateCharacteristics() {
@@ -92,11 +92,11 @@ class A2LFile {
           problems.add(Problem(characteristic,
               'The referenced compute method "${characteristic.computeMethod}" does not exist!'));
         }
-        if (characteristic.comparisionQuantity != null &&
-            module.findMeasurement(characteristic.comparisionQuantity!) ==
+        if (characteristic.comparisonQuantity != null &&
+            module.findMeasurement(characteristic.comparisonQuantity!) ==
                 null) {
           problems.add(Problem(characteristic,
-              'The referenced comparison quantity "${characteristic.comparisionQuantity}" does not exist!'));
+              'The referenced comparison quantity "${characteristic.comparisonQuantity}" does not exist!'));
         }
         if (characteristic.dependentCharacteristics != null) {
           for (final dep
@@ -125,7 +125,7 @@ class A2LFile {
         if (characteristic.memorySegment != null &&
             module.findMemorySegment(characteristic.memorySegment!) == null) {
           problems.add(Problem(characteristic,
-              'The referenced memory segement "${characteristic.memorySegment}" does not exist!'));
+              'The referenced memory segment "${characteristic.memorySegment}" does not exist!'));
         }
         final dimension = characteristic.validateDimensions();
         if (dimension != null) {
@@ -277,7 +277,7 @@ class A2LFile {
         if (m.memorySegment != null &&
             module.findMemorySegment(m.memorySegment!) == null) {
           problems.add(Problem(m,
-              'The referenced memory segement "${m.memorySegment}" does not exist!'));
+              'The referenced memory segment "${m.memorySegment}" does not exist!'));
         }
         final dim = m.validateMatrixDimensions();
         if (dim != null) {

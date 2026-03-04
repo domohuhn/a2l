@@ -54,7 +54,7 @@ void main() {
       // optional defaults:
       expect(desc.annotations.length, 0);
       expect(desc.axisPoints, null);
-      expect(desc.endianess, null);
+      expect(desc.endianness, null);
       expect(desc.rescaleAxisPoints, null);
       expect(desc.depositMode, null);
       expect(desc.extendedLimits, null);
@@ -251,7 +251,7 @@ void main() {
       expect(file.project.modules.length, 1);
       final desc =
           file.project.modules[0].characteristics[0].axisDescription[0];
-      expect(desc.endianess, ByteOrder.MSB_LAST);
+      expect(desc.endianness, ByteOrder.MSB_LAST);
     });
 
     test('CURVE_AXIS_REF', () {

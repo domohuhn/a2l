@@ -21,7 +21,7 @@ enum SegmentType {
   /// values in the ecu not in binary files for flashing
   EXCLUDE_FROM_FLASH,
 
-  /// data the is not allowed to be changed by online claibration
+  /// data the is not allowed to be changed by online calibration
   OFFLINE_DATA,
 
   /// reserved
@@ -76,8 +76,6 @@ String segmentTypeToString(SegmentType e) {
       return 'SERAM';
     case SegmentType.VARIABLES:
       return 'VARIABLES';
-    default:
-      throw ValidationError('Unknown program type $e');
   }
 }
 
@@ -119,8 +117,6 @@ String memoryTypeToString(MemoryType e) {
       return 'ROM';
     case MemoryType.REGISTER:
       return 'REGISTER';
-    default:
-      throw ValidationError('Unknown memory type $e');
   }
 }
 
@@ -152,8 +148,6 @@ String segmentAttributeToString(SegmentAttribute e) {
       return 'INTERN';
     case SegmentAttribute.EXTERN:
       return 'EXTERN';
-    default:
-      throw ValidationError('Unknown SegmentAttribute type $e');
   }
 }
 
@@ -184,7 +178,7 @@ class MemorySegment extends SegmentData {
   /// Hardware where the segment is located.
   MemoryType memoryType = MemoryType.FLASH;
 
-  /// Attribues of the segment.
+  /// Attributes of the segment.
   SegmentAttribute attribute = SegmentAttribute.INTERN;
 
   /// The interface description (if present). The library will not process these strings in any way.  (a2l key: IFDATA)

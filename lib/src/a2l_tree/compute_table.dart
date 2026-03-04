@@ -16,7 +16,7 @@ class ComputeTableEntry {
   double xUp = 0.0;
 
   /// If the values are floating point number.
-  /// Changes behaviour of VerbatimRangeTable.
+  /// Changes behavior of VerbatimRangeTable.
   bool isFloat = false;
 
   /// Output number.
@@ -37,10 +37,10 @@ class ComputeTableEntry {
 
 /// Base class for computation tables.
 abstract class ComputeTableBase {
-  /// Name of the converions table
+  /// Name of the conversions table
   String name = '';
 
-  /// Description of the converions table
+  /// Description of the conversions table
   String description = '';
 
   /// type of the table
@@ -95,11 +95,11 @@ class ComputeTable extends ComputeTableBase {
         }
         return 'Value out of range';
       }
-      var ylow = table[index - 1].outNumeric;
-      var yhi = table[index].outNumeric;
-      var xlow = table[index - 1].x;
-      var xhi = table[index].x;
-      rv = ylow + yhi * (input - xlow) / (xhi - xlow);
+      final yLow = table[index - 1].outNumeric;
+      final yHi = table[index].outNumeric;
+      final xLow = table[index - 1].x;
+      final xHi = table[index].x;
+      rv = yLow + yHi * (input - xLow) / (xHi - xLow);
       return rv.toString();
     } else {
       for (var i = 0; i < table.length; ++i) {

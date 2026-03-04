@@ -46,7 +46,7 @@ void main() {
       expect(axis[0].calibrationAccess, null);
       expect(axis[0].depositMode, null);
       expect(axis[0].displayIdentifier, null);
-      expect(axis[0].endianess, null);
+      expect(axis[0].endianness, null);
       expect(axis[0].extendedLimits, null);
       expect(axis[0].format, null);
       expect(axis[0].guardRails, false);
@@ -111,7 +111,7 @@ void main() {
       expect(axis[0].calibrationAccess, null);
       expect(axis[0].depositMode, null);
       expect(axis[0].displayIdentifier, null);
-      expect(axis[0].endianess, null);
+      expect(axis[0].endianness, null);
       expect(axis[0].extendedLimits, null);
       expect(axis[0].format, null);
       expect(axis[0].guardRails, false);
@@ -140,7 +140,7 @@ void main() {
       expect(axis[1].calibrationAccess, null);
       expect(axis[1].depositMode, null);
       expect(axis[1].displayIdentifier, null);
-      expect(axis[1].endianess, null);
+      expect(axis[1].endianness, null);
       expect(axis[1].extendedLimits, null);
       expect(axis[1].format, null);
       expect(axis[1].guardRails, false);
@@ -227,7 +227,7 @@ void main() {
       expect(file.project.modules.length, 1);
       var axis = file.project.modules[0].axisPoints;
       expect(axis.length, 1);
-      expect(axis[0].endianess, ByteOrder.MSB_FIRST);
+      expect(axis[0].endianness, ByteOrder.MSB_FIRST);
     });
 
     test('CALIBRATION_ACCESS', () {

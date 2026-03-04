@@ -109,7 +109,7 @@ class Value extends A2LElement {
 void doNothing() {}
 
 /// This class represent a named value inside the A2L file.
-/// The are typcially entered as KEY value0 value1 ...
+/// The are typically entered as KEY value0 value1 ...
 ///
 class NamedValue extends A2LElement {
   /// The mandatory values required after the key word.
@@ -160,7 +160,7 @@ class BlockElement extends A2LElement {
   final A2LElementParsingOptions Function(dynamic self, dynamic parent)
       _callback;
 
-  A2LElementParsingOptions prepareNewLement(dynamic parent) {
+  A2LElementParsingOptions prepareNewElement(dynamic parent) {
     return _callback(this, parent);
   }
 }
@@ -202,7 +202,7 @@ class TokenParser {
           if (expected is BlockElement) {
             currentIndex = i + 2;
             stack.add(expectedTokens);
-            var opts = expected.prepareNewLement(current);
+            var opts = expected.prepareNewElement(current);
             parseRequiredOrderedElements(opts.mandatoryPositional, limit);
             expectedTokens = [];
             expectedTokens.addAll(opts.named);
@@ -582,7 +582,7 @@ class TokenParser {
               'BYTE_ORDER',
               [
                 Value('order', ValueType.text, (ValueType t, List<Token> s) {
-                  axis.endianess = byteOrderFromString(s[0]);
+                  axis.endianness = byteOrderFromString(s[0]);
                 })
               ],
               optional: true),
@@ -780,7 +780,7 @@ class TokenParser {
               'BYTE_ORDER',
               [
                 Value('order', ValueType.text, (ValueType t, List<Token> s) {
-                  axis.endianess = byteOrderFromString(s[0]);
+                  axis.endianness = byteOrderFromString(s[0]);
                 })
               ],
               optional: true),
@@ -955,7 +955,7 @@ class TokenParser {
         p.forbidden.add(forb);
         var values = <Value>[
           Value('value', ValueType.text, (p0, p1) {
-            forb.comibination.add(NameValuePair(p1[0].text, p1[1].text));
+            forb.combination.add(NameValuePair(p1[0].text, p1[1].text));
           }, multiplicity: -1, requiredTokens: 2)
         ];
         return A2LElementParsingOptions(forb, values, []);
@@ -1094,7 +1094,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  common.aligmentInt8 = int.parse(s[0].text);
+                  common.alignmentInt8 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1103,7 +1103,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  common.aligmentInt16 = int.parse(s[0].text);
+                  common.alignmentInt16 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1112,7 +1112,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  common.aligmentInt32 = int.parse(s[0].text);
+                  common.alignmentInt32 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1121,7 +1121,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  common.aligmentInt64 = int.parse(s[0].text);
+                  common.alignmentInt64 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1130,7 +1130,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  common.aligmentFloat32 = int.parse(s[0].text);
+                  common.alignmentFloat32 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1139,7 +1139,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  common.aligmentFloat64 = int.parse(s[0].text);
+                  common.alignmentFloat64 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1147,7 +1147,7 @@ class TokenParser {
               'BYTE_ORDER',
               [
                 Value('order', ValueType.text, (ValueType t, List<Token> s) {
-                  common.endianess = byteOrderFromString(s[0]);
+                  common.endianness = byteOrderFromString(s[0]);
                 })
               ],
               optional: true),
@@ -1463,7 +1463,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  rl.aligmentInt8 = int.parse(s[0].text);
+                  rl.alignmentInt8 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1472,7 +1472,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  rl.aligmentInt16 = int.parse(s[0].text);
+                  rl.alignmentInt16 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1481,7 +1481,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  rl.aligmentInt32 = int.parse(s[0].text);
+                  rl.alignmentInt32 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1490,7 +1490,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  rl.aligmentInt64 = int.parse(s[0].text);
+                  rl.alignmentInt64 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1499,7 +1499,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  rl.aligmentFloat32 = int.parse(s[0].text);
+                  rl.alignmentFloat32 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1508,7 +1508,7 @@ class TokenParser {
               [
                 Value('alignment', ValueType.integer,
                     (ValueType t, List<Token> s) {
-                  rl.aligmentFloat64 = int.parse(s[0].text);
+                  rl.alignmentFloat64 = int.parse(s[0].text);
                 }),
               ],
               optional: true),
@@ -1527,7 +1527,7 @@ class TokenParser {
                     (ValueType t, List<Token> s) {
                   rl.values!.mode = indexModeFromString(s[0]);
                 }),
-                Value('Addresstype', ValueType.text,
+                Value('AddressType', ValueType.text,
                     (ValueType t, List<Token> s) {
                   rl.values!.addressType = addressTypeFromString(s[0]);
                 }),
@@ -1951,7 +1951,7 @@ class TokenParser {
           'BYTE_ORDER',
           [
             Value('order', ValueType.text, (ValueType t, List<Token> s) {
-              base.endianess = byteOrderFromString(s[0]);
+              base.endianness = byteOrderFromString(s[0]);
             })
           ],
           optional: true),
@@ -2173,7 +2173,7 @@ class TokenParser {
               'COMPARISON_QUANTITY',
               [
                 Value('COMPARISON_QUANTITY', ValueType.id, (p0, p1) {
-                  char.comparisionQuantity = p1[0].text;
+                  char.comparisonQuantity = p1[0].text;
                 })
               ],
               optional: true),

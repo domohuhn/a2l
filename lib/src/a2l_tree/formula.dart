@@ -7,7 +7,7 @@ import 'package:a2l/src/utility.dart';
 class Formula {
   /// The formula used to convert internal values to physical values.
   /// May contain references to System constants. If a single variable is used,
-  /// it can be referenced via X. If multiple input values are used, they must be referecend
+  /// it can be referenced via X. If multiple input values are used, they must be referenced
   /// via X1, X2 ... etc.
   String formula = '';
 

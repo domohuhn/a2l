@@ -43,7 +43,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -54,7 +54,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -110,7 +110,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -120,7 +120,7 @@ void main() {
       expect(chara[0].maxRefresh, null);
       expect(chara[0].symbolLink, null);
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -140,7 +140,7 @@ void main() {
       expect(chara[1].addressExtension, null);
       expect(chara[1].bitMask, null);
       expect(chara[1].displayIdentifier, null);
-      expect(chara[1].endianess, null);
+      expect(chara[1].endianness, null);
       expect(chara[1].format, null);
       expect(chara[1].memorySegment, null);
       expect(chara[1].discrete, false);
@@ -150,7 +150,7 @@ void main() {
       expect(chara[1].maxRefresh, null);
       expect(chara[1].symbolLink, null);
       expect(chara[1].calibrationAccess, null);
-      expect(chara[1].comparisionQuantity, null);
+      expect(chara[1].comparisonQuantity, null);
       expect(chara[1].dependentCharacteristics, null);
       expect(chara[1].extendedLimits, null);
       expect(chara[1].guardRails, false);
@@ -194,7 +194,7 @@ void main() {
       expect(chara[0].addressExtension, 25);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -205,7 +205,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -249,7 +249,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, 0xFFFFFFFF);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -260,7 +260,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -304,7 +304,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, 'SOME.ID');
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -315,7 +315,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -359,7 +359,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, ByteOrder.MSB_FIRST);
+      expect(chara[0].endianness, ByteOrder.MSB_FIRST);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -370,7 +370,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -414,7 +414,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, '%7.3');
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -425,7 +425,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -469,7 +469,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, 'Some.Segment');
       expect(chara[0].discrete, false);
@@ -480,7 +480,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -523,7 +523,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, true);
@@ -534,7 +534,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -577,7 +577,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -588,7 +588,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -632,7 +632,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -643,7 +643,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -700,7 +700,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -711,7 +711,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -763,7 +763,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -774,7 +774,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -819,7 +819,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -830,7 +830,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -874,7 +874,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -885,7 +885,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, 'SomeQuant');
+      expect(chara[0].comparisonQuantity, 'SomeQuant');
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -930,7 +930,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -941,7 +941,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, CalibrationAccess.CALIBRATION);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -987,7 +987,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -998,7 +998,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, isNot(equals(null)));
       expect(chara[0].extendedLimits!.lowerLimit, 0.5);
@@ -1051,7 +1051,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1062,7 +1062,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -1115,7 +1115,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1126,7 +1126,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -1181,7 +1181,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1192,7 +1192,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].virtualCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -1246,7 +1246,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1257,7 +1257,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -1304,7 +1304,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1315,7 +1315,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, true);
@@ -1362,7 +1362,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1376,7 +1376,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -1422,7 +1422,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1435,7 +1435,7 @@ void main() {
       expect(chara[0].symbolLink, null);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
@@ -1481,7 +1481,7 @@ void main() {
       expect(chara[0].addressExtension, null);
       expect(chara[0].bitMask, null);
       expect(chara[0].displayIdentifier, null);
-      expect(chara[0].endianess, null);
+      expect(chara[0].endianness, null);
       expect(chara[0].format, null);
       expect(chara[0].memorySegment, null);
       expect(chara[0].discrete, false);
@@ -1494,7 +1494,7 @@ void main() {
       expect(chara[0].symbolLink!.offset, 42);
 
       expect(chara[0].calibrationAccess, null);
-      expect(chara[0].comparisionQuantity, null);
+      expect(chara[0].comparisonQuantity, null);
       expect(chara[0].dependentCharacteristics, null);
       expect(chara[0].extendedLimits, null);
       expect(chara[0].guardRails, false);
