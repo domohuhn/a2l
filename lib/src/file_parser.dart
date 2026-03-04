@@ -22,7 +22,7 @@ A2LFile parseA2LFileSync(String path) {
 /// Parses the given [text] as A2L file and converts it to the [A2LFile]
 /// data structure.
 ///
-/// Throws exceptions if the there are snytax errors or dangling references.
+/// Throws exceptions if the there are syntax errors or dangling references.
 A2LFile parseA2L(String text) {
   var parser = TokenParser();
   parser.tokens = convertFileContentsToTokens(text);

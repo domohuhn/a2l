@@ -28,7 +28,7 @@ class Measurement extends MeasurementCharacteristicBase {
   int? arraySize;
   // bitMask  is in base
   BitOperation? bitOperation;
-  // endianess is in base
+  // endianness is in base
   // discrete is in base
   // displayIdentifier is in base
   int? address;

@@ -167,7 +167,7 @@ class Module {
     return findByKey(measurements, key);
   }
 
-  /// Finds aaxis points by key or returns null.
+  /// Finds axis points by key or returns null.
   AxisPoints? findAxisPoints(String key) {
     return findByKey(axisPoints, key);
   }

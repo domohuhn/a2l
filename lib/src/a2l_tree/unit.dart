@@ -22,7 +22,7 @@ UnitType unitTypeFromString(Token s) {
     case 'EXTENDED_SI':
       return UnitType.EXTENDED_SI;
     default:
-      throw ParsingException('Unkown unit type', s);
+      throw ParsingException('Unknown unit type', s);
   }
 }
 

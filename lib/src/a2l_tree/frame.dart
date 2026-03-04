@@ -6,7 +6,7 @@ import 'package:a2l/src/a2l_tree/passthrough_blocks.dart';
 import 'package:a2l/src/utility.dart';
 
 /// Represents a list of measurements with a timing.
-/// This allows selecting similiar measurements from a selection of lists in the calibration system.
+/// This allows selecting similar measurements from a selection of lists in the calibration system.
 class Frame {
   Frame()
       : measurements = [],

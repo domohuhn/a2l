@@ -111,11 +111,11 @@ class _Preprocessor {
 
   /// Finds the begin of a section that should not be processed by the preprocessor.
   int _findBeginOfNextUnprocessedSection(int start) {
-    final searchstring = content.substring(start);
+    final searchString = content.substring(start);
     int matchStart = -1;
     _currentUnprocessedSection = null;
     for (final secs in unprocessedSections) {
-      RegExpMatch? match = secs.begin.firstMatch(searchstring);
+      RegExpMatch? match = secs.begin.firstMatch(searchString);
       if (match != null && (match.start < matchStart || matchStart == -1)) {
         matchStart = match.end;
         _currentUnprocessedSection = secs;
@@ -130,9 +130,9 @@ class _Preprocessor {
       throw ValidationError(
           'Internal logic error: current section was not set!');
     }
-    final searchstring = content.substring(start);
+    final searchString = content.substring(start);
     RegExpMatch? match =
-        _currentUnprocessedSection!.end.firstMatch(searchstring);
+        _currentUnprocessedSection!.end.firstMatch(searchString);
     if (match == null) {
       throw PreprocessingError(
           'Unterminated section started via "${_currentUnprocessedSection!.begin.toString()}"',

@@ -27,7 +27,7 @@ void main() {
         '0x100',
         '/begin',
         'IF_DATA',
-        'somedata',
+        'someData',
         '/end',
         'IF_DATA',
         '/end',
@@ -51,7 +51,7 @@ void main() {
       expect(data[0].offsets[3], 4);
       expect(data[0].offsets[4], 0x100);
       expect(data[0].interfaceData.length, 1);
-      expect(data[0].interfaceData[0], 'somedata');
+      expect(data[0].interfaceData[0], 'someData');
       expect(data[0].toFileContents(0).contains('/begin IF_DATA'), true);
     });
 
@@ -139,7 +139,7 @@ void main() {
         '0x100',
         '/begin',
         'IF_DATA',
-        'somedata',
+        'someData',
         '/end',
         'IF_DATA',
         '/end',
@@ -167,7 +167,7 @@ void main() {
       expect(data[0].offsets[3], 4);
       expect(data[0].offsets[4], 0x100);
       expect(data[0].interfaceData.length, 1);
-      expect(data[0].interfaceData[0], 'somedata');
+      expect(data[0].interfaceData[0], 'someData');
       expect(data[0].toFileContents(0).contains('/begin IF_DATA'), true);
     });
 

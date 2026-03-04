@@ -47,7 +47,7 @@ void main() {
           file.project.modules[0].computeTables[0].fallbackValueNumeric, null);
     });
 
-    test('Parse mandatory mutiple', () {
+    test('Parse mandatory multiple', () {
       prepareTestData(parser, [
         '/begin',
         'COMPU_VTAB',

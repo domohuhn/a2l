@@ -148,9 +148,9 @@ void main() {
         '"MooProject"',
         '/begin',
         'HEADER',
-        '"Commemt"',
+        '"Comment"',
         'VERSION',
-        '"versio"',
+        '"version"',
         'PROJECT_NO',
         'XCP123',
         '/end',
@@ -166,8 +166,8 @@ void main() {
       ]);
       parser.currentIndex = 0;
       var file = parser.parse();
-      expect(file.project.header!.description, 'Commemt');
-      expect(file.project.header!.version, 'versio');
+      expect(file.project.header!.description, 'Comment');
+      expect(file.project.header!.version, 'version');
       expect(file.project.header!.number, 'XCP123');
     });
   });
